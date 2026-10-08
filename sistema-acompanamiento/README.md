@@ -56,6 +56,5 @@ python prototipo/construir_prototipo_real.py BASE_DE_DATOS.xlsx ~/OneDrive/Bitac
 ## Reglas
 
 - La copia del prototipo con datos reales (`*_datos_reales.html`) no se publica como página web ni se sube a este repositorio. No lleva atenciones ni seguimientos inventados: lo que no está en la base aparece vacío.
-
 - Aquí no se guardan datos reales de estudiantes. El repositorio es público y el `.gitignore` bloquea `*.xlsx` y `*.csv`. Los archivos de carga reales se entregan aparte y se guardan en el OneDrive institucional.
 - Los códigos ficticios tienen el formato real: año de ingreso, periodo, programa, variante y consecutivo (por ejemplo 2026214962). Usan las variantes de la 9 hacia abajo, que la base real no usa (solo usa de la 0 a la 3); así ningún código de prueba coincide con el de un estudiante real. Los documentos ficticios empiezan por 99, un prefijo que no tienen las cédulas colombianas.
