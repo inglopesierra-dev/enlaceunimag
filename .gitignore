@@ -8,3 +8,6 @@
 
 __pycache__/
 *.pyc
+
+# Prototipo con datos reales de estudiantes (se genera con prototipo/construir_prototipo_real.py)
+*_datos_reales.html

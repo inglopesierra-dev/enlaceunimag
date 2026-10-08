@@ -13,6 +13,7 @@ Ver `docs/01-arquitectura-y-licencias.md`.
 | Ruta | Qué es |
 |---|---|
 | `prototipo/index.html` | Prototipo navegable con datos 100 % ficticios. Tiene el catálogo real de unidades y servicios, 20.000 estudiantes y más de 100.000 seguimientos. Muestra lo que ve cada rol, la bandeja de solicitudes de Forms y las remisiones tipo buzón. |
+| `prototipo/construir_prototipo_real.py` | Arma una copia privada del prototipo con los estudiantes reales de BASE_DE_DATOS: los 18.185, con las 25 columnas de la base en cada perfil. La salida se abre en el navegador del computador y se guarda solo en el OneDrive institucional. No se publica ni se sube aquí. |
 | `microsoft365/` | Kit del camino A: modelo único, scripts de PnP para TI, código de la app de Power Apps y generadores. Ver `microsoft365/README.md`. |
 | `docs/01-arquitectura-y-licencias.md` | Los dos caminos, licencias por verificar y cómo puede trabajar Claude con la cuenta institucional. |
 | `docs/02-modelo-de-datos.md` | Diccionario de datos del camino B (Dataverse): 15 tablas y 126 columnas. |
@@ -46,7 +47,15 @@ python dataverse/generar_diccionario.py dataverse/esquema.json docs/02-modelo-de
 
 Para ver el prototipo localmente, abre `prototipo/index.html` en un navegador.
 
+Para la copia con datos reales:
+
+```bash
+python prototipo/construir_prototipo_real.py BASE_DE_DATOS.xlsx ~/OneDrive/Bitacora_datos_reales.html
+```
+
 ## Reglas
+
+- La copia del prototipo con datos reales (`*_datos_reales.html`) no se publica como página web ni se sube a este repositorio. No lleva atenciones ni seguimientos inventados: lo que no está en la base aparece vacío.
 
 - Aquí no se guardan datos reales de estudiantes. El repositorio es público y el `.gitignore` bloquea `*.xlsx` y `*.csv`. Los archivos de carga reales se entregan aparte y se guardan en el OneDrive institucional.
 - Los códigos ficticios tienen el formato real: año de ingreso, periodo, programa, variante y consecutivo (por ejemplo 2026214962). Usan las variantes de la 9 hacia abajo, que la base real no usa (solo usa de la 0 a la 3); así ningún código de prueba coincide con el de un estudiante real. Los documentos ficticios empiezan por 99, un prefijo que no tienen las cédulas colombianas.
