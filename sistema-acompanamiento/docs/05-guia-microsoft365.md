@@ -87,7 +87,7 @@ Para cada plantilla del kit (Estudiantes, Condiciones de ingreso, Deportes, Cult
 1. En el sitio: **+ Nuevo** > **Lista** > **Desde Excel** > sube la plantilla.
 2. Revisa el tipo de cada columna contra la hoja **Columnas** de la plantilla: Texto, Fecha o Número.
 3. Ponle a la lista exactamente el nombre de la plantilla. La app los busca por nombre.
-4. Borra la fila de ejemplo (es ficticia).
+4. Borra la fila de ejemplo, que es ficticia. La excepción es Catálogo de servicios: sus filas son el catálogo real.
 5. En **Configuración de la lista**:
    - Confirma que hay una columna llamada **Código**. Si el asistente puso el código en «Título», renómbrala a «Código».
    - Abre la columna **Título** y marca que no es obligatoria.

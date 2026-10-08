@@ -142,7 +142,9 @@ def instrucciones(ws, lista):
         "1. En el sitio «Acompañamiento Estudiantil» elige Nuevo > Lista > Desde Excel y sube este archivo.",
         "2. Elige la tabla de la hoja «Datos». Revisa que cada columna quede como dice la hoja «Columnas» (Texto, Fecha, Número).",
         f"3. Nombra la lista exactamente: {lista['titulo']}",
-        "4. Cuando termine, borra la fila de ejemplo (es ficticia) y borra este archivo de «Activos del sitio».",
+        ("4. Estas filas son el catálogo real de servicios: no las borres. Al terminar, borra este archivo de «Activos del sitio»."
+         if lista["titulo"] == "Catálogo de servicios" else
+         "4. Cuando termine, borra la fila de ejemplo (es ficticia) y borra este archivo de «Activos del sitio»."),
         "5. En Configuración de la lista confirma que existe una columna llamada «Código». Si el asistente puso el código en «Título», cámbiale el nombre a «Código».",
         "6. Aplica los permisos que indica la guía (docs/05-guia-microsoft365.md).",
     ]
