@@ -37,3 +37,7 @@ python scripts/postprocess.py salida.xlsx salida_recalculada.xlsx Como_esta_mi_f
 ```
 
 Requiere Python 3.10 o superior, `openpyxl` y `lxml`.
+
+## Sistema de seguimiento y acompañamiento estudiantil
+
+La carpeta `sistema-acompanamiento/` contiene la propuesta para llevar el seguimiento de Bienestar y Desarrollo Estudiantil a Power Apps, Dataverse, Power Automate y Power BI, dentro de Teams. Incluye un prototipo con datos ficticios, el esquema de Dataverse, el modelo de seguridad para datos psicológicos y el plan de implementación. Ver `sistema-acompanamiento/README.md`.

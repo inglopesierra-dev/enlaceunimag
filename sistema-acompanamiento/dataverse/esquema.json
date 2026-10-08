@@ -1,0 +1,290 @@
+{
+  "version": "0.1",
+  "descripcion": "Esquema propuesto para el sistema de seguimiento y acompañamiento estudiantil en Dataverse. Prefijo y nombres sujetos a la convención del editor de la solución.",
+  "solucion": { "nombre_unico": "AcompanamientoEstudiantil", "nombre": "Acompañamiento estudiantil", "editor": "UNIMAGDALENA", "prefijo": "unimag" },
+  "opciones": {
+    "unimag_tipodocumento": ["Cédula de ciudadanía", "Tarjeta de identidad", "Cédula de extranjería", "Permiso por protección temporal", "Pasaporte", "Registro civil", "Otro"],
+    "unimag_sexo": ["Femenino", "Masculino", "Intersexual", "No reporta"],
+    "unimag_origen": ["Santa Marta", "Resto del Magdalena", "Resto de la región Caribe", "Resto del país", "Extranjero"],
+    "unimag_tipocolegio": ["Público", "Privado", "Extranjero"],
+    "unimag_condicionespecial": ["Ninguna", "Víctima del conflicto armado", "Comunidad afrocolombiana", "Comunidad indígena", "Persona con discapacidad", "Mujer cabeza de familia", "Deportista destacado", "Artista destacado", "Otra"],
+    "unimag_estadoacademico": ["Activo", "Inactivo", "Graduado", "Retirado"],
+    "unimag_calendario": ["Semestral", "Cuatrimestral", "Anual"],
+    "unimag_dependencia": ["Bienestar Universitario", "Desarrollo Estudiantil"],
+    "unimag_tiposervicio": ["Atención", "Beneficio", "Actividad o programa"],
+    "unimag_modalidad": ["Presencial", "Virtual", "Telefónica"],
+    "unimag_tipoatencion": ["Primera vez", "Seguimiento", "Remisión recibida", "Cierre"],
+    "unimag_resultadoatencion": ["Realizada", "No asistió", "Anulada"],
+    "unimag_motivocaso": ["Rendimiento académico", "Situación socioeconómica", "Bienestar emocional", "Salud", "Adaptación a la vida universitaria", "Convivencia", "Otro"],
+    "unimag_prioridad": ["Alta", "Media", "Baja"],
+    "unimag_origencaso": ["Alerta temprana", "Solicitud del estudiante", "Remisión docente", "Remisión de otra área", "Otro"],
+    "unimag_tipoalerta": ["Promedio por debajo de 3,0", "Sin matrícula", "Cancelación de semestre", "Inasistencia reiterada", "Remisión docente", "Otra"],
+    "unimag_origenalerta": ["Automática", "Manual"],
+    "unimag_tipoconsentimiento": ["Tratamiento de datos personales", "Tratamiento de datos sensibles", "Atención psicológica", "Atención en salud", "Autorización de acudiente (menor de edad)"],
+    "unimag_nivelriesgo": ["Sin riesgo identificado", "Bajo", "Medio", "Alto"]
+  },
+  "estados": {
+    "unimag_caso": { "activo": ["Abierto", "En seguimiento", "Remitido"], "inactivo": ["Cerrado", "Anulado"] },
+    "unimag_remision": { "activo": ["Pendiente", "Aceptada"], "inactivo": ["Atendida", "No aceptada"] },
+    "unimag_beneficio": { "activo": ["Asignado", "Activo"], "inactivo": ["Finalizado", "Cancelado"] },
+    "unimag_alerta": { "activo": ["Nueva", "En gestión"], "inactivo": ["Atendida", "Descartada"] },
+    "unimag_atencion": { "nota": "Actividad: Abierta → Completada (Realizada / No asistió) o Cancelada (Anulada)." }
+  },
+  "tablas": [
+    {
+      "nombre_logico": "unimag_facultad", "nombre": "Facultad", "plural": "Facultades", "tipo": "Standard", "propiedad": "OrganizationOwned", "auditoria": true,
+      "principal": { "nombre_logico": "unimag_name", "nombre": "Nombre", "tipo": "Text", "max": 120 },
+      "columnas": [ { "nombre_logico": "unimag_codigo", "nombre": "Código", "tipo": "Text", "max": 20, "requerida": true } ],
+      "claves_alternas": [ ["unimag_codigo"] ], "volumen": "≈ 6"
+    },
+    {
+      "nombre_logico": "unimag_programa", "nombre": "Programa", "plural": "Programas", "tipo": "Standard", "propiedad": "OrganizationOwned", "auditoria": true,
+      "principal": { "nombre_logico": "unimag_name", "nombre": "Nombre", "tipo": "Text", "max": 160 },
+      "columnas": [
+        { "nombre_logico": "unimag_codigo", "nombre": "Código", "tipo": "Text", "max": 20, "requerida": true },
+        { "nombre_logico": "unimag_facultadid", "nombre": "Facultad", "tipo": "Lookup", "destino": "unimag_facultad", "requerida": true },
+        { "nombre_logico": "unimag_calendario", "nombre": "Calendario", "tipo": "Choice", "opciones": "unimag_calendario" }
+      ],
+      "claves_alternas": [ ["unimag_codigo"] ], "volumen": "≈ 40"
+    },
+    {
+      "nombre_logico": "unimag_periodo", "nombre": "Período académico", "plural": "Períodos académicos", "tipo": "Standard", "propiedad": "OrganizationOwned", "auditoria": true,
+      "principal": { "nombre_logico": "unimag_name", "nombre": "Período original", "tipo": "Text", "max": 20, "ejemplo": "2026II" },
+      "columnas": [
+        { "nombre_logico": "unimag_periodoreporte", "nombre": "Período de reporte", "tipo": "Text", "max": 20, "requerida": true, "ejemplo": "2026-II" },
+        { "nombre_logico": "unimag_calendario", "nombre": "Calendario", "tipo": "Choice", "opciones": "unimag_calendario" },
+        { "nombre_logico": "unimag_fechainicio", "nombre": "Fecha de inicio", "tipo": "DateOnly" },
+        { "nombre_logico": "unimag_fechafin", "nombre": "Fecha de fin", "tipo": "DateOnly" }
+      ],
+      "claves_alternas": [ ["unimag_name"] ], "volumen": "pocas filas por año"
+    },
+    {
+      "nombre_logico": "unimag_estudiante", "nombre": "Estudiante", "plural": "Estudiantes", "tipo": "Standard", "propiedad": "UserOwned", "auditoria": true, "habilitar_actividades": true,
+      "nota": "Una fila por código académico. Debe habilitarse para actividades: así la tabla Atención aparece en la línea de tiempo de la ficha.",
+      "principal": { "nombre_logico": "unimag_name", "nombre": "Nombre completo", "tipo": "Text", "max": 200 },
+      "columnas": [
+        { "nombre_logico": "unimag_codigo", "nombre": "Código estudiantil", "tipo": "Text", "max": 15, "requerida": true },
+        { "nombre_logico": "unimag_nombres", "nombre": "Nombres", "tipo": "Text", "max": 100, "requerida": true },
+        { "nombre_logico": "unimag_apellidos", "nombre": "Apellidos", "tipo": "Text", "max": 100, "requerida": true },
+        { "nombre_logico": "unimag_tipodocumento", "nombre": "Tipo de documento", "tipo": "Choice", "opciones": "unimag_tipodocumento" },
+        { "nombre_logico": "unimag_numerodocumento", "nombre": "Número de documento", "tipo": "Text", "max": 20, "seguridad_columna": "Documento completo" },
+        { "nombre_logico": "unimag_documentoparcial", "nombre": "Documento (últimos 4)", "tipo": "Text", "max": 12, "nota": "Lo calcula un flujo al crear o actualizar: ••••1234" },
+        { "nombre_logico": "unimag_sexo", "nombre": "Sexo", "tipo": "Choice", "opciones": "unimag_sexo" },
+        { "nombre_logico": "unimag_fechanacimiento", "nombre": "Fecha de nacimiento", "tipo": "DateOnly" },
+        { "nombre_logico": "unimag_correoinstitucional", "nombre": "Correo institucional", "tipo": "Email", "max": 120 },
+        { "nombre_logico": "unimag_celular", "nombre": "Celular", "tipo": "Phone", "max": 20 },
+        { "nombre_logico": "unimag_programaid", "nombre": "Programa actual", "tipo": "Lookup", "destino": "unimag_programa" },
+        { "nombre_logico": "unimag_facultadid", "nombre": "Facultad", "tipo": "Lookup", "destino": "unimag_facultad" },
+        { "nombre_logico": "unimag_estadoacademico", "nombre": "Estado académico", "tipo": "Choice", "opciones": "unimag_estadoacademico" },
+        { "nombre_logico": "unimag_origen", "nombre": "Origen", "tipo": "Choice", "opciones": "unimag_origen" },
+        { "nombre_logico": "unimag_departamentoorigen", "nombre": "Departamento de origen", "tipo": "Text", "max": 80 },
+        { "nombre_logico": "unimag_municipioorigen", "nombre": "Municipio de origen", "tipo": "Text", "max": 80 },
+        { "nombre_logico": "unimag_colegio", "nombre": "Colegio de procedencia", "tipo": "Text", "max": 200 },
+        { "nombre_logico": "unimag_tipocolegio", "nombre": "Tipo de colegio", "tipo": "Choice", "opciones": "unimag_tipocolegio" },
+        { "nombre_logico": "unimag_estrato", "nombre": "Estrato", "tipo": "WholeNumber", "min": 0, "max": 6, "seguridad_columna": "Datos sensibles" },
+        { "nombre_logico": "unimag_condicionespecial", "nombre": "Condición especial", "tipo": "Choice", "opciones": "unimag_condicionespecial", "seguridad_columna": "Datos sensibles" },
+        { "nombre_logico": "unimag_ultimaatencionbienestar", "nombre": "Última atención de Bienestar", "tipo": "DateOnly", "nota": "La mantiene un flujo; permite a docentes saber que hay acompañamiento sin ver el detalle" },
+        { "nombre_logico": "unimag_alertasactivas", "nombre": "Alertas activas", "tipo": "WholeNumber", "nota": "Columna de resumen (rollup) sobre Alerta temprana" }
+      ],
+      "claves_alternas": [ ["unimag_codigo"] ], "volumen": "≈ 20.000 (crece cada período)"
+    },
+    {
+      "nombre_logico": "unimag_matricula", "nombre": "Matrícula del período", "plural": "Matrículas del período", "tipo": "Standard", "propiedad": "UserOwned", "auditoria": true,
+      "nota": "Equivale a la hoja Base_estudiantes del Excel: una fila por estudiante y período.",
+      "principal": { "nombre_logico": "unimag_name", "nombre": "Clave", "tipo": "Text", "max": 40, "ejemplo": "2026II|9026118045" },
+      "columnas": [
+        { "nombre_logico": "unimag_estudianteid", "nombre": "Estudiante", "tipo": "Lookup", "destino": "unimag_estudiante", "requerida": true },
+        { "nombre_logico": "unimag_periodoid", "nombre": "Período", "tipo": "Lookup", "destino": "unimag_periodo", "requerida": true },
+        { "nombre_logico": "unimag_programaid", "nombre": "Programa", "tipo": "Lookup", "destino": "unimag_programa" },
+        { "nombre_logico": "unimag_planestudio", "nombre": "Plan de estudio", "tipo": "WholeNumber" },
+        { "nombre_logico": "unimag_modalidadingreso", "nombre": "Modalidad de ingreso", "tipo": "Text", "max": 100 },
+        { "nombre_logico": "unimag_matriculado", "nombre": "Matriculado", "tipo": "Boolean" },
+        { "nombre_logico": "unimag_cancelacion", "nombre": "Canceló el semestre", "tipo": "Boolean" },
+        { "nombre_logico": "unimag_promedioorigen", "nombre": "Promedio (valor fuente)", "tipo": "WholeNumber", "ejemplo": 318 },
+        { "nombre_logico": "unimag_promedio", "nombre": "Promedio acumulado (0 a 5)", "tipo": "Decimal", "precision": 2, "ejemplo": 3.18 },
+        { "nombre_logico": "unimag_fechacorte", "nombre": "Fecha de corte", "tipo": "DateOnly" }
+      ],
+      "claves_alternas": [ ["unimag_name"] ], "volumen": "≈ 18.000 por período"
+    },
+    {
+      "nombre_logico": "unimag_area", "nombre": "Área", "plural": "Áreas", "tipo": "Standard", "propiedad": "OrganizationOwned", "auditoria": true,
+      "principal": { "nombre_logico": "unimag_name", "nombre": "Nombre", "tipo": "Text", "max": 100 },
+      "columnas": [
+        { "nombre_logico": "unimag_dependencia", "nombre": "Dependencia", "tipo": "Choice", "opciones": "unimag_dependencia", "requerida": true },
+        { "nombre_logico": "unimag_esclinica", "nombre": "Es área clínica", "tipo": "Boolean" },
+        { "nombre_logico": "unimag_canalteams", "nombre": "Canal de Teams para avisos", "tipo": "Url", "max": 400 }
+      ],
+      "volumen": "≈ 10"
+    },
+    {
+      "nombre_logico": "unimag_servicio", "nombre": "Servicio", "plural": "Servicios", "tipo": "Standard", "propiedad": "OrganizationOwned", "auditoria": true,
+      "principal": { "nombre_logico": "unimag_name", "nombre": "Nombre", "tipo": "Text", "max": 150 },
+      "columnas": [
+        { "nombre_logico": "unimag_areaid", "nombre": "Área", "tipo": "Lookup", "destino": "unimag_area", "requerida": true },
+        { "nombre_logico": "unimag_tiposervicio", "nombre": "Tipo", "tipo": "Choice", "opciones": "unimag_tiposervicio" },
+        { "nombre_logico": "unimag_esclinico", "nombre": "Es clínico", "tipo": "Boolean" },
+        { "nombre_logico": "unimag_requiereconsentimiento", "nombre": "Requiere consentimiento", "tipo": "Boolean" }
+      ],
+      "volumen": "≈ 40"
+    },
+    {
+      "nombre_logico": "unimag_atencion", "nombre": "Atención", "plural": "Atenciones", "tipo": "Activity", "propiedad": "UserOwned", "auditoria": true,
+      "nota": "Tabla de actividad: hereda Asunto, Referente a (el estudiante), fechas, propietario y estado, y aparece en la línea de tiempo. El propietario es el profesional; Dataverse guarda quién creó y modificó cada registro.",
+      "principal": { "nombre_logico": "subject", "nombre": "Asunto", "tipo": "Text", "max": 200 },
+      "columnas": [
+        { "nombre_logico": "regardingobjectid", "nombre": "Estudiante (Referente a)", "tipo": "Lookup", "destino": "unimag_estudiante", "requerida": true, "nota": "Columna estándar de las actividades" },
+        { "nombre_logico": "unimag_areaid", "nombre": "Área", "tipo": "Lookup", "destino": "unimag_area", "requerida": true },
+        { "nombre_logico": "unimag_servicioid", "nombre": "Servicio", "tipo": "Lookup", "destino": "unimag_servicio", "requerida": true },
+        { "nombre_logico": "unimag_casoid", "nombre": "Caso", "tipo": "Lookup", "destino": "unimag_caso" },
+        { "nombre_logico": "unimag_modalidad", "nombre": "Modalidad", "tipo": "Choice", "opciones": "unimag_modalidad" },
+        { "nombre_logico": "unimag_tipoatencion", "nombre": "Tipo de atención", "tipo": "Choice", "opciones": "unimag_tipoatencion" },
+        { "nombre_logico": "unimag_resumen", "nombre": "Resumen para la red (no clínico)", "tipo": "Multiline", "max": 500, "seguridad_columna": "Resumen de atenciones" },
+        { "nombre_logico": "unimag_proximaaccion", "nombre": "Próxima acción", "tipo": "Text", "max": 120 },
+        { "nombre_logico": "unimag_fechaproximaaccion", "nombre": "Fecha de la próxima acción", "tipo": "DateOnly" },
+        { "nombre_logico": "unimag_resultado", "nombre": "Resultado", "tipo": "Choice", "opciones": "unimag_resultadoatencion" },
+        { "nombre_logico": "unimag_motivoanulacion", "nombre": "Motivo de anulación", "tipo": "Text", "max": 200 },
+        { "nombre_logico": "unimag_esclinica", "nombre": "Es atención clínica", "tipo": "Boolean" },
+        { "nombre_logico": "unimag_alertaprioritaria", "nombre": "Alerta prioritaria para coordinación", "tipo": "Boolean", "nota": "La marca el profesional clínico sin revelar contenido" }
+      ],
+      "volumen": "100.000+ por año"
+    },
+    {
+      "nombre_logico": "unimag_notapsicologica", "nombre": "Nota psicológica", "plural": "Notas psicológicas", "tipo": "Standard", "propiedad": "UserOwned", "auditoria": true, "registrar_accesos": true,
+      "nota": "Contenido clínico de Psicología. Propietario: equipo Psicología. Solo el rol de Psicología tiene privilegios sobre esta tabla.",
+      "principal": { "nombre_logico": "unimag_name", "nombre": "Nota", "tipo": "Text", "max": 100 },
+      "columnas": [
+        { "nombre_logico": "unimag_atencionid", "nombre": "Atención", "tipo": "Lookup", "destino": "unimag_atencion", "requerida": true },
+        { "nombre_logico": "unimag_estudianteid", "nombre": "Estudiante", "tipo": "Lookup", "destino": "unimag_estudiante", "requerida": true },
+        { "nombre_logico": "unimag_consentimientoid", "nombre": "Consentimiento informado", "tipo": "Lookup", "destino": "unimag_consentimiento", "requerida": true },
+        { "nombre_logico": "unimag_motivoconsulta", "nombre": "Motivo de consulta", "tipo": "Multiline", "max": 4000, "seguridad_columna": "Contenido clínico de Psicología" },
+        { "nombre_logico": "unimag_valoracion", "nombre": "Valoración", "tipo": "Multiline", "max": 4000, "seguridad_columna": "Contenido clínico de Psicología" },
+        { "nombre_logico": "unimag_impresiondiagnostica", "nombre": "Impresión diagnóstica", "tipo": "Text", "max": 300, "seguridad_columna": "Contenido clínico de Psicología" },
+        { "nombre_logico": "unimag_planintervencion", "nombre": "Plan de intervención", "tipo": "Multiline", "max": 4000, "seguridad_columna": "Contenido clínico de Psicología" },
+        { "nombre_logico": "unimag_nivelriesgo", "nombre": "Nivel de riesgo", "tipo": "Choice", "opciones": "unimag_nivelriesgo", "seguridad_columna": "Contenido clínico de Psicología" }
+      ],
+      "volumen": "según demanda"
+    },
+    {
+      "nombre_logico": "unimag_notasalud", "nombre": "Nota de salud", "plural": "Notas de salud", "tipo": "Standard", "propiedad": "UserOwned", "auditoria": true, "registrar_accesos": true,
+      "nota": "Misma estructura que la nota psicológica, separada para aislar el acceso entre Psicología y Salud.",
+      "principal": { "nombre_logico": "unimag_name", "nombre": "Nota", "tipo": "Text", "max": 100 },
+      "columnas": [
+        { "nombre_logico": "unimag_atencionid", "nombre": "Atención", "tipo": "Lookup", "destino": "unimag_atencion", "requerida": true },
+        { "nombre_logico": "unimag_estudianteid", "nombre": "Estudiante", "tipo": "Lookup", "destino": "unimag_estudiante", "requerida": true },
+        { "nombre_logico": "unimag_consentimientoid", "nombre": "Consentimiento informado", "tipo": "Lookup", "destino": "unimag_consentimiento", "requerida": true },
+        { "nombre_logico": "unimag_motivoconsulta", "nombre": "Motivo de consulta", "tipo": "Multiline", "max": 4000, "seguridad_columna": "Contenido clínico de Salud" },
+        { "nombre_logico": "unimag_valoracion", "nombre": "Valoración", "tipo": "Multiline", "max": 4000, "seguridad_columna": "Contenido clínico de Salud" },
+        { "nombre_logico": "unimag_impresiondiagnostica", "nombre": "Impresión diagnóstica", "tipo": "Text", "max": 300, "seguridad_columna": "Contenido clínico de Salud" },
+        { "nombre_logico": "unimag_conducta", "nombre": "Conducta y plan", "tipo": "Multiline", "max": 4000, "seguridad_columna": "Contenido clínico de Salud" }
+      ],
+      "volumen": "según demanda"
+    },
+    {
+      "nombre_logico": "unimag_caso", "nombre": "Caso de acompañamiento", "plural": "Casos de acompañamiento", "tipo": "Standard", "propiedad": "UserOwned", "auditoria": true,
+      "nota": "Flujo de proceso de negocio «Ruta de acompañamiento»: Detección → Valoración → Plan → Seguimiento → Cierre.",
+      "principal": { "nombre_logico": "unimag_name", "nombre": "Número de caso", "tipo": "Autonumber", "formato": "CAS-{DATETIMEUTC:yyyy}-{SEQNUM:5}" },
+      "columnas": [
+        { "nombre_logico": "unimag_estudianteid", "nombre": "Estudiante", "tipo": "Lookup", "destino": "unimag_estudiante", "requerida": true },
+        { "nombre_logico": "unimag_motivo", "nombre": "Motivo", "tipo": "Choice", "opciones": "unimag_motivocaso", "requerida": true },
+        { "nombre_logico": "unimag_arealiderid", "nombre": "Área líder", "tipo": "Lookup", "destino": "unimag_area", "requerida": true },
+        { "nombre_logico": "unimag_prioridad", "nombre": "Prioridad", "tipo": "Choice", "opciones": "unimag_prioridad" },
+        { "nombre_logico": "unimag_origen", "nombre": "Origen", "tipo": "Choice", "opciones": "unimag_origencaso" },
+        { "nombre_logico": "unimag_resumen", "nombre": "Resumen (no clínico)", "tipo": "Multiline", "max": 1000 },
+        { "nombre_logico": "unimag_fechaapertura", "nombre": "Fecha de apertura", "tipo": "DateOnly" },
+        { "nombre_logico": "unimag_fechacierre", "nombre": "Fecha de cierre", "tipo": "DateOnly" }
+      ],
+      "volumen": "miles por año"
+    },
+    {
+      "nombre_logico": "unimag_remision", "nombre": "Remisión", "plural": "Remisiones", "tipo": "Standard", "propiedad": "UserOwned", "auditoria": true,
+      "nota": "Al crearse, un flujo la asigna al equipo del área destino y publica el aviso en su canal de Teams.",
+      "principal": { "nombre_logico": "unimag_name", "nombre": "Número", "tipo": "Autonumber", "formato": "REM-{SEQNUM:6}" },
+      "columnas": [
+        { "nombre_logico": "unimag_estudianteid", "nombre": "Estudiante", "tipo": "Lookup", "destino": "unimag_estudiante", "requerida": true },
+        { "nombre_logico": "unimag_casoid", "nombre": "Caso", "tipo": "Lookup", "destino": "unimag_caso" },
+        { "nombre_logico": "unimag_areaorigenid", "nombre": "Área que remite", "tipo": "Lookup", "destino": "unimag_area", "requerida": true },
+        { "nombre_logico": "unimag_areadestinoid", "nombre": "Área destino", "tipo": "Lookup", "destino": "unimag_area", "requerida": true },
+        { "nombre_logico": "unimag_motivo", "nombre": "Motivo (no clínico)", "tipo": "Text", "max": 300, "requerida": true },
+        { "nombre_logico": "unimag_prioridad", "nombre": "Prioridad", "tipo": "Choice", "opciones": "unimag_prioridad" },
+        { "nombre_logico": "unimag_respuesta", "nombre": "Respuesta", "tipo": "Multiline", "max": 500 },
+        { "nombre_logico": "unimag_fecharespuesta", "nombre": "Fecha de respuesta", "tipo": "DateOnly" }
+      ],
+      "volumen": "miles por año"
+    },
+    {
+      "nombre_logico": "unimag_beneficio", "nombre": "Beneficio", "plural": "Beneficios", "tipo": "Standard", "propiedad": "UserOwned", "auditoria": true,
+      "nota": "Una fila por asignación (no por cada almuerzo entregado). Reemplaza la hoja Beneficios del Excel.",
+      "principal": { "nombre_logico": "unimag_name", "nombre": "Número", "tipo": "Autonumber", "formato": "BEN-{SEQNUM:6}" },
+      "columnas": [
+        { "nombre_logico": "unimag_estudianteid", "nombre": "Estudiante", "tipo": "Lookup", "destino": "unimag_estudiante", "requerida": true },
+        { "nombre_logico": "unimag_servicioid", "nombre": "Beneficio (servicio)", "tipo": "Lookup", "destino": "unimag_servicio", "requerida": true },
+        { "nombre_logico": "unimag_periodoid", "nombre": "Período", "tipo": "Lookup", "destino": "unimag_periodo", "requerida": true },
+        { "nombre_logico": "unimag_fechainicio", "nombre": "Fecha de inicio", "tipo": "DateOnly" },
+        { "nombre_logico": "unimag_fechafin", "nombre": "Fecha de fin", "tipo": "DateOnly" },
+        { "nombre_logico": "unimag_fuente", "nombre": "Fuente o convocatoria", "tipo": "Text", "max": 200 },
+        { "nombre_logico": "unimag_observaciones", "nombre": "Observaciones", "tipo": "Multiline", "max": 1000 }
+      ],
+      "volumen": "≈ 10.000 por período"
+    },
+    {
+      "nombre_logico": "unimag_alerta", "nombre": "Alerta temprana", "plural": "Alertas tempranas", "tipo": "Standard", "propiedad": "UserOwned", "auditoria": true,
+      "nota": "Las automáticas las crea un flujo después de cada carga de matrícula.",
+      "principal": { "nombre_logico": "unimag_name", "nombre": "Número", "tipo": "Autonumber", "formato": "ALE-{SEQNUM:6}" },
+      "columnas": [
+        { "nombre_logico": "unimag_estudianteid", "nombre": "Estudiante", "tipo": "Lookup", "destino": "unimag_estudiante", "requerida": true },
+        { "nombre_logico": "unimag_periodoid", "nombre": "Período", "tipo": "Lookup", "destino": "unimag_periodo" },
+        { "nombre_logico": "unimag_tipo", "nombre": "Tipo de alerta", "tipo": "Choice", "opciones": "unimag_tipoalerta", "requerida": true },
+        { "nombre_logico": "unimag_origen", "nombre": "Origen", "tipo": "Choice", "opciones": "unimag_origenalerta" },
+        { "nombre_logico": "unimag_areaasignadaid", "nombre": "Área asignada", "tipo": "Lookup", "destino": "unimag_area" },
+        { "nombre_logico": "unimag_detalle", "nombre": "Detalle", "tipo": "Text", "max": 300 }
+      ],
+      "volumen": "miles por período"
+    },
+    {
+      "nombre_logico": "unimag_consentimiento", "nombre": "Consentimiento", "plural": "Consentimientos", "tipo": "Standard", "propiedad": "UserOwned", "auditoria": true,
+      "principal": { "nombre_logico": "unimag_name", "nombre": "Número", "tipo": "Autonumber", "formato": "CON-{SEQNUM:6}" },
+      "columnas": [
+        { "nombre_logico": "unimag_estudianteid", "nombre": "Estudiante", "tipo": "Lookup", "destino": "unimag_estudiante", "requerida": true },
+        { "nombre_logico": "unimag_tipo", "nombre": "Tipo", "tipo": "Choice", "opciones": "unimag_tipoconsentimiento", "requerida": true },
+        { "nombre_logico": "unimag_fechafirma", "nombre": "Fecha de firma", "tipo": "DateOnly", "requerida": true },
+        { "nombre_logico": "unimag_vigentehasta", "nombre": "Vigente hasta", "tipo": "DateOnly" },
+        { "nombre_logico": "unimag_revocado", "nombre": "Revocado", "tipo": "Boolean" },
+        { "nombre_logico": "unimag_fecharevocatoria", "nombre": "Fecha de revocatoria", "tipo": "DateOnly" },
+        { "nombre_logico": "unimag_soporte", "nombre": "Soporte firmado", "tipo": "File", "max_kb": 10240 }
+      ],
+      "volumen": "≈ 1 a 3 por estudiante"
+    }
+  ],
+  "perfiles_seguridad_columna": [
+    { "nombre": "Documento completo", "columnas": ["unimag_estudiante.unimag_numerodocumento"], "equipos": ["Coordinación de Bienestar", "Carga de datos (cuenta de servicio)"] },
+    { "nombre": "Datos sensibles", "columnas": ["unimag_estudiante.unimag_estrato", "unimag_estudiante.unimag_condicionespecial"], "equipos": ["Coordinación de Bienestar", "Psicología", "Salud", "Trabajo social"] },
+    { "nombre": "Resumen de atenciones", "columnas": ["unimag_atencion.unimag_resumen"], "equipos": ["Todas las áreas de Bienestar y Desarrollo estudiantil", "Coordinación de Bienestar", "Docentes consejeros"], "excluye": ["Auditoría de datos"] },
+    { "nombre": "Contenido clínico de Psicología", "columnas": ["unimag_notapsicologica.*"], "equipos": ["Psicología"] },
+    { "nombre": "Contenido clínico de Salud", "columnas": ["unimag_notasalud.*"], "equipos": ["Salud"] }
+  ],
+  "unidades_de_negocio": [
+    { "nombre": "Universidad (raíz)", "uso": "Catálogos, estudiantes y matrícula" },
+    { "nombre": "Bienestar Universitario", "uso": "Equipos propietarios de Psicología, Salud, Trabajo social, Apoyo socioeconómico, Deporte y Arte y cultura" },
+    { "nombre": "Desarrollo Estudiantil", "uso": "Equipos propietarios de Monitorías y Tutorías; aquí se asigna el rol de docentes consejeros" }
+  ],
+  "roles": [
+    { "nombre": "ACOMP Profesional (base)", "asignado_a": "Todos los profesionales", "privilegios": {
+      "unimag_estudiante": "Leer: organización · Anexar a: organización",
+      "unimag_matricula": "Leer: organización",
+      "catalogos (facultad, programa, periodo, area, servicio)": "Leer: organización",
+      "unimag_atencion": "Crear: usuario · Leer: organización · Escribir: usuario · Anexar: usuario · Borrar: ninguno",
+      "unimag_caso": "Crear: usuario · Leer: organización · Escribir: usuario (incluye casos del equipo del área)",
+      "unimag_remision": "Crear: usuario · Leer: organización · Escribir: usuario",
+      "unimag_beneficio": "Leer: organización",
+      "unimag_alerta": "Leer: organización · Escribir: usuario",
+      "unimag_consentimiento": "Crear: usuario · Leer: organización",
+      "notas clínicas": "ninguno",
+      "Exportar a Excel": "no" } },
+    { "nombre": "ACOMP Psicología", "asignado_a": "Equipo Psicología", "privilegios": { "unimag_notapsicologica": "Crear, leer, escribir y anexar: usuario (notas del equipo) · Borrar: ninguno" } },
+    { "nombre": "ACOMP Salud", "asignado_a": "Equipo Salud", "privilegios": { "unimag_notasalud": "Crear, leer, escribir y anexar: usuario (notas del equipo) · Borrar: ninguno" } },
+    { "nombre": "ACOMP Beneficios", "asignado_a": "Apoyo socioeconómico y Monitorías", "privilegios": { "unimag_beneficio": "Crear y escribir: usuario" } },
+    { "nombre": "ACOMP Coordinación", "asignado_a": "Coordinación de Bienestar", "privilegios": { "no clínicas": "Leer y escribir: organización", "catálogos": "Crear y escribir: organización", "auditoría": "Ver historial y resumen de auditoría", "Exportar a Excel": "sí" } },
+    { "nombre": "ACOMP Docente consejero", "asignado_a": "Docentes consejeros (unidad Desarrollo Estudiantil)", "privilegios": { "unimag_estudiante": "Leer: organización", "unimag_matricula": "Leer: organización", "unimag_atencion": "Leer: unidad de negocio (solo Desarrollo estudiantil) · Crear: usuario", "unimag_remision": "Crear: usuario" } },
+    { "nombre": "ACOMP Auditoría", "asignado_a": "Auditoría y protección de datos", "privilegios": { "no clínicas": "Leer: organización (sin el perfil «Resumen de atenciones»)", "auditoría": "Ver historial y resumen de auditoría", "notas clínicas": "ninguno; las lecturas se revisan en Microsoft Purview" } }
+  ]
+}

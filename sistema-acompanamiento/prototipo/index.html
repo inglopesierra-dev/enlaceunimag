@@ -1,0 +1,1217 @@
+<title>Bitácora de Acompañamiento</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Concepto: app de trabajo al estilo Teams. Riel de secciones a la izquierda, barra superior con el rol activo,
+   pestañas de estudiantes abiertas sobre el área de trabajo. Lo reservado (clínico) se marca en violeta con candado. */
+:root {
+  --bg: #F1F5F5;
+  --surface: #FFFFFF;
+  --surface-2: #E9F0F0;
+  --ink: #0F2427;
+  --ink-2: #44595D;
+  --muted: #687C80;
+  --line: #D5E0E1;
+  --accent: #0A6C76;
+  --accent-ink: #FFFFFF;
+  --accent-soft: #D6EBED;
+  --reserved: #5B3FA0;
+  --reserved-soft: #EEE8F9;
+  --good: #0ca30c;
+  --warning: #fab219;
+  --serious: #ec835a;
+  --critical: #d03b3b;
+  --good-ink: #006300;
+  --critical-ink: #A12626;
+  --series-1: #2a78d6;
+  --chart-grid: #E1E7E8;
+  --overlay: rgba(15, 36, 39, .40);
+  --shadow: 0 1px 2px rgba(15, 36, 39, .06), 0 8px 24px rgba(15, 36, 39, .10);
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-ui: "Figtree", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --radius: 8px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0A1214; --surface: #111B1E; --surface-2: #17252A; --ink: #E3EDEE; --ink-2: #AEC0C3; --muted: #889B9F;
+    --line: #26363C; --accent: #45B7C2; --accent-ink: #03252A; --accent-soft: #10383E; --reserved: #BBA8F4;
+    --reserved-soft: #29213F; --good-ink: #3FCB3F; --critical-ink: #F28B8B; --series-1: #3987e5;
+    --chart-grid: #22302F; --overlay: rgba(0, 0, 0, .58); --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .35);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0A1214; --surface: #111B1E; --surface-2: #17252A; --ink: #E3EDEE; --ink-2: #AEC0C3; --muted: #889B9F;
+  --line: #26363C; --accent: #45B7C2; --accent-ink: #03252A; --accent-soft: #10383E; --reserved: #BBA8F4;
+  --reserved-soft: #29213F; --good-ink: #3FCB3F; --critical-ink: #F28B8B; --series-1: #3987e5;
+  --chart-grid: #22302F; --overlay: rgba(0, 0, 0, .58); --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .35);
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font: 14px/1.45 var(--font-ui); }
+* { box-sizing: border-box; }
+button { font: inherit; }
+select, input, textarea { font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 7px 10px; max-width: 100%; }
+textarea { resize: vertical; min-height: 84px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.shell { display: grid; grid-template-columns: 78px minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); height: 100%; }
+.topbar { grid-column: 1 / -1; display: flex; align-items: center; gap: 10px 18px; padding: 10px 16px; background: var(--surface); border-bottom: 1px solid var(--line); flex-wrap: wrap; z-index: 20; }
+.brand { display: flex; align-items: center; gap: 10px; min-width: 0; margin-right: auto; }
+.mark { flex: none; width: 34px; height: 34px; border-radius: 9px; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; font: 700 18px/1 var(--font-display); }
+.brand-text { display: flex; flex-direction: column; min-width: 0; }
+.brand-text strong { font: 700 16.5px/1.15 var(--font-display); letter-spacing: -.01em; }
+.proto { font-size: 10.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; font-weight: 600; }
+.role { display: flex; align-items: center; gap: 8px; }
+.role label { font-size: 12px; color: var(--muted); }
+.role select { font-weight: 600; }
+.me { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.avatar { flex: none; width: 32px; height: 32px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; font-weight: 700; font-size: 12px; }
+.me-text { display: flex; flex-direction: column; min-width: 0; }
+.me-text b { font-size: 13px; }
+.me-text small { color: var(--muted); font-size: 11.5px; }
+
+.rail { background: var(--surface); border-right: 1px solid var(--line); display: flex; flex-direction: column; gap: 4px; padding: 10px 7px; overflow-y: auto; }
+.rail button { border: 0; background: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 9px 2px; border-radius: 8px; color: var(--ink-2); font-size: 11px; font-weight: 600; position: relative; }
+.rail button svg { width: 22px; height: 22px; }
+.rail button:hover { background: var(--surface-2); }
+.rail button[aria-current="page"] { color: var(--accent); background: var(--accent-soft); }
+.rail .badge { position: absolute; top: 3px; right: 7px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--critical); color: #fff; font-size: 10.5px; line-height: 18px; text-align: center; }
+
+.main { min-width: 0; display: flex; flex-direction: column; overflow: hidden; }
+.notice { display: flex; gap: 10px; align-items: flex-start; padding: 9px 16px; background: var(--reserved-soft); border-bottom: 1px solid var(--line); font-size: 13px; }
+.notice p { margin: 0; flex: 1; min-width: 0; }
+.notice button { border: 0; background: none; color: var(--ink-2); cursor: pointer; font-weight: 600; padding: 0 4px; }
+.tabs { display: flex; gap: 2px; padding: 8px 16px 0; border-bottom: 1px solid var(--line); background: var(--surface); overflow-x: auto; flex: none; }
+.tab { display: flex; align-items: center; gap: 6px; padding: 7px 8px 7px 12px; border-radius: 8px 8px 0 0; font-weight: 600; color: var(--ink-2); white-space: nowrap; border: 1px solid transparent; border-bottom: 0; margin-bottom: -1px; background: none; cursor: pointer; }
+.tab.sec { padding-right: 12px; }
+.tab[aria-selected="true"] { background: var(--bg); color: var(--ink); border-color: var(--line); }
+.tab .ini { width: 20px; height: 20px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; font-size: 9.5px; font-weight: 700; }
+.tab .x { border: 0; background: none; cursor: pointer; width: 20px; height: 20px; display: grid; place-items: center; border-radius: 4px; color: var(--muted); padding: 0; }
+.tab .x:hover { background: var(--surface-2); color: var(--ink); }
+.view { flex: 1; overflow: auto; padding-block: 18px 48px; padding-inline: 16px; }
+.wrap { max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+.v-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+.v-title { font: 700 24px/1.15 var(--font-display); letter-spacing: -.015em; margin: 0; text-wrap: balance; }
+.v-sub { color: var(--muted); margin: 4px 0 0; max-width: 70ch; }
+
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; min-width: 0; }
+.panel > h2 { font: 600 15px/1.25 var(--font-ui); margin: 0 0 12px; display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.panel > h2 small { font-weight: 500; color: var(--muted); font-size: 12px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(178px, 1fr)); gap: 12px; }
+.kpi { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; }
+.kpi .lab { font-size: 12.5px; color: var(--ink-2); }
+.kpi .val { font: 600 28px/1.1 var(--font-ui); margin-top: 6px; }
+.kpi .ctx { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 430px), 1fr)); gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 16px; }
+
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 2px 9px; border-radius: 999px; font-size: 12px; font-weight: 600; background: var(--surface-2); color: var(--ink-2); white-space: nowrap; }
+.chip .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+.chip.ok .dot { background: var(--good); }
+.chip.warn .dot { background: var(--warning); }
+.chip.ser .dot { background: var(--serious); }
+.chip.crit .dot { background: var(--critical); }
+.chip.res { background: var(--reserved-soft); color: var(--reserved); }
+.chip.acc { background: var(--accent-soft); color: var(--accent); }
+.lock { display: inline-flex; align-items: center; gap: 6px; color: var(--reserved); font-size: 12.5px; font-weight: 600; }
+.lock svg, .chip svg { width: 13px; height: 13px; flex: none; }
+
+.scroll-x { overflow-x: auto; }
+table.data { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+table.data th { text-align: left; font-size: 12px; font-weight: 600; color: var(--muted); padding: 8px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+table.data td { padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+table.data tr.row { cursor: pointer; }
+table.data tr.row:hover td { background: var(--surface-2); }
+table.data tr.row:focus-visible td { background: var(--accent-soft); }
+.num { font-variant-numeric: tabular-nums; text-align: right; }
+.mono { font-family: var(--font-mono); font-size: 12.5px; }
+.muted { color: var(--muted); }
+.small { font-size: 12.5px; }
+.empty { color: var(--muted); padding: 18px 4px; }
+
+.btn { cursor: pointer; display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 6px; font-weight: 600; font-size: 13px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); white-space: nowrap; }
+.btn:hover { background: var(--surface-2); }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.btn.primary:hover { filter: brightness(1.07); }
+.btn.sm { padding: 4px 9px; font-size: 12px; }
+.btn.ghost { border-color: transparent; background: none; color: var(--accent); }
+.btn[disabled] { opacity: .5; cursor: not-allowed; }
+.btn svg { width: 15px; height: 15px; }
+
+.filters { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.filters input[type="search"] { flex: 1 1 300px; min-width: 0; padding: 10px 12px; font-size: 15px; }
+.filters label.chk { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--ink-2); }
+.pager { display: flex; align-items: center; gap: 10px; justify-content: flex-end; flex-wrap: wrap; font-size: 13px; color: var(--muted); }
+
+.ficha-head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 14px 16px; align-items: start; }
+.big-avatar { width: 58px; height: 58px; border-radius: 16px; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; font: 700 21px/1 var(--font-display); }
+.ficha-head h1 { font: 700 22px/1.15 var(--font-display); margin: 0; letter-spacing: -.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 4px 14px; color: var(--ink-2); font-size: 13px; margin-top: 4px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.subtabs { display: flex; gap: 2px; border-bottom: 1px solid var(--line); overflow-x: auto; }
+.subtab { border: 0; background: none; cursor: pointer; padding: 9px 12px; font-weight: 600; color: var(--ink-2); border-bottom: 2px solid transparent; white-space: nowrap; }
+.subtab[aria-selected="true"] { color: var(--accent); border-bottom-color: var(--accent); }
+.subtab .count { color: var(--muted); font-weight: 500; margin-left: 3px; }
+
+dl.kv { display: grid; grid-template-columns: minmax(110px, max-content) minmax(0, 1fr); gap: 7px 16px; margin: 0; }
+dl.kv dt { color: var(--muted); font-size: 12.5px; padding-top: 1px; }
+dl.kv dd { margin: 0; font-weight: 500; overflow-wrap: anywhere; }
+
+.tl-month { font-size: 11.5px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); margin: 6px 0 8px 112px; }
+.tl-item { display: grid; grid-template-columns: 96px 16px minmax(0, 1fr); gap: 0 12px; position: relative; padding-bottom: 12px; }
+.tl-date { text-align: right; font-size: 12.5px; color: var(--ink-2); font-variant-numeric: tabular-nums; padding-top: 9px; line-height: 1.3; }
+.tl-date small { display: block; color: var(--muted); }
+.tl-axis { position: relative; display: flex; justify-content: center; }
+.tl-axis::before { content: ""; position: absolute; top: 0; bottom: -12px; width: 2px; background: var(--line); }
+.tl-node { width: 14px; height: 14px; border-radius: 50%; background: var(--surface); border: 3px solid var(--accent); margin-top: 11px; position: relative; }
+.tl-item.reservada .tl-node { border-color: var(--reserved); }
+.tl-item.nueva .tl-card { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.tl-card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; min-width: 0; }
+.tl-card .top { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
+.tl-card .svc { font-weight: 600; }
+.tl-card p { margin: 6px 0 0; overflow-wrap: anywhere; }
+.tl-card .foot { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 8px; font-size: 12px; color: var(--muted); }
+.clinica { margin-top: 8px; border: 1px dashed var(--reserved); background: var(--reserved-soft); border-radius: 6px; padding: 8px 10px; font-size: 13px; }
+.clinica b { color: var(--reserved); }
+.anulada .svc, .anulada .tl-card p { text-decoration: line-through; color: var(--muted); }
+.area-filter { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+.area-filter button { border: 1px solid var(--line); background: var(--surface); color: var(--ink-2); border-radius: 999px; padding: 4px 11px; font-size: 12.5px; font-weight: 600; cursor: pointer; }
+.area-filter button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+
+.stages { display: flex; gap: 3px; flex-wrap: wrap; margin-top: 8px; }
+.stage { font-size: 11.5px; padding: 3px 8px; border-radius: 4px; background: var(--surface-2); color: var(--muted); font-weight: 600; }
+.stage.done { background: var(--accent-soft); color: var(--accent); }
+.stage.now { background: var(--accent); color: var(--accent-ink); }
+.case-card { border: 1px solid var(--line); border-radius: 8px; padding: 12px; background: var(--surface); }
+.case-card h3 { margin: 0; font-size: 14px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+.drawer { position: fixed; inset: 0; z-index: 50; display: flex; justify-content: flex-end; background: var(--overlay); }
+.drawer-panel { width: min(580px, 100%); height: 100%; background: var(--surface); box-shadow: var(--shadow); display: flex; flex-direction: column; }
+.drawer-head { padding: 16px 18px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+.drawer-head h2 { margin: 0; font: 700 18px/1.2 var(--font-display); }
+.drawer-body { padding: 16px 18px; overflow: auto; display: flex; flex-direction: column; gap: 14px; flex: 1; }
+.drawer-foot { padding: 12px 18px calc(12px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.field { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.field > label, .field > .lbl { font-size: 12.5px; font-weight: 600; color: var(--ink-2); }
+.hint { font-size: 12px; color: var(--muted); }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.err { color: var(--critical-ink); font-size: 12.5px; font-weight: 600; }
+.box-res { border: 1px solid var(--reserved); background: var(--reserved-soft); border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.box-res .t { display: flex; gap: 8px; align-items: center; color: var(--reserved); font-weight: 700; font-size: 13px; }
+.box-res .t svg { width: 16px; height: 16px; flex: none; }
+.firma { font-size: 12.5px; color: var(--ink-2); background: var(--surface-2); border-radius: 6px; padding: 8px 10px; }
+
+.toast { position: fixed; left: 50%; bottom: calc(22px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 10px 14px; border-radius: 8px; z-index: 60; width: max-content; max-width: min(600px, calc(100% - 32px)); box-shadow: var(--shadow); font-weight: 500; }
+.tip { position: fixed; pointer-events: none; background: var(--ink); color: var(--bg); font-size: 12px; padding: 6px 8px; border-radius: 6px; z-index: 70; white-space: nowrap; }
+
+svg.chart { width: 100%; height: auto; display: block; font-family: var(--font-ui); overflow: visible; }
+.chart .lab { fill: var(--ink-2); font-size: 12px; }
+.chart .val { fill: var(--ink); font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.chart .axis { stroke: var(--line); stroke-width: 1; }
+.chart .grid { stroke: var(--chart-grid); stroke-width: 1; }
+.chart .mark { fill: var(--series-1); }
+.chart .bar:hover .mark { opacity: .82; }
+.chart .hit { fill: transparent; }
+.chart .line { fill: none; stroke: var(--series-1); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.chart .area { fill: var(--series-1); opacity: .1; }
+.chart .tick { fill: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+.chart .end { fill: var(--series-1); stroke: var(--surface); stroke-width: 2; }
+.chart .cross { stroke: var(--muted); stroke-width: 1; }
+details.datos { margin-top: 8px; font-size: 12.5px; }
+details.datos summary { cursor: pointer; color: var(--accent); font-weight: 600; }
+
+.prose { max-width: 78ch; }
+.prose h3 { font: 700 17px/1.25 var(--font-display); margin: 0 0 8px; }
+.prose p, .prose li { color: var(--ink); }
+.prose ul, .prose ol { padding-left: 20px; margin: 8px 0; }
+.prose li + li { margin-top: 4px; }
+.yes { color: var(--good-ink); font-weight: 600; }
+.no { color: var(--critical-ink); font-weight: 600; }
+.part { color: var(--reserved); font-weight: 600; }
+.arch { display: flex; flex-direction: column; gap: 18px; }
+.arch-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.arch-box { position: relative; display: flex; flex-direction: column; gap: 2px; border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; background: var(--surface-2); }
+.arch-box.key { background: var(--accent-soft); border-color: var(--accent); }
+.arch > .arch-box:not(:last-child)::after, .arch > .arch-box + .arch-row::before { content: ""; position: absolute; left: 50%; bottom: -17px; width: 2px; height: 16px; background: var(--muted); }
+.arch > .arch-row { position: relative; }
+.arch > .arch-box + .arch-row::before { top: -17px; bottom: auto; }
+.arch-etq { font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 700; }
+@media (max-width: 520px) { .arch-row { grid-template-columns: 1fr; } }
+.loading { display: grid; place-items: center; gap: 8px; padding: 80px 16px; color: var(--muted); text-align: center; }
+
+@media (max-width: 760px) {
+  .shell { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr) auto; }
+  .rail { grid-row: 3; flex-direction: row; justify-content: space-around; border-right: 0; border-top: 1px solid var(--line); padding: 4px 4px calc(4px + env(safe-area-inset-bottom, 0px)); overflow: visible; }
+  .rail button { flex: 1; padding: 6px 2px; font-size: 10.5px; }
+  .me-text { display: none; }
+  .role label { display: none; }
+  .ficha-head { grid-template-columns: auto minmax(0, 1fr); }
+  .ficha-head .actions { grid-column: 1 / -1; justify-content: flex-start; }
+  .tl-item { grid-template-columns: 62px 14px minmax(0, 1fr); gap: 0 8px; }
+  .tl-month { margin-left: 76px; }
+  .row2 { grid-template-columns: 1fr; }
+  .v-title { font-size: 21px; }
+  .kpis { grid-template-columns: 1fr 1fr; }
+  .kpi:last-child:nth-child(odd) { grid-column: 1 / -1; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+
+<div class="shell">
+  <header class="topbar">
+    <div class="brand">
+      <span class="mark" aria-hidden="true">B</span>
+      <div class="brand-text"><strong>Bitácora de Acompañamiento</strong><span class="proto">Prototipo · datos ficticios</span></div>
+    </div>
+    <div class="role">
+      <label for="roleSel">Ver como</label>
+      <select id="roleSel"></select>
+    </div>
+    <div class="me"><span class="avatar" id="meIni">AR</span><span class="me-text"><b id="meName">Ana Lucía Rojas</b><small id="meRole">Coordinación de Bienestar</small></span></div>
+  </header>
+  <nav class="rail" aria-label="Secciones">
+    <button type="button" data-nav="inicio" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9.5 21v-6h5v6"/></svg><span>Inicio</span></button>
+    <button type="button" data-nav="estudiantes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.6 3.2-5.5 6.5-5.5s5.9 1.9 6.5 5.5"/><path d="M15.5 4.8a3.5 3.5 0 0 1 0 6.4"/><path d="M18 14.8c2 .7 3.2 2.4 3.5 5.2"/></svg><span>Estudiantes</span></button>
+    <button type="button" data-nav="casos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8.5 7V5a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v2"/><path d="M3 12.5h18"/></svg><span>Casos</span></button>
+    <button type="button" data-nav="remisiones"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h13"/><path d="m13.5 4 4 4-4 4"/><path d="M20 16H7"/><path d="m10.5 12-4 4 4 4"/></svg><span>Remisiones</span><span class="badge" id="remBadge" hidden></span></button>
+    <button type="button" data-nav="guia"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/><path d="M8.5 8h7M8.5 11.5h5"/></svg><span>Guía</span></button>
+  </nav>
+  <main class="main">
+    <div class="notice" id="notice">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true" style="color:var(--reserved);flex:none;margin-top:1px"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg>
+      <p><b>Prototipo con datos 100&nbsp;% ficticios:</b> 20.000 estudiantes y más de 100.000 atenciones generadas automáticamente. No escribas datos reales aquí; lo que registres se borra al recargar. Cambia «Ver como» para ver qué muestra el sistema a cada rol.</p>
+      <button type="button" id="noticeClose" aria-label="Ocultar aviso">Ocultar</button>
+    </div>
+    <div class="tabs" role="tablist" id="tabs" aria-label="Pestañas abiertas"></div>
+    <section class="view" id="view" tabindex="-1">
+      <div class="loading"><b>Preparando la base ficticia…</b><span>20.000 estudiantes y más de 100.000 atenciones de prueba</span></div>
+    </section>
+  </main>
+</div>
+<div class="drawer" id="drawer" hidden></div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<div class="tip" id="tip" hidden></div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ---------------------------------------------------------------- utilidades */
+  var DAY = 86400000;
+  var BASE = Date.UTC(2025, 0, 1);
+  var HOY_DIA = Math.round((Date.UTC(2026, 9, 8) - BASE) / DAY);
+  var N_EST = 20000;
+  var MES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+  var MES_L = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+  function $(s, el) { return (el || document).querySelector(s); }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function fmtN(n) { return Number(n).toLocaleString('es-CO'); }
+  function norm(s) { return String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase(); }
+  function dDate(d) { return new Date(BASE + d * DAY); }
+  function diaDe(y, m, d) { return Math.round((Date.UTC(y, m, d) - BASE) / DAY); }
+  function fDia(d) { var x = dDate(d); return x.getUTCDate() + ' ' + MES[x.getUTCMonth()] + ' ' + x.getUTCFullYear(); }
+  function fHora(min) { return String(Math.floor(min / 60)).padStart(2, '0') + ':' + String(min % 60).padStart(2, '0'); }
+  function fAhora(dt) { return dt.getDate() + ' ' + MES[dt.getMonth()] + ' ' + dt.getFullYear() + ', ' + String(dt.getHours()).padStart(2, '0') + ':' + String(dt.getMinutes()).padStart(2, '0'); }
+  function iniciales(n) { var p = String(n).replace(/^(Ps\.|Dra\.|T\.S\.|Lic\.|Prof\.|Enf\.|Adm\.|Mtra\.|Mg\.|Ing\.)\s+/, '').split(/\s+/); return (p[0][0] + (p.length > 1 ? p[p.length - 1][0] : '')).toUpperCase(); }
+  function inicialesEst(e) { return (e.nombres[0] + e.apellidos[0]).toUpperCase(); }
+  var ICON_LOCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg>';
+  var ICON_PLUS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>';
+  var ICON_X = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>';
+
+  function rng(seed) { var a = seed >>> 0; return function () { a = (a + 0x6D2B79F5) | 0; var t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  var R = rng(20261008);
+  function pick(a) { return a[Math.floor(R() * a.length)]; }
+  function entre(a, b) { return a + Math.floor(R() * (b - a + 1)); }
+  function ponderado(w) { var c = [], t = 0; for (var i = 0; i < w.length; i++) { t += w[i]; c.push(t); } return function () { var r = R() * t, lo = 0, hi = c.length - 1; while (lo < hi) { var m = (lo + hi) >> 1; if (r < c[m]) hi = m; else lo = m + 1; } return lo; }; }
+  function gauss() { var u = 0, v = 0; while (u === 0) u = R(); while (v === 0) v = R(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+
+  /* ---------------------------------------------------------------- catálogos (ficticios o genéricos) */
+  var FACULTADES = ['Ingeniería', 'Ciencias Básicas', 'Ciencias Empresariales y Económicas', 'Ciencias de la Salud', 'Humanidades', 'Ciencias de la Educación'];
+  var PROGRAMAS = [
+    ['Ingeniería de Sistemas', 0, 10], ['Ingeniería Industrial', 0, 10], ['Ingeniería Civil', 0, 8], ['Ingeniería Ambiental y Sanitaria', 0, 8],
+    ['Ingeniería Electrónica', 0, 7], ['Ingeniería Agronómica', 0, 6], ['Ingeniería Pesquera', 0, 3], ['Ingeniería en Ciencia de Datos', 0, 1],
+    ['Biología', 1, 4], ['Química', 1, 1],
+    ['Administración de Empresas', 2, 9], ['Contaduría Pública', 2, 12], ['Economía', 2, 5], ['Negocios Internacionales', 2, 13],
+    ['Administración de Empresas Turísticas y Hoteleras', 2, 5], ['Tecnología en Gestión Hotelera y Turística', 2, 7],
+    ['Medicina', 3, 6], ['Enfermería', 3, 5], ['Odontología', 3, 6], ['Psicología', 3, 6],
+    ['Antropología', 4, 3], ['Cine y Audiovisuales', 4, 4], ['Derecho', 4, 9], ['Historia y Patrimonio', 4, 3],
+    ['Licenciatura en Lenguas Extranjeras', 5, 4], ['Licenciatura en Educación Infantil', 5, 3], ['Licenciatura en Matemáticas', 5, 2],
+    ['Licenciatura en Literatura y Lengua Castellana', 5, 2], ['Licenciatura en Ciencias Naturales', 5, 2], ['Licenciatura en Artes', 5, 2], ['Licenciatura en Etnoeducación', 5, 2]
+  ];
+  var NOM_F = ['María José', 'Valentina', 'Daniela', 'Isabella', 'Sofía', 'Camila', 'Mariana', 'Gabriela', 'Laura', 'Natalia', 'Andrea', 'Paula', 'Juliana', 'Karen', 'Luisa Fernanda', 'Ana María', 'Yuliana', 'Melissa', 'Sara', 'Valeria', 'Angie', 'Dayana', 'Alejandra', 'Carolina', 'Kelly', 'Lina', 'Manuela', 'Estefanía', 'Diana', 'Yesica'];
+  var NOM_M = ['Juan David', 'Santiago', 'Andrés Felipe', 'Carlos', 'Sebastián', 'Daniel', 'Jesús', 'Luis Miguel', 'Kevin', 'José Luis', 'Miguel Ángel', 'Jhon', 'Samuel', 'Mateo', 'Alejandro', 'Brayan', 'Esteban', 'Camilo', 'Julián', 'Nicolás', 'Óscar', 'Rafael', 'Eduardo', 'Jorge', 'Iván', 'Fabián', 'Andrés', 'Cristian', 'David', 'Elkin'];
+  var APE = ['Pérez', 'Gómez', 'Rodríguez', 'Martínez', 'García', 'López', 'Hernández', 'Díaz', 'Torres', 'Ramírez', 'Barrios', 'Castro', 'Mendoza', 'Ospino', 'De la Hoz', 'Charris', 'Pacheco', 'Orozco', 'Vergara', 'Fontalvo', 'Cantillo', 'Romero', 'Polo', 'Ariza', 'Navarro', 'Ruiz', 'Suárez', 'Jiménez', 'Rojas', 'Morales', 'Contreras', 'Guerrero', 'Padilla', 'Escobar', 'Vanegas', 'Rangel', 'Manjarrés', 'Daza', 'Bolaño', 'Granados', 'Mejía', 'Salcedo', 'Villalobos', 'Arrieta', 'Cervantes', 'Zúñiga', 'Barraza', 'Correa', 'Herrera', 'Mercado'];
+  var LUGARES = [
+    ['Santa Marta', 'Magdalena', 'Santa Marta', 48], ['Ciénaga', 'Magdalena', 'Resto del Magdalena', 6], ['Zona Bananera', 'Magdalena', 'Resto del Magdalena', 4],
+    ['Fundación', 'Magdalena', 'Resto del Magdalena', 3], ['Aracataca', 'Magdalena', 'Resto del Magdalena', 2], ['El Banco', 'Magdalena', 'Resto del Magdalena', 3],
+    ['Plato', 'Magdalena', 'Resto del Magdalena', 3], ['Barranquilla', 'Atlántico', 'Resto de la región Caribe', 5], ['Valledupar', 'Cesar', 'Resto de la región Caribe', 5],
+    ['Riohacha', 'La Guajira', 'Resto de la región Caribe', 4], ['Maicao', 'La Guajira', 'Resto de la región Caribe', 2], ['Cartagena', 'Bolívar', 'Resto de la región Caribe', 2],
+    ['Sincelejo', 'Sucre', 'Resto de la región Caribe', 1], ['Bogotá', 'Bogotá D.C.', 'Resto del país', 3], ['Medellín', 'Antioquia', 'Resto del país', 1],
+    ['Bucaramanga', 'Santander', 'Resto del país', 1], ['Maracaibo', 'Venezuela', 'Extranjero', 2]
+  ];
+  var COLEGIOS = [['IED Liceo del Caribe', 'Público'], ['Institución Educativa San José', 'Público'], ['IED Técnica Industrial', 'Público'], ['IE Normal Superior', 'Público'],
+    ['IED Rural Mixta El Prado', 'Público'], ['Colegio Nuestra Señora del Carmen', 'Privado'], ['Colegio Bilingüe del Norte', 'Privado'], ['IED Simón Bolívar', 'Público'], ['Colegio Campestre La Sierra', 'Privado']];
+  var INGRESOS = [['Nuevo', 74], ['Programa de talentos regional', 9], ['Traslado', 4], ['Transferencia', 2], ['Validación de competencias', 3], ['Simultaneidad', 1], ['Reintegro', 2]];
+  var CUPOS = [['Ninguna', 90.6], ['Víctima del conflicto armado', 2], ['Comunidad afrocolombiana', 2], ['Comunidad indígena', 1.5], ['Persona con discapacidad', 0.6], ['Mujer cabeza de familia', 0.8], ['Deportista destacado', 0.5], ['Artista destacado', 0.5]];
+
+  var AREAS = [
+    { nombre: 'Psicología', dep: 'Bienestar', clinica: true, servicios: ['Consulta psicológica individual', 'Intervención en crisis', 'Seguimiento psicológico', 'Valoración inicial'] },
+    { nombre: 'Salud', dep: 'Bienestar', clinica: true, servicios: ['Consulta médica general', 'Atención de enfermería', 'Salud sexual y reproductiva', 'Valoración de primeros auxilios'] },
+    { nombre: 'Trabajo social', dep: 'Bienestar', servicios: ['Entrevista socio-familiar', 'Orientación en rutas y derechos', 'Visita domiciliaria', 'Gestión de apoyos externos'] },
+    { nombre: 'Apoyo socioeconómico', dep: 'Bienestar', servicios: ['Almuerzo subsidiado', 'Refrigerio', 'Auxilio de transporte', 'Estudio socioeconómico'] },
+    { nombre: 'Deporte y recreación', dep: 'Bienestar', servicios: ['Selección deportiva', 'Actividad física dirigida', 'Torneo interno', 'Valoración física'] },
+    { nombre: 'Arte y cultura', dep: 'Bienestar', servicios: ['Grupo artístico', 'Taller cultural', 'Evento cultural'] },
+    { nombre: 'Monitorías y ayudantías', dep: 'Desarrollo estudiantil', servicios: ['Monitoría académica', 'Ayudantía de investigación', 'Seguimiento a monitor'] },
+    { nombre: 'Tutorías y permanencia', dep: 'Desarrollo estudiantil', servicios: ['Tutoría académica', 'Consejería de permanencia', 'Plan de mejoramiento académico', 'Orientación vocacional'] }
+  ];
+  var AREA_W = [12, 10, 8, 22, 12, 6, 12, 18];
+  var RES = [
+    ['Atención de Psicología realizada.'],
+    ['Atención de Salud realizada.'],
+    ['Entrevista sobre la situación familiar y económica; se orienta sobre los apoyos disponibles.', 'Se verifica la red de apoyo familiar; refiere dificultades para pagar el transporte diario.', 'Orientación sobre la ruta de atención institucional y los requisitos de los apoyos.', 'Seguimiento a compromisos: asiste puntual y entrega los documentos solicitados.'],
+    ['Se asigna cupo de almuerzo subsidiado para el período.', 'Entrega de refrigerio en jornada extendida; asistencia confirmada.', 'Revisión de requisitos del auxilio de transporte; documentos completos.', 'Estudio socioeconómico actualizado con soportes del hogar.'],
+    ['Participa en el entrenamiento de la selección; buena disposición.', 'Valoración física inicial; se recomienda un plan de actividad progresivo.', 'Inscripción en el torneo interno de la facultad.'],
+    ['Asiste al ensayo del grupo artístico; avanza en el montaje.', 'Participa en el taller de música tradicional.', 'Presentación en el evento cultural de la universidad.'],
+    ['Monitor asignado a Cálculo Diferencial; se acuerdan horarios de atención.', 'Seguimiento al desempeño como monitor; cumple con los informes.', 'Inicia ayudantía de investigación con el grupo del programa.'],
+    ['Tutoría de Cálculo Diferencial: se repasan límites y derivadas.', 'Consejería de permanencia: se revisan carga académica y hábitos de estudio.', 'Se formula plan de mejoramiento académico con metas por corte.', 'Orientación vocacional: explora opciones de cambio de programa.', 'Seguimiento al plan de mejoramiento: mejora en la segunda nota parcial.']
+  ];
+  var ACCION = [['Sesión de seguimiento'], ['Control en 15 días'], ['Revisar respuesta del apoyo externo', 'Llamada de seguimiento al acudiente'], ['Verificar asistencia al comedor', 'Renovar el auxilio el próximo período'], ['Evaluar el progreso en un mes'], ['Confirmar participación en la muestra'], ['Entregar informe mensual de monitoría'], ['Asistir a tutoría la próxima semana', 'Revisar notas del segundo corte']];
+  var CLINICA = [
+    ['Motivo de consulta: ansiedad ante las evaluaciones finales. Se trabajan técnicas de respiración y organización del tiempo. Plan: tres sesiones de seguimiento.',
+      'Motivo: duelo reciente. Se brinda primer apoyo psicológico y se acuerda seguimiento semanal.',
+      'Motivo: dificultades de adaptación a la vida universitaria y a la ciudad. Se fortalecen las redes de apoyo; se remite a Trabajo social.',
+      'Seguimiento: refiere mejoría en el sueño y la concentración. Se espacia la frecuencia de las sesiones.'],
+    ['Consulta por cefalea recurrente; se indican medidas generales y control.', 'Atención de enfermería por lesión deportiva leve; curación y recomendaciones.', 'Asesoría en salud sexual y reproductiva; se entrega información y rutas de atención.']
+  ];
+  var PROF = [['Ps. Daniel Ortega', 'Ps. Mónica Lozano', 'Ps. Ricardo Peña'], ['Dra. Laura Gómez', 'Enf. Yolanda Charris'], ['T.S. Paola Restrepo', 'T.S. Hernán Vides'], ['Adm. Luz Marina Pabón', 'T.S. Hernán Vides'], ['Lic. Jairo Pertuz', 'Lic. Diana Orozco'], ['Mtra. Silvia Cantillo', 'Lic. Ramón Ariza'], ['Lic. Andrés Ruiz', 'Ing. Patricia Navarro'], ['Lic. Andrés Ruiz', 'Mg. Elena Barros', 'Prof. Carlos Méndez']];
+  var MODALIDAD = ['Presencial', 'Virtual', 'Telefónica'];
+  var TIPOS = ['Primera vez', 'Seguimiento', 'Remisión recibida', 'Cierre'];
+  var ESTADO_AT = ['Realizada', 'No asistió', 'Anulada'];
+  var MOTIVOS = ['Rendimiento académico', 'Situación socioeconómica', 'Bienestar emocional', 'Salud', 'Adaptación a la vida universitaria', 'Convivencia'];
+  var RESUMEN_CASO = ['Promedio en riesgo y ausencias reiteradas; se activa ruta de permanencia.', 'Dificultades económicas para sostener la asistencia; se gestionan apoyos.', 'Estudiante solicita acompañamiento; se coordina atención entre áreas.', 'Requiere valoración y seguimiento de salud.', 'Primer año fuera de su municipio; se refuerza su red de apoyo.', 'Situación de convivencia en residencia estudiantil; se media con las partes.'];
+  var ESTADO_CASO = ['Abierto', 'En seguimiento', 'Remitido', 'Cerrado'];
+  var ETAPAS = ['Detección', 'Valoración', 'Plan', 'Seguimiento', 'Cierre'];
+  var MOTIVO_REM = ['Bajo rendimiento y ausencias reiteradas', 'Dificultades económicas para el transporte', 'Solicita orientación y apoyo emocional', 'Requiere valoración de salud', 'Interés en el apoyo alimentario', 'Necesita tutoría en matemáticas', 'Acompañamiento familiar'];
+
+  var ROLES = [
+    { id: 'coord', nombre: 'Coordinación de Bienestar', usuario: 'Ana Lucía Rojas', resumen: 'todas', clinico: [], sensibles: true, documento: true, registra: [2, 3, 4, 5, 6, 7], auditoria: true,
+      desc: 'Ve datos básicos, datos sensibles y los resúmenes de todas las áreas. No ve notas clínicas.' },
+    { id: 'psi', nombre: 'Psicología', usuario: 'Ps. Daniel Ortega', resumen: 'todas', clinico: [0], sensibles: true, documento: false, registra: [0], auditoria: false,
+      desc: 'Ve los resúmenes de todas las áreas y las notas clínicas de Psicología. Cada lectura de una nota queda registrada.' },
+    { id: 'salud', nombre: 'Salud', usuario: 'Dra. Laura Gómez', resumen: 'todas', clinico: [1], sensibles: true, documento: false, registra: [1], auditoria: false,
+      desc: 'Ve los resúmenes de todas las áreas y las notas clínicas de Salud.' },
+    { id: 'ts', nombre: 'Trabajo social', usuario: 'T.S. Paola Restrepo', resumen: 'todas', clinico: [], sensibles: true, documento: false, registra: [2, 3], auditoria: false,
+      desc: 'Ve los resúmenes de todas las áreas y los datos sensibles. Registra en Trabajo social y Apoyo socioeconómico.' },
+    { id: 'des', nombre: 'Desarrollo estudiantil', usuario: 'Lic. Andrés Ruiz', resumen: 'todas', clinico: [], sensibles: false, documento: false, registra: [6, 7], auditoria: false,
+      desc: 'Ve los resúmenes de todas las áreas. Los datos sensibles aparecen ocultos.' },
+    { id: 'doc', nombre: 'Docente consejero', usuario: 'Prof. Carlos Méndez', resumen: 'academicas', clinico: [], sensibles: false, documento: false, registra: [7], auditoria: false,
+      desc: 'Ve datos básicos y académicos y el detalle de Desarrollo estudiantil. De Bienestar solo ve que hubo atención.' },
+    { id: 'aud', nombre: 'Auditoría de datos', usuario: 'Sofía Navarro', resumen: 'metadatos', clinico: [], sensibles: false, documento: false, registra: [], auditoria: true,
+      desc: 'Ve quién hizo qué y cuándo, sin el contenido de las atenciones.' }
+  ];
+
+  /* ---------------------------------------------------------------- base ficticia */
+  var DB = { est: [], casos: [], casoDe: new Map(), rem: [], remDe: new Map(), ben: [], benDe: new Map(), extra: new Map(), custom: new Map(), audit: [], nAt: 0 };
+  var A = null;
+
+  function generar() {
+    var wProg = ponderado(PROGRAMAS.map(function (p) { return p[2]; }));
+    var wLug = ponderado(LUGARES.map(function (l) { return l[3]; }));
+    var wIng = ponderado(INGRESOS.map(function (x) { return x[1]; }));
+    var wCupo = ponderado(CUPOS.map(function (x) { return x[1]; }));
+    var wEstr = ponderado([52, 31, 11, 3.2, 1.2, 0.4]);
+    var wAnio = ponderado([3, 5, 9, 13, 15, 17, 18, 20]);
+    var seq = new Map();
+    for (var i = 0; i < N_EST; i++) {
+      var f = R() < 0.51;
+      var nombres = f ? pick(NOM_F) : pick(NOM_M);
+      var a1 = pick(APE), a2 = pick(APE);
+      if (a2 === a1) a2 = pick(APE);
+      var p = wProg();
+      var anio = 2019 + wAnio();
+      var key = anio * 100 + p;
+      var s = (seq.get(key) || entre(1, 30)) + entre(1, 3);
+      seq.set(key, s);
+      var codigo = '9' + String(anio).slice(1) + String(p + 101) + String(s).padStart(3, '0');
+      var edadIng = 16 + Math.floor(Math.abs(gauss()) * 1.6) + (R() < 0.07 ? entre(3, 12) : 0);
+      var nacAnio = anio - edadIng;
+      var nac = diaDe(nacAnio, entre(0, 11), entre(1, 28));
+      var edad = 2026 - nacAnio;
+      var tipoDoc = edad < 18 ? 'TI' : (R() < 0.97 ? 'CC' : pick(['CE', 'PPT']));
+      var lug = LUGARES[wLug()];
+      var col = pick(COLEGIOS);
+      var nuevo = anio === 2026;
+      var prom = nuevo ? 0 : Math.round(Math.max(2.1, Math.min(4.9, 3.66 + gauss() * 0.42)) * 100) / 100;
+      var matric = R() < 0.951;
+      var primerNombre = nombres.split(' ')[0];
+      var correo = norm(primerNombre + '.' + a1.replace(/\s+/g, '')).toLowerCase() + (i % 89) + '@estudiantes.ejemplo.edu.co';
+      DB.est.push({
+        i: i, codigo: codigo, nombres: nombres, apellidos: a1 + ' ' + a2, sexo: f ? 'F' : 'M', tipoDoc: tipoDoc,
+        numDoc: '99' + String(Math.floor(R() * 1e8)).padStart(8, '0'), nac: nac, prog: p, anio: anio,
+        sem: nuevo ? 1 : Math.max(1, Math.min(10, (2026 - anio) * 2 + 1 - (R() < 0.3 ? 1 : 0))),
+        plan: entre(1, 7), ing: wIng(), cupo: wCupo(), lug: lug, colegio: col[0], tipoCol: col[1], estrato: 1 + wEstr(),
+        prom: prom, matric: matric, cancel: matric && R() < 0.01, correo: correo,
+        cel: '3' + entre(0, 2) + entre(0, 9) + ' ••• ' + entre(1000, 9999)
+      });
+    }
+    DB.est.forEach(function (e) { e.q = norm(e.codigo + ' ' + e.numDoc + ' ' + e.nombres + ' ' + e.apellidos); e.alertas = alertasDe(e); });
+
+    var MAX = 128000;
+    A = { est: new Int32Array(MAX), dia: new Int32Array(MAX), min: new Int16Array(MAX), area: new Uint8Array(MAX), serv: new Uint8Array(MAX),
+      prof: new Uint8Array(MAX), mod: new Uint8Array(MAX), tipo: new Uint8Array(MAX), res: new Uint8Array(MAX), acc: new Uint8Array(MAX),
+      cli: new Uint8Array(MAX), estado: new Uint8Array(MAX), prox: new Int32Array(MAX), start: new Int32Array(N_EST + 1) };
+    var wCount = ponderado([7, 11, 13, 13, 11, 9, 8, 7, 6, 5, 4, 3, 3]);
+    var wArea = ponderado(AREA_W);
+    var wMod = ponderado([70, 20, 10]);
+    var MW = [0.3, 1, 1.1, 1.1, 1, 0.5, 0.4, 1, 1.1, 1.1, 1, 0.3];
+    var D_INI = diaDe(2025, 3, 1), D_NUEVOS = diaDe(2026, 1, 2), D_FIN = HOY_DIA - 1;
+    function diaAleatorio(desde) { for (;;) { var d = entre(desde, D_FIN); var x = dDate(d); if (x.getUTCDay() === 0) continue; if (R() < MW[x.getUTCMonth()] / 1.1) return d; } }
+    var n = 0;
+    for (var k = 0; k < N_EST; k++) {
+      var e = DB.est[k];
+      A.start[k] = n;
+      var cuantas = wCount() + (R() < 0.35 ? 1 : 0);
+      var enRiesgo = e.alertas.length > 0;
+      if (enRiesgo) cuantas += entre(2, 9);
+      if (e.anio === 2026) cuantas = Math.min(cuantas, 4);
+      var desde = e.anio === 2026 ? D_NUEVOS : D_INI;
+      var dias = [];
+      for (var j = 0; j < cuantas; j++) dias.push(diaAleatorio(desde));
+      dias.sort(function (a, b) { return a - b; });
+      var vistas = {};
+      for (j = 0; j < cuantas && n < MAX - 4000; j++) {
+        var area = wArea();
+        if (enRiesgo && R() < 0.35) area = 7;
+        if (e.estrato <= 2 && R() < 0.12) area = 3;
+        A.est[n] = k; A.dia[n] = dias[j]; A.min[n] = 7 * 60 + entre(0, 10) * 60 + pick([0, 15, 30, 45]);
+        A.area[n] = area; A.serv[n] = entre(0, AREAS[area].servicios.length - 1); A.prof[n] = entre(0, PROF[area].length - 1);
+        A.mod[n] = wMod(); A.tipo[n] = vistas[area] ? (R() < 0.07 ? 3 : 1) : (R() < 0.12 ? 2 : 0); vistas[area] = 1;
+        A.res[n] = entre(0, RES[area].length - 1); A.acc[n] = entre(0, ACCION[area].length - 1);
+        A.cli[n] = AREAS[area].clinica ? 1 + entre(0, CLINICA[area].length - 1) : 0;
+        A.estado[n] = R() < 0.05 ? 1 : 0;
+        A.prox[n] = R() < 0.5 ? dias[j] + entre(5, 30) : -1;
+        n++;
+      }
+    }
+    A.start[N_EST] = n;
+    DB.nAt = n;
+
+    var wEst = ponderado([24, 36, 8, 32]);
+    var wPrio = ponderado([20, 55, 25]);
+    var nCaso = 0;
+    DB.est.forEach(function (e) {
+      var tot = A.start[e.i + 1] - A.start[e.i];
+      if (!((e.alertas.length && R() < 0.62) || (tot >= 8 && R() < 0.22))) return;
+      var lider = (!e.matric || (e.prom > 0 && e.prom < 3)) ? 7 : pick([0, 2, 3, 7, 2, 3]);
+      var motivo = lider === 7 ? 0 : lider === 3 ? 1 : lider === 0 ? 2 : pick([1, 4, 5]);
+      var estado = wEst();
+      var etapa = estado === 3 ? 4 : estado === 0 ? entre(0, 1) : estado === 2 ? 2 : entre(2, 3);
+      var ap = HOY_DIA - entre(3, 320);
+      var c = { id: 'CAS-' + dDate(ap).getUTCFullYear() + '-' + String(10000 + (++nCaso)).slice(1), est: e.i, lider: lider, motivo: motivo, estado: estado, etapa: etapa,
+        prio: wPrio(), apertura: ap, cierre: estado === 3 ? Math.min(HOY_DIA - 1, ap + entre(15, 120)) : -1, resp: pick(PROF[lider]), resumen: RESUMEN_CASO[motivo] };
+      DB.casos.push(c);
+      if (!DB.casoDe.has(e.i)) DB.casoDe.set(e.i, []);
+      DB.casoDe.get(e.i).push(c);
+      var nr = R() < 0.55 ? entre(1, 2) : 0;
+      for (var r = 0; r < nr; r++) {
+        var destino = pick([0, 2, 3, 7, 1, 0, 2].filter(function (x) { return x !== lider; }));
+        var fd = Math.min(HOY_DIA - 1, ap + entre(1, 25));
+        var reciente = HOY_DIA - fd <= 12;
+        var est = reciente && R() < 0.6 ? 'Pendiente' : pick(['Atendida', 'Atendida', 'Atendida', 'Aceptada', 'No aceptada']);
+        agregarRemision({ est: e.i, caso: c.id, de: lider, para: destino, dia: fd, motivo: pick(MOTIVO_REM), estado: est, por: c.resp });
+      }
+    });
+    for (var x = 0; x < 260; x++) {
+      var e2 = DB.est[entre(0, N_EST - 1)];
+      agregarRemision({ est: e2.i, caso: '', de: 7, para: pick([0, 2, 3]), dia: HOY_DIA - entre(1, 40), motivo: pick(MOTIVO_REM), estado: R() < 0.45 ? 'Pendiente' : 'Atendida', por: 'Prof. Carlos Méndez' });
+    }
+
+    DB.est.forEach(function (e) {
+      if (!e.matric) return;
+      function dar(area, serv, estado, desde) {
+        var b = { est: e.i, area: area, serv: serv, periodo: estado === 'Finalizado' ? '2026-I' : '2026-II', estado: estado, desde: desde };
+        DB.ben.push(b);
+        if (!DB.benDe.has(e.i)) DB.benDe.set(e.i, []);
+        DB.benDe.get(e.i).push(b);
+      }
+      if (e.estrato <= 2 && R() < 0.28) dar(3, 0, 'Activo', diaDe(2026, 7, entre(3, 20)));
+      if (R() < 0.1) dar(3, 1, 'Activo', diaDe(2026, 7, entre(3, 25)));
+      if (e.lug[2] !== 'Santa Marta' && R() < 0.16) dar(3, 2, R() < 0.8 ? 'Activo' : 'Finalizado', diaDe(2026, R() < 0.8 ? 7 : 1, entre(3, 25)));
+      if (e.prom >= 4 && R() < 0.1) dar(6, 0, 'Activo', diaDe(2026, 7, entre(10, 28)));
+      if (e.prom >= 4.2 && R() < 0.03) dar(6, 1, 'Activo', diaDe(2026, 7, entre(10, 28)));
+    });
+  }
+
+  function agregarRemision(r) {
+    r.n = DB.rem.length;
+    DB.rem.push(r);
+    if (!DB.remDe.has(r.est)) DB.remDe.set(r.est, []);
+    DB.remDe.get(r.est).push(r);
+  }
+
+  function alertasDe(e) {
+    var a = [];
+    if (e.prom > 0 && e.prom < 3) a.push({ t: 'Promedio por debajo de 3,0', c: 'crit' });
+    if (!e.matric) a.push({ t: 'Sin matrícula en 2026-II', c: 'ser' });
+    if (e.cancel) a.push({ t: 'Canceló el semestre', c: 'warn' });
+    return a;
+  }
+
+  /* ---------------------------------------------------------------- consultas */
+  function atencionesDe(i) {
+    var out = [];
+    for (var j = A.start[i]; j < A.start[i + 1]; j++) out.push(j);
+    var ex = DB.extra.get(i);
+    if (ex) out = out.concat(ex);
+    out.sort(function (a, b) { return (A.dia[b] - A.dia[a]) || (A.min[b] - A.min[a]) || (b - a); });
+    return out;
+  }
+  function profDe(j) { var c = DB.custom.get(j); return c ? c.prof : PROF[A.area[j]][A.prof[j]]; }
+  function resumenDe(j) { var c = DB.custom.get(j); return c ? c.res : RES[A.area[j]][A.res[j]]; }
+  function accionDe(j) { var c = DB.custom.get(j); if (c) return c.acc; return A.prox[j] >= 0 ? ACCION[A.area[j]][A.acc[j]] : ''; }
+  function clinicaDe(j) { var c = DB.custom.get(j); if (c) return c.cli; return A.cli[j] ? CLINICA[A.area[j]][A.cli[j] - 1] : ''; }
+  function ultimaAtencion(i) { var best = -1; for (var j = A.start[i]; j < A.start[i + 1]; j++) if (best < 0 || A.dia[j] > A.dia[best]) best = j; var ex = DB.extra.get(i); if (ex) ex.forEach(function (j2) { if (best < 0 || A.dia[j2] >= A.dia[best]) best = j2; }); return best; }
+  function totalAt(i) { return (A.start[i + 1] - A.start[i]) + ((DB.extra.get(i) || []).length); }
+  function casosAbiertos(i) { return (DB.casoDe.get(i) || []).filter(function (c) { return c.estado !== 3; }); }
+  function edadDe(e) { var n = dDate(e.nac), h = dDate(HOY_DIA); var a = h.getUTCFullYear() - n.getUTCFullYear(); if (h.getUTCMonth() < n.getUTCMonth() || (h.getUTCMonth() === n.getUTCMonth() && h.getUTCDate() < n.getUTCDate())) a--; return a; }
+  function nombreEst(e) { return e.nombres + ' ' + e.apellidos; }
+  function nivelVista(area) { var r = S.rol; if (r.resumen === 'metadatos') return 'meta'; if (r.resumen === 'academicas' && AREAS[area].dep !== 'Desarrollo estudiantil') return 'oculto'; return 'resumen'; }
+
+  function auditar(e, accion, detalle) { DB.audit.unshift({ est: e ? e.i : -1, cuando: new Date(), quien: S.rol.usuario, rol: S.rol.nombre, accion: accion, detalle: detalle || '' }); }
+  function auditoriaHistorica(e) {
+    var r2 = rng(e.i * 7919 + 17), ev = [];
+    for (var j = A.start[e.i]; j < A.start[e.i + 1]; j++) {
+      ev.push({ dia: A.dia[j], min: A.min[j] + 40, quien: PROF[A.area[j]][A.prof[j]], rol: AREAS[A.area[j]].nombre, accion: 'Registró atención', detalle: AREAS[A.area[j]].servicios[A.serv[j]] });
+      if (A.cli[j]) ev.push({ dia: A.dia[j], min: A.min[j] + 42, quien: PROF[A.area[j]][A.prof[j]], rol: AREAS[A.area[j]].nombre, accion: 'Registró nota clínica (reservada)', detalle: 'Tabla protegida de ' + AREAS[A.area[j]].nombre });
+      if (A.cli[j] && r2() < 0.5) { var d2 = Math.min(HOY_DIA - 1, A.dia[j] + 1 + Math.floor(r2() * 20)); ev.push({ dia: d2, min: 9 * 60 + Math.floor(r2() * 480), quien: PROF[A.area[j]][Math.floor(r2() * PROF[A.area[j]].length)], rol: AREAS[A.area[j]].nombre, accion: 'Consultó nota clínica', detalle: 'Lectura registrada' }); }
+      if (r2() < 0.06) ev.push({ dia: Math.min(HOY_DIA - 1, A.dia[j] + 1), min: 15 * 60, quien: PROF[A.area[j]][A.prof[j]], rol: AREAS[A.area[j]].nombre, accion: 'Editó atención', detalle: 'Corrigió la próxima acción' });
+    }
+    var lectores = ['Ana Lucía Rojas · Coordinación de Bienestar', 'Prof. Carlos Méndez · Docente consejero', 'T.S. Paola Restrepo · Trabajo social', 'Lic. Andrés Ruiz · Desarrollo estudiantil'];
+    var nl = 2 + Math.floor(r2() * 5);
+    for (var k = 0; k < nl; k++) { var l = lectores[Math.floor(r2() * lectores.length)].split(' · '); ev.push({ dia: HOY_DIA - 1 - Math.floor(r2() * 200), min: 8 * 60 + Math.floor(r2() * 540), quien: l[0], rol: l[1], accion: 'Consultó la ficha', detalle: 'Datos básicos y atenciones' }); }
+    ev.sort(function (a, b) { return (b.dia - a.dia) || (b.min - a.min); });
+    return ev;
+  }
+
+  /* ---------------------------------------------------------------- estado de la interfaz */
+  var S = { rol: ROLES[0], seccion: 'inicio', tabs: [], activo: null, sub: {}, areaF: {}, verNota: {}, nuevas: {}, anulando: null,
+    f: { q: '', fac: '', prog: '', mat: '', alerta: false, caso: false, pag: 0 }, cf: { estado: 'abiertos', area: '', pag: 0 }, rf: 'mias' };
+  var SECCIONES = { inicio: 'Inicio', estudiantes: 'Estudiantes', casos: 'Casos', remisiones: 'Remisiones', guia: 'Guía de implementación' };
+  var view = $('#view');
+
+  function render() {
+    document.querySelectorAll('.rail button').forEach(function (b) { if (b.dataset.nav === S.seccion && S.activo === null) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); });
+    var pend = DB.rem.filter(function (r) { return r.estado === 'Pendiente' && S.rol.registra.indexOf(r.para) >= 0; }).length;
+    var badge = $('#remBadge'); badge.textContent = pend > 99 ? '99+' : String(pend); badge.hidden = pend === 0;
+    renderTabs();
+    var html;
+    if (S.activo !== null) html = vistaFicha(DB.est[S.activo]);
+    else if (S.seccion === 'inicio') html = vistaInicio();
+    else if (S.seccion === 'estudiantes') html = vistaEstudiantes();
+    else if (S.seccion === 'casos') html = vistaCasos();
+    else if (S.seccion === 'remisiones') html = vistaRemisiones();
+    else html = vistaGuia();
+    view.innerHTML = '<div class="wrap">' + html + '</div>';
+    if (S.activo === null && S.seccion === 'inicio') dibujarGraficas();
+  }
+
+  function renderTabs() {
+    var h = '<button type="button" class="tab sec" role="tab" data-tab="sec" aria-selected="' + (S.activo === null) + '">' + esc(SECCIONES[S.seccion]) + '</button>';
+    S.tabs.forEach(function (i) {
+      var e = DB.est[i];
+      h += '<div class="tab" role="tab" aria-selected="' + (S.activo === i) + '"><button type="button" data-tab="' + i + '" style="all:unset;cursor:pointer;display:flex;align-items:center;gap:6px"><span class="ini" aria-hidden="true">' + esc(inicialesEst(e)) + '</span>' + esc(e.nombres.split(' ')[0] + ' ' + e.apellidos.split(' ')[0]) + '</button><button type="button" class="x" data-close="' + i + '" aria-label="Cerrar pestaña de ' + esc(nombreEst(e)) + '">' + ICON_X + '</button></div>';
+    });
+    $('#tabs').innerHTML = h;
+  }
+
+  function abrirEstudiante(i, sub) {
+    if (S.tabs.indexOf(i) < 0) {
+      S.tabs.push(i);
+      if (S.tabs.length > 8) S.tabs.shift();
+      auditar(DB.est[i], 'Consultó la ficha', 'Abrió la pestaña del estudiante');
+    }
+    S.activo = i;
+    if (sub) S.sub[i] = sub;
+    render();
+    view.scrollTop = 0;
+  }
+
+  /* ---------------------------------------------------------------- vista: inicio */
+  function metricas() {
+    var m = { at30: 0, porArea: AREAS.map(function () { return 0; }), semanas: [] };
+    var nSem = 26, finSem = HOY_DIA - 1, iniSem = finSem - nSem * 7 + 1;
+    for (var s = 0; s < nSem; s++) m.semanas.push(0);
+    for (var j = 0; j < DB.nAt; j++) {
+      if (A.estado[j] === 2) continue;
+      var d = A.dia[j];
+      if (d >= HOY_DIA - 30) m.at30++;
+      if (d >= HOY_DIA - 90) m.porArea[A.area[j]]++;
+      if (d >= iniSem && d <= finSem) m.semanas[Math.floor((d - iniSem) / 7)]++;
+    }
+    m.iniSem = iniSem;
+    m.casosAb = DB.casos.filter(function (c) { return c.estado !== 3; }).length;
+    m.remPend = DB.rem.filter(function (r) { return r.estado === 'Pendiente'; }).length;
+    var sinAt = 0;
+    DB.est.forEach(function (e) { if (!e.alertas.length) return; var u = ultimaAtencion(e.i); if (u < 0 || A.dia[u] < HOY_DIA - 30) sinAt++; });
+    m.alertasSinAt = sinAt;
+    return m;
+  }
+
+  var M = null;
+  function vistaInicio() {
+    M = metricas();
+    var r = S.rol;
+    var h = '<div class="v-head"><div><h1 class="v-title">Hola, ' + esc(r.usuario.replace(/^(Ps\.|Dra\.|T\.S\.|Lic\.|Prof\.)\s+/, '').split(' ')[0]) + '</h1><p class="v-sub">Así va el acompañamiento al ' + fDia(HOY_DIA) + '. Cifras agregadas: en el sistema real este tablero es un informe de Power BI sin datos clínicos.</p></div>' +
+      '<button type="button" class="btn primary" data-nav="estudiantes">Buscar estudiante</button></div>';
+    h += '<div class="kpis">' +
+      kpi('Estudiantes en la base', fmtN(N_EST), 'Ficticios, con su ficha individual') +
+      kpi('Atenciones en 30 días', fmtN(M.at30), 'Todas las áreas, sin anuladas') +
+      kpi('Casos abiertos', fmtN(M.casosAb), 'En detección, valoración o seguimiento') +
+      kpi('Remisiones pendientes', fmtN(M.remPend), 'Esperan respuesta del área destino') +
+      kpi('Alertas sin atención', fmtN(M.alertasSinAt), 'Con alerta académica y sin atención en 30 días') + '</div>';
+    h += '<div class="grid-2"><div class="panel"><h2>Atenciones por área <small>últimos 90 días</small></h2><div id="chArea"></div>' + tablaDatos('Área', 'Atenciones', AREAS.map(function (a, k) { return [a.nombre, M.porArea[k]]; })) + '</div>' +
+      '<div class="panel"><h2>Atenciones por semana <small>últimas 26 semanas</small></h2><div id="chSem"></div>' + tablaDatos('Semana que inicia', 'Atenciones', M.semanas.map(function (v, k) { return [fDia(M.iniSem + k * 7), v]; })) + '</div></div>';
+    h += bandeja();
+    return h;
+  }
+  function kpi(l, v, c) { return '<div class="kpi"><div class="lab">' + esc(l) + '</div><div class="val">' + esc(v) + '</div><div class="ctx">' + esc(c) + '</div></div>'; }
+  function tablaDatos(c1, c2, filas) {
+    return '<details class="datos"><summary>Ver los datos</summary><div class="scroll-x"><table class="data"><thead><tr><th>' + esc(c1) + '</th><th class="num">' + esc(c2) + '</th></tr></thead><tbody>' +
+      filas.map(function (f) { return '<tr><td>' + esc(f[0]) + '</td><td class="num">' + fmtN(f[1]) + '</td></tr>'; }).join('') + '</tbody></table></div></details>';
+  }
+  function bandeja() {
+    var r = S.rol;
+    if (!r.registra.length) return '<div class="panel"><h2>Tu bandeja</h2><p class="empty">Tu rol solo consulta. Revisa la trazabilidad desde la pestaña de cada estudiante.</p></div>';
+    var rems = DB.rem.filter(function (x) { return x.estado === 'Pendiente' && r.registra.indexOf(x.para) >= 0; }).sort(function (a, b) { return b.dia - a.dia; }).slice(0, 6);
+    var venc = [];
+    for (var j = 0; j < DB.nAt; j++) if (A.prox[j] >= HOY_DIA - 10 && A.prox[j] < HOY_DIA && r.registra.indexOf(A.area[j]) >= 0 && A.estado[j] === 0) venc.push(j);
+    venc.sort(function (a, b) { return A.prox[b] - A.prox[a]; });
+    venc = venc.slice(0, 6);
+    var h = '<div class="grid-2"><div class="panel"><h2>Remisiones que esperan a tu área <small>' + fmtN(DB.rem.filter(function (x) { return x.estado === 'Pendiente' && r.registra.indexOf(x.para) >= 0; }).length) + ' pendientes</small></h2>';
+    h += rems.length ? '<div class="scroll-x"><table class="data"><tbody>' + rems.map(function (x) {
+      var e = DB.est[x.est];
+      return '<tr><td><button type="button" class="btn ghost sm" data-open="' + e.i + '">' + esc(nombreEst(e)) + '</button><div class="small muted">' + esc(AREAS[x.de].nombre) + ' → ' + esc(AREAS[x.para].nombre) + ' · ' + fDia(x.dia) + '</div><div class="small">' + esc(motivoRem(x)) + '</div></td><td class="num"><button type="button" class="btn sm" data-aceptar="' + x.n + '">Aceptar</button></td></tr>';
+    }).join('') + '</tbody></table></div>' : '<p class="empty">No hay remisiones pendientes para tu área.</p>';
+    h += '</div><div class="panel"><h2>Próximas acciones vencidas <small>últimos 10 días</small></h2>';
+    h += venc.length ? '<div class="scroll-x"><table class="data"><tbody>' + venc.map(function (j) {
+      var e = DB.est[A.est[j]];
+      return '<tr class="row" tabindex="0" data-open="' + e.i + '" data-sub="atenciones"><td><b>' + esc(nombreEst(e)) + '</b><div class="small muted">' + esc(AREAS[A.area[j]].nombre) + ' · ' + esc(accionDe(j)) + '</div></td><td class="num small">' + fDia(A.prox[j]) + '</td></tr>';
+    }).join('') + '</tbody></table></div>' : '<p class="empty">Sin acciones vencidas.</p>';
+    return h + '</div></div>';
+  }
+  function motivoRem(x) { return (AREAS[x.de].clinica && !(S.rol.clinico.indexOf(x.de) >= 0)) ? 'Motivo reservado (remisión desde ' + AREAS[x.de].nombre + ')' : x.motivo; }
+
+  /* ---------------------------------------------------------------- gráficas (SVG) */
+  var tip = $('#tip');
+  function mostrarTip(txt, x, y) { tip.textContent = txt; tip.hidden = false; var w = tip.offsetWidth; tip.style.left = Math.min(window.innerWidth - w - 8, Math.max(8, x + 12)) + 'px'; tip.style.top = (y - 34) + 'px'; }
+  function ocultarTip() { tip.hidden = true; }
+
+  function dibujarGraficas() {
+    var filas = AREAS.map(function (a, k) { return { label: a.nombre, value: M.porArea[k] }; }).sort(function (a, b) { return b.value - a.value; });
+    var W = 560, rowH = 32, barH = 18, padL = 176, padR = 64, padT = 6, H = padT * 2 + filas.length * rowH;
+    var max = Math.max.apply(null, filas.map(function (f) { return f.value; }).concat([1]));
+    var s = '<svg class="chart" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Atenciones por área en los últimos 90 días">';
+    s += '<line class="axis" x1="' + padL + '" y1="' + padT + '" x2="' + padL + '" y2="' + (H - padT) + '"/>';
+    filas.forEach(function (f, k) {
+      var y = padT + k * rowH + (rowH - barH) / 2, w = Math.max(2, (W - padL - padR) * f.value / max), x1 = padL + w, rr = Math.min(4, w / 2);
+      s += '<g class="bar" data-tip="' + esc(f.label + ': ' + fmtN(f.value) + ' atenciones') + '"><rect class="hit" x="0" y="' + (padT + k * rowH) + '" width="' + W + '" height="' + rowH + '"/>' +
+        '<path class="mark" d="M' + padL + ',' + y + 'H' + (x1 - rr) + 'Q' + x1 + ',' + y + ' ' + x1 + ',' + (y + rr) + 'V' + (y + barH - rr) + 'Q' + x1 + ',' + (y + barH) + ' ' + (x1 - rr) + ',' + (y + barH) + 'H' + padL + 'Z"/>' +
+        '<text class="lab" x="' + (padL - 10) + '" y="' + (y + barH / 2) + '" text-anchor="end" dominant-baseline="central">' + esc(f.label) + '</text>' +
+        '<text class="val" x="' + (x1 + 6) + '" y="' + (y + barH / 2) + '" dominant-baseline="central">' + fmtN(f.value) + '</text></g>';
+    });
+    s += '</svg>';
+    var ch = $('#chArea'); ch.innerHTML = s;
+    ch.onpointermove = function (ev) { var g = ev.target.closest('.bar'); if (g) mostrarTip(g.dataset.tip, ev.clientX, ev.clientY); else ocultarTip(); };
+    ch.onpointerleave = ocultarTip;
+
+    var vals = M.semanas, n = vals.length, W2 = 560, H2 = 230, pl = 46, pr = 52, pt = 14, pb = 30;
+    var vmax = Math.max.apply(null, vals.concat([1]));
+    var paso = pasoBonito(vmax / 4), top = paso * Math.ceil(vmax / paso);
+    function X(i) { return pl + (W2 - pl - pr) * i / (n - 1); }
+    function Y(v) { return pt + (H2 - pt - pb) * (1 - v / top); }
+    var t = '<svg class="chart" viewBox="0 0 ' + W2 + ' ' + H2 + '" role="img" aria-label="Atenciones por semana en las últimas 26 semanas">';
+    for (var v = 0; v <= top + 0.001; v += paso) t += '<line class="grid" x1="' + pl + '" x2="' + (W2 - pr) + '" y1="' + Y(v) + '" y2="' + Y(v) + '"/><text class="tick" x="' + (pl - 8) + '" y="' + Y(v) + '" text-anchor="end" dominant-baseline="central">' + fmtN(v) + '</text>';
+    var mesPrev = -1;
+    for (var i = 0; i < n; i++) { var dt = dDate(M.iniSem + i * 7); if (dt.getUTCMonth() !== mesPrev && i > 0 && i < n - 1) { t += '<text class="tick" x="' + X(i) + '" y="' + (H2 - 8) + '" text-anchor="middle">' + MES[dt.getUTCMonth()] + '</text>'; } mesPrev = dt.getUTCMonth(); }
+    var pts = vals.map(function (v2, i2) { return X(i2).toFixed(1) + ',' + Y(v2).toFixed(1); });
+    t += '<path class="area" d="M' + X(0) + ',' + Y(0) + 'L' + pts.join('L') + 'L' + X(n - 1) + ',' + Y(0) + 'Z"/>';
+    t += '<path class="line" d="M' + pts.join('L') + '"/>';
+    t += '<circle class="end" cx="' + X(n - 1) + '" cy="' + Y(vals[n - 1]) + '" r="4.5"/><text class="val" x="' + (X(n - 1) + 9) + '" y="' + Y(vals[n - 1]) + '" dominant-baseline="central">' + fmtN(vals[n - 1]) + '</text>';
+    t += '<g id="cross" visibility="hidden"><line class="cross" y1="' + pt + '" y2="' + (H2 - pb) + '"/><circle class="end" r="4.5"/></g>';
+    t += '<rect class="hit" x="' + pl + '" y="' + pt + '" width="' + (W2 - pl - pr) + '" height="' + (H2 - pt - pb) + '"/></svg>';
+    var c2 = $('#chSem'); c2.innerHTML = t;
+    var svg = c2.querySelector('svg'), cross = c2.querySelector('#cross'), ln = cross.querySelector('line'), dot = cross.querySelector('circle');
+    c2.onpointermove = function (ev) {
+      var b = svg.getBoundingClientRect(), xv = (ev.clientX - b.left) * W2 / b.width;
+      var i3 = Math.max(0, Math.min(n - 1, Math.round((xv - pl) / (W2 - pl - pr) * (n - 1))));
+      ln.setAttribute('x1', X(i3)); ln.setAttribute('x2', X(i3)); dot.setAttribute('cx', X(i3)); dot.setAttribute('cy', Y(vals[i3]));
+      cross.setAttribute('visibility', 'visible');
+      mostrarTip('Semana del ' + fDia(M.iniSem + i3 * 7) + ': ' + fmtN(vals[i3]) + ' atenciones', ev.clientX, ev.clientY);
+    };
+    c2.onpointerleave = function () { cross.setAttribute('visibility', 'hidden'); ocultarTip(); };
+  }
+  function pasoBonito(x) { var m = Math.pow(10, Math.floor(Math.log10(Math.max(x, 1)))); var f = [1, 2, 2.5, 5, 10]; for (var i = 0; i < f.length; i++) if (f[i] * m >= x) return f[i] * m; return 10 * m; }
+
+  /* ---------------------------------------------------------------- vista: estudiantes */
+  function filtrarEst() {
+    var f = S.f, toks = norm(f.q).split(/\s+/).filter(Boolean), out = [];
+    for (var i = 0; i < N_EST; i++) {
+      var e = DB.est[i];
+      if (f.fac !== '' && PROGRAMAS[e.prog][1] !== +f.fac) continue;
+      if (f.prog !== '' && e.prog !== +f.prog) continue;
+      if (f.mat === 'SI' && !e.matric) continue;
+      if (f.mat === 'NO' && e.matric) continue;
+      if (f.alerta && !e.alertas.length) continue;
+      if (f.caso && !casosAbiertos(i).length) continue;
+      var ok = true;
+      for (var t = 0; t < toks.length; t++) if (e.q.indexOf(toks[t]) < 0) { ok = false; break; }
+      if (ok) out.push(e);
+    }
+    return out;
+  }
+  function vistaEstudiantes() {
+    var f = S.f;
+    var h = '<div class="v-head"><div><h1 class="v-title">Estudiantes</h1><p class="v-sub">Base unificada. Busca por código, documento o nombre (sin importar tildes) y abre a cada estudiante en su propia pestaña.</p></div></div>';
+    h += '<div class="panel"><div class="filters">' +
+      '<input type="search" id="q" placeholder="Ej.: maria perez, 9024110…, 9912…" value="' + esc(f.q) + '" aria-label="Buscar estudiante" autocomplete="off">' +
+      '<select id="fFac" aria-label="Facultad"><option value="">Todas las facultades</option>' + FACULTADES.map(function (x, k) { return '<option value="' + k + '"' + (String(k) === f.fac ? ' selected' : '') + '>' + esc(x) + '</option>'; }).join('') + '</select>' +
+      '<select id="fProg" aria-label="Programa"><option value="">Todos los programas</option>' + PROGRAMAS.map(function (p, k) { return (f.fac === '' || String(p[1]) === f.fac) ? '<option value="' + k + '"' + (String(k) === f.prog ? ' selected' : '') + '>' + esc(p[0]) + '</option>' : ''; }).join('') + '</select>' +
+      '<select id="fMat" aria-label="Matrícula"><option value="">Matrícula: todas</option><option value="SI"' + (f.mat === 'SI' ? ' selected' : '') + '>Matriculados</option><option value="NO"' + (f.mat === 'NO' ? ' selected' : '') + '>Sin matrícula</option></select>' +
+      '<label class="chk"><input type="checkbox" id="fAl"' + (f.alerta ? ' checked' : '') + '> Con alertas</label>' +
+      '<label class="chk"><input type="checkbox" id="fCa"' + (f.caso ? ' checked' : '') + '> Con caso abierto</label></div></div>';
+    h += '<div class="panel" id="resEst">' + resultadosEst() + '</div>';
+    return h;
+  }
+  function resultadosEst() {
+    var lista = filtrarEst(), por = 50, pags = Math.max(1, Math.ceil(lista.length / por));
+    if (S.f.pag >= pags) S.f.pag = pags - 1;
+    var desde = S.f.pag * por, filas = lista.slice(desde, desde + por);
+    var h = '<h2>' + fmtN(lista.length) + ' estudiante' + (lista.length === 1 ? '' : 's') + ' <small>Clic en una fila para abrir su pestaña</small></h2>';
+    if (!filas.length) return h + '<p class="empty">Sin resultados. Prueba con un solo apellido o quita filtros.</p>';
+    h += '<div class="scroll-x"><table class="data"><thead><tr><th>Código</th><th>Estudiante</th><th>Programa</th><th class="num">Sem.</th><th>Matrícula</th><th>Alertas</th><th class="num">Atenciones</th><th>Última atención</th></tr></thead><tbody>';
+    filas.forEach(function (e) {
+      var u = ultimaAtencion(e.i);
+      h += '<tr class="row" tabindex="0" data-open="' + e.i + '"><td class="mono">' + esc(e.codigo) + '</td><td><b>' + esc(nombreEst(e)) + '</b></td><td>' + esc(PROGRAMAS[e.prog][0]) + '</td><td class="num">' + e.sem + '</td>' +
+        '<td>' + (e.matric ? '<span class="chip ok"><span class="dot"></span>Sí</span>' : '<span class="chip ser"><span class="dot"></span>No</span>') + '</td>' +
+        '<td>' + (e.alertas.length ? e.alertas.map(function (a) { return '<span class="chip ' + a.c + '"><span class="dot"></span>' + esc(a.t) + '</span>'; }).join(' ') : '<span class="muted small">—</span>') + '</td>' +
+        '<td class="num">' + fmtN(totalAt(e.i)) + '</td><td class="small">' + (u >= 0 ? fDia(A.dia[u]) + ' · ' + esc(AREAS[A.area[u]].nombre) : '—') + '</td></tr>';
+    });
+    h += '</tbody></table></div><div class="pager"><span>' + fmtN(desde + 1) + '–' + fmtN(Math.min(desde + por, lista.length)) + ' de ' + fmtN(lista.length) + '</span>' +
+      '<button type="button" class="btn sm" data-pag="-1"' + (S.f.pag === 0 ? ' disabled' : '') + '>Anterior</button><button type="button" class="btn sm" data-pag="1"' + (S.f.pag >= pags - 1 ? ' disabled' : '') + '>Siguiente</button></div>';
+    return h;
+  }
+
+  /* ---------------------------------------------------------------- vista: ficha del estudiante */
+  function vistaFicha(e) {
+    var r = S.rol, sub = S.sub[e.i] || 'resumen';
+    var ats = atencionesDe(e.i), casos = DB.casoDe.get(e.i) || [], bens = DB.benDe.get(e.i) || [];
+    var abiertos = casosAbiertos(e.i);
+    var h = '<div class="panel"><div class="ficha-head"><div class="big-avatar" aria-hidden="true">' + esc(inicialesEst(e)) + '</div><div><h1>' + esc(nombreEst(e)) + '</h1>' +
+      '<div class="meta"><span class="mono">' + esc(e.codigo) + '</span><span>' + esc(PROGRAMAS[e.prog][0]) + '</span><span>' + esc(FACULTADES[PROGRAMAS[e.prog][1]]) + '</span><span>Semestre ' + e.sem + '</span><span>' + edadDe(e) + ' años</span></div>' +
+      '<div class="chips">' + (e.matric ? '<span class="chip ok"><span class="dot"></span>Matriculado 2026-II</span>' : '<span class="chip ser"><span class="dot"></span>Sin matrícula 2026-II</span>') +
+      e.alertas.map(function (a) { return '<span class="chip ' + a.c + '"><span class="dot"></span>' + esc(a.t) + '</span>'; }).join('') +
+      abiertos.map(function (c) { return '<span class="chip acc">Caso abierto · ' + esc(AREAS[c.lider].nombre) + '</span>'; }).join('') + '</div></div>' +
+      '<div class="actions">' + (r.registra.length ? '<button type="button" class="btn primary" data-act="registrar">' + ICON_PLUS + 'Registrar atención</button>' : '<span class="small muted">Tu rol no registra atenciones</span>') + '</div></div></div>';
+    var subs = [['resumen', 'Resumen', ''], ['atenciones', 'Atenciones', ats.length], ['casos', 'Casos y remisiones', casos.length], ['beneficios', 'Beneficios', bens.length], ['academico', 'Académico', '']];
+    if (r.auditoria) subs.push(['traza', 'Trazabilidad', '']);
+    if (!subs.some(function (x) { return x[0] === sub; })) sub = 'resumen';
+    h += '<div class="subtabs" role="tablist">' + subs.map(function (x) { return '<button type="button" class="subtab" role="tab" data-sub="' + x[0] + '" aria-selected="' + (sub === x[0]) + '">' + x[1] + (x[2] !== '' ? '<span class="count">' + fmtN(x[2]) + '</span>' : '') + '</button>'; }).join('') + '</div>';
+    if (sub === 'resumen') h += subResumen(e, ats, abiertos);
+    else if (sub === 'atenciones') h += subAtenciones(e, ats);
+    else if (sub === 'casos') h += subCasos(e, casos);
+    else if (sub === 'beneficios') h += subBeneficios(bens);
+    else if (sub === 'academico') h += subAcademico(e);
+    else h += subTraza(e);
+    return h;
+  }
+  function protegido(texto) { return '<span class="lock">' + ICON_LOCK + esc(texto) + '</span>'; }
+  function subResumen(e, ats, abiertos) {
+    var r = S.rol, doc = r.documento ? e.tipoDoc + ' ' + e.numDoc : e.tipoDoc + ' ••••' + e.numDoc.slice(-4);
+    var h = '<div class="grid-3"><div class="panel"><h2>Datos básicos</h2><dl class="kv">' +
+      '<dt>Documento</dt><dd>' + esc(doc) + (r.documento ? '' : '<div class="hint">Completo solo para Coordinación</div>') + '</dd>' +
+      '<dt>Sexo</dt><dd>' + (e.sexo === 'F' ? 'Femenino' : 'Masculino') + '</dd>' +
+      '<dt>Nacimiento</dt><dd>' + fDia(e.nac) + ' · ' + edadDe(e) + ' años</dd>' +
+      '<dt>Correo</dt><dd class="small">' + esc(e.correo) + '</dd><dt>Celular</dt><dd>' + esc(e.cel) + '</dd>' +
+      '<dt>Ingreso</dt><dd>' + esc(INGRESOS[e.ing][0]) + ' · ' + e.anio + '</dd></dl></div>' +
+      '<div class="panel"><h2>Procedencia</h2><dl class="kv"><dt>Origen</dt><dd>' + esc(e.lug[2]) + '</dd><dt>Municipio</dt><dd>' + esc(e.lug[0] + (e.lug[0] === e.lug[1] ? '' : ', ' + e.lug[1])) + '</dd>' +
+      '<dt>Colegio</dt><dd>' + esc(e.colegio) + '</dd><dt>Tipo de colegio</dt><dd>' + esc(e.tipoCol) + '</dd></dl></div>' +
+      '<div class="panel"><h2>Datos sensibles <span class="chip res">' + ICON_LOCK + 'Protegidos</span></h2><dl class="kv">' +
+      '<dt>Estrato</dt><dd>' + (r.sensibles ? e.estrato : protegido('Oculto para tu rol')) + '</dd>' +
+      '<dt>Condición especial</dt><dd>' + (r.sensibles ? esc(CUPOS[e.cupo][0]) : protegido('Oculto para tu rol')) + '</dd></dl>' +
+      '<p class="hint" style="margin:10px 0 0">Etnia, discapacidad o condición de víctima son datos sensibles (Ley 1581 de 2012). En Dataverse van en columnas con seguridad propia.</p></div></div>';
+    var prox = ats.filter(function (j) { return A.prox[j] >= HOY_DIA - 10 && A.estado[j] !== 2 && nivelVista(A.area[j]) === 'resumen'; }).slice(0, 4);
+    h += '<div class="grid-2"><div class="panel"><h2>Últimas atenciones <button type="button" class="btn ghost sm" data-sub="atenciones">Ver todas</button></h2>' + (ats.length ? lineaTiempo(e, ats.slice(0, 3), false) : '<p class="empty">Aún no tiene atenciones registradas.</p>') + '</div>' +
+      '<div class="panel"><h2>Casos abiertos y próximas acciones</h2>' +
+      (abiertos.length ? abiertos.map(tarjetaCaso).join('') : '<p class="empty">Sin casos abiertos.</p>') +
+      (prox.length ? '<div class="scroll-x" style="margin-top:10px"><table class="data"><tbody>' + prox.map(function (j) { return '<tr><td class="small">' + esc(accionDe(j)) + '<div class="muted">' + esc(AREAS[A.area[j]].nombre) + '</div></td><td class="num small">' + fDia(A.prox[j]) + '</td></tr>'; }).join('') + '</tbody></table></div>' : '') +
+      '</div></div>';
+    return h;
+  }
+  function subAtenciones(e, ats) {
+    var fA = S.areaF[e.i];
+    var cuenta = AREAS.map(function () { return 0; });
+    ats.forEach(function (j) { cuenta[A.area[j]]++; });
+    var h = '<div class="panel"><div class="area-filter" role="group" aria-label="Filtrar por área"><button type="button" data-areaf="" aria-pressed="' + (fA == null) + '">Todas · ' + fmtN(ats.length) + '</button>' +
+      AREAS.map(function (a, k) { return cuenta[k] ? '<button type="button" data-areaf="' + k + '" aria-pressed="' + (fA === k) + '">' + esc(a.nombre) + ' · ' + cuenta[k] + '</button>' : ''; }).join('') + '</div>';
+    var lista = fA == null ? ats : ats.filter(function (j) { return A.area[j] === fA; });
+    h += lista.length ? lineaTiempo(e, lista, true) : '<p class="empty">Sin atenciones en esta área.</p>';
+    return h + '</div>';
+  }
+  function lineaTiempo(e, lista, conMeses) {
+    var h = '', mesPrev = '';
+    lista.forEach(function (j) {
+      var dt = dDate(A.dia[j]), mes = MES_L[dt.getUTCMonth()] + ' ' + dt.getUTCFullYear();
+      if (conMeses && mes !== mesPrev) { h += '<div class="tl-month">' + mes + '</div>'; mesPrev = mes; }
+      h += itemAtencion(e, j);
+    });
+    return '<div class="tl">' + h + '</div>';
+  }
+  function itemAtencion(e, j) {
+    var area = A.area[j], ar = AREAS[area], nivel = nivelVista(area), c = DB.custom.get(j), anulada = A.estado[j] === 2;
+    var cls = 'tl-item' + (ar.clinica ? ' reservada' : '') + (anulada ? ' anulada' : '') + (S.nuevas[j] ? ' nueva' : '');
+    var h = '<div class="' + cls + '"><div class="tl-date">' + fDia(A.dia[j]).replace(/ \d{4}$/, '') + '<small>' + fHora(A.min[j]) + '</small></div><div class="tl-axis"><span class="tl-node"></span></div><div class="tl-card">';
+    h += '<div class="top"><span class="chip ' + (ar.clinica ? 'res' : 'acc') + '">' + (ar.clinica ? ICON_LOCK : '') + esc(ar.nombre) + '</span>';
+    if (nivel === 'oculto') {
+      h += '<span class="svc">Atención de ' + esc(ar.dep) + '</span></div><p class="small muted">Hubo una atención de ' + esc(ar.nombre) + '. El detalle no está disponible para tu rol.</p></div></div>';
+      return h;
+    }
+    h += '<span class="svc">' + esc(ar.servicios[A.serv[j]]) + '</span><span class="small muted">' + TIPOS[A.tipo[j]] + ' · ' + MODALIDAD[A.mod[j]] + '</span>';
+    if (A.estado[j] === 1) h += '<span class="chip warn"><span class="dot"></span>No asistió</span>';
+    if (anulada) h += '<span class="chip crit"><span class="dot"></span>Anulada</span>';
+    h += '</div>';
+    if (nivel === 'meta') {
+      h += '<p class="small muted">Contenido no visible para Auditoría. Se muestran solo los datos de registro.</p>';
+    } else {
+      h += '<p>' + esc(resumenDe(j)) + '</p>';
+      var acc = accionDe(j);
+      if (acc) h += '<p class="small"><b>Próxima acción:</b> ' + esc(acc) + (A.prox[j] >= 0 ? ' · ' + fDia(A.prox[j]) : '') + '</p>';
+      if (c && c.rem) h += '<p class="small"><b>Remitido a:</b> ' + esc(AREAS[c.rem.para].nombre) + ' · ' + esc(c.rem.motivo) + '</p>';
+      if (anulada && c && c.anulMotivo) h += '<p class="small"><b>Motivo de anulación:</b> ' + esc(c.anulMotivo) + '</p>';
+      if (ar.clinica) {
+        if (S.rol.clinico.indexOf(area) >= 0) {
+          h += S.verNota[j] ? '<div class="clinica"><b>Nota clínica reservada</b><br>' + esc(clinicaDe(j)) + '<div class="hint" style="margin-top:6px">Tu lectura quedó registrada en la trazabilidad.</div></div>'
+            : '<div class="clinica"><button type="button" class="btn sm" data-nota="' + j + '">' + ICON_LOCK + 'Ver nota clínica</button> <span class="hint">Abrirla queda registrado.</span></div>';
+        } else {
+          h += '<p>' + protegido('Nota clínica reservada: solo la ve ' + ar.nombre) + '</p>';
+        }
+      }
+    }
+    h += '<div class="foot"><span>Registró: <b>' + esc(profDe(j)) + '</b></span><span>' + (c ? 'Guardado ' + esc(fAhora(c.creado)) : 'Guardado ' + fDia(A.dia[j]) + ', ' + fHora(A.min[j] + 40)) + '</span>';
+    if (c && c.prof === S.rol.usuario && !anulada) h += '<button type="button" class="btn ghost sm" data-anular="' + j + '">Anular</button>';
+    h += '</div>';
+    if (S.anulando === j) {
+      h += '<form class="field" data-form-anular="' + j + '" style="margin-top:8px"><label for="anulMot">Motivo de la anulación</label><input id="anulMot" required maxlength="160" placeholder="Ej.: se registró en el estudiante equivocado">' +
+        '<div style="display:flex;gap:8px;flex-wrap:wrap"><button type="submit" class="btn sm primary">Anular atención</button><button type="button" class="btn sm" data-anular-cancel="1">Cancelar</button></div><span class="hint">No se borra: queda anulada, con tu nombre y el motivo.</span></form>';
+    }
+    return h + '</div></div>';
+  }
+  function tarjetaCaso(c) {
+    var h = '<div class="case-card"><h3><span class="mono">' + esc(c.id) + '</span><span class="chip ' + (c.estado === 3 ? 'ok' : c.estado === 2 ? 'warn' : 'acc') + '">' + (c.estado === 3 || c.estado === 2 ? '<span class="dot"></span>' : '') + ESTADO_CASO[c.estado] + '</span><span class="chip">' + ['Alta', 'Media', 'Baja'][c.prio] + ' prioridad</span></h3>';
+    var nivel = nivelVista(c.lider);
+    h += '<p class="small" style="margin:6px 0 0"><b>' + esc(MOTIVOS[c.motivo]) + '</b> · lidera ' + esc(AREAS[c.lider].nombre) + ' · ' + esc(c.resp) + '</p>';
+    if (nivel === 'resumen') h += '<p class="small" style="margin:4px 0 0">' + esc(c.resumen) + '</p>';
+    h += '<div class="stages" aria-label="Etapa del caso">' + ETAPAS.map(function (et, k) { return '<span class="stage' + (k < c.etapa ? ' done' : k === c.etapa ? ' now' : '') + '">' + et + '</span>'; }).join('') + '</div>';
+    h += '<p class="small muted" style="margin:6px 0 0">Abierto el ' + fDia(c.apertura) + (c.cierre >= 0 ? ' · cerrado el ' + fDia(c.cierre) : '') + '</p></div>';
+    return h;
+  }
+  function subCasos(e, casos) {
+    var rems = (DB.remDe.get(e.i) || []).slice().sort(function (a, b) { return b.dia - a.dia; });
+    var h = '<div class="grid-2"><div class="panel"><h2>Casos de acompañamiento</h2>' + (casos.length ? '<div style="display:flex;flex-direction:column;gap:10px">' + casos.map(tarjetaCaso).join('') + '</div>' : '<p class="empty">Sin casos. Un caso se abre cuando una situación necesita coordinación entre áreas.</p>') + '</div>';
+    h += '<div class="panel"><h2>Remisiones entre áreas</h2>' + (rems.length ? '<div class="scroll-x"><table class="data"><thead><tr><th>Fecha</th><th>De → Para</th><th>Motivo</th><th>Estado</th></tr></thead><tbody>' + rems.map(function (x) {
+      return '<tr><td class="small">' + fDia(x.dia) + '</td><td class="small">' + esc(AREAS[x.de].nombre) + ' → ' + esc(AREAS[x.para].nombre) + '</td><td class="small">' + esc(nivelVista(x.para) === 'resumen' && nivelVista(x.de) === 'resumen' ? motivoRem(x) : 'No visible para tu rol') + '</td><td>' + chipRem(x) + (x.estado === 'Pendiente' && S.rol.registra.indexOf(x.para) >= 0 ? ' <button type="button" class="btn sm" data-aceptar="' + x.n + '">Aceptar</button>' : '') + '</td></tr>';
+    }).join('') + '</tbody></table></div>' : '<p class="empty">Sin remisiones.</p>') + '</div></div>';
+    return h;
+  }
+  function chipRem(x) { var c = { 'Pendiente': 'warn', 'Aceptada': 'acc', 'Atendida': 'ok', 'No aceptada': 'crit' }[x.estado]; return '<span class="chip ' + c + '">' + (c !== 'acc' ? '<span class="dot"></span>' : '') + esc(x.estado) + '</span>'; }
+  function subBeneficios(bens) {
+    if (!bens.length) return '<div class="panel"><p class="empty">Sin beneficios registrados en 2026.</p></div>';
+    return '<div class="panel"><div class="scroll-x"><table class="data"><thead><tr><th>Beneficio</th><th>Área</th><th>Período</th><th>Desde</th><th>Estado</th></tr></thead><tbody>' + bens.map(function (b) {
+      return '<tr><td><b>' + esc(AREAS[b.area].servicios[b.serv]) + '</b></td><td>' + esc(AREAS[b.area].nombre) + '</td><td>' + b.periodo + '</td><td class="small">' + fDia(b.desde) + '</td><td><span class="chip ' + (b.estado === 'Activo' ? 'ok' : '') + '"><span class="dot"></span>' + b.estado + '</span></td></tr>';
+    }).join('') + '</tbody></table></div></div>';
+  }
+  function subAcademico(e) {
+    var r2 = rng(e.i * 31 + 7), filas = [], p = e.prom || 0;
+    var periodos = [];
+    for (var y = Math.max(e.anio, 2024); y <= 2026; y++) { periodos.push(y + '-I'); periodos.push(y + '-II'); }
+    periodos = periodos.slice(-4);
+    periodos.forEach(function (per, k) {
+      var ult = k === periodos.length - 1;
+      var pr = e.anio === 2026 ? 0 : Math.max(2, Math.min(5, p + (ult ? 0 : (r2() - 0.5) * 0.4)));
+      filas.push('<tr><td>' + per + '</td><td class="num">' + (pr ? pr.toFixed(2).replace('.', ',') : '—') + '</td><td>' + (ult ? (e.matric ? 'Sí' : 'No') : 'Sí') + '</td><td>' + (ult && e.cancel ? 'Sí' : 'No') + '</td></tr>');
+    });
+    return '<div class="grid-2"><div class="panel"><h2>Situación académica</h2><dl class="kv"><dt>Programa</dt><dd>' + esc(PROGRAMAS[e.prog][0]) + '</dd><dt>Plan de estudio</dt><dd>' + e.plan + '</dd><dt>Semestre</dt><dd>' + e.sem + '</dd>' +
+      '<dt>Promedio acumulado</dt><dd>' + (e.prom ? e.prom.toFixed(2).replace('.', ',') : 'Sin promedio (primer semestre)') + '</dd><dt>Modalidad de ingreso</dt><dd>' + esc(INGRESOS[e.ing][0]) + '</dd></dl></div>' +
+      '<div class="panel"><h2>Historial por período <small>proviene de la carga de matrícula</small></h2><div class="scroll-x"><table class="data"><thead><tr><th>Período</th><th class="num">Promedio</th><th>Matriculado</th><th>Canceló</th></tr></thead><tbody>' + filas.reverse().join('') + '</tbody></table></div></div></div>';
+  }
+  function subTraza(e) {
+    var ses = DB.audit.filter(function (a) { return a.est === e.i; });
+    var hist = auditoriaHistorica(e).slice(0, 60);
+    var h = '<div class="panel"><h2>Trazabilidad <small>Quién hizo qué y cuándo. Nadie puede editar ni borrar este registro.</small></h2><div class="scroll-x"><table class="data"><thead><tr><th>Fecha y hora</th><th>Usuario</th><th>Rol o área</th><th>Acción</th><th>Detalle</th></tr></thead><tbody>';
+    ses.forEach(function (a) { h += '<tr><td class="small">' + esc(fAhora(a.cuando)) + ' <span class="chip acc">Esta sesión</span></td><td>' + esc(a.quien) + '</td><td class="small">' + esc(a.rol) + '</td><td><b>' + esc(a.accion) + '</b></td><td class="small">' + esc(a.detalle) + '</td></tr>'; });
+    hist.forEach(function (a) { h += '<tr><td class="small">' + fDia(a.dia) + ', ' + fHora(Math.min(a.min, 23 * 60 + 59)) + '</td><td>' + esc(a.quien) + '</td><td class="small">' + esc(a.rol) + '</td><td><b>' + esc(a.accion) + '</b></td><td class="small">' + esc(a.detalle) + '</td></tr>'; });
+    return h + '</tbody></table></div><p class="hint" style="margin:10px 0 0">En Dataverse esto es la auditoría de la tabla, más el registro de lecturas en Microsoft Purview para las notas clínicas.</p></div>';
+  }
+
+  /* ---------------------------------------------------------------- vista: casos */
+  function vistaCasos() {
+    var cf = S.cf;
+    var lista = DB.casos.filter(function (c) { return (cf.estado === 'abiertos' ? c.estado !== 3 : cf.estado === '' ? true : c.estado === +cf.estado) && (cf.area === '' || c.lider === +cf.area); }).sort(function (a, b) { return a.prio - b.prio || b.apertura - a.apertura; });
+    var por = 50, pags = Math.max(1, Math.ceil(lista.length / por)); if (cf.pag >= pags) cf.pag = pags - 1;
+    var filas = lista.slice(cf.pag * por, cf.pag * por + por);
+    var h = '<div class="v-head"><div><h1 class="v-title">Casos de acompañamiento</h1><p class="v-sub">Un caso reúne las atenciones y remisiones de varias áreas alrededor de una situación. En Power Apps cada etapa es un paso del flujo de proceso.</p></div></div>';
+    h += '<div class="panel"><div class="filters"><select id="cEst" aria-label="Estado"><option value="abiertos"' + (cf.estado === 'abiertos' ? ' selected' : '') + '>Abiertos (sin cerrar)</option><option value=""' + (cf.estado === '' ? ' selected' : '') + '>Todos</option>' + ESTADO_CASO.map(function (x, k) { return '<option value="' + k + '"' + (cf.estado === String(k) ? ' selected' : '') + '>' + x + '</option>'; }).join('') + '</select>' +
+      '<select id="cArea" aria-label="Área líder"><option value="">Todas las áreas líderes</option>' + AREAS.map(function (a, k) { return '<option value="' + k + '"' + (cf.area === String(k) ? ' selected' : '') + '>' + esc(a.nombre) + '</option>'; }).join('') + '</select></div></div>';
+    h += '<div class="panel"><h2>' + fmtN(lista.length) + ' casos</h2><div class="scroll-x"><table class="data"><thead><tr><th>Caso</th><th>Estudiante</th><th>Motivo</th><th>Lidera</th><th>Etapa</th><th>Estado</th><th>Prioridad</th><th>Apertura</th></tr></thead><tbody>';
+    filas.forEach(function (c) {
+      var e = DB.est[c.est];
+      h += '<tr class="row" tabindex="0" data-open="' + e.i + '" data-sub="casos"><td class="mono">' + esc(c.id) + '</td><td><b>' + esc(nombreEst(e)) + '</b><div class="small muted mono">' + esc(e.codigo) + '</div></td><td>' + esc(MOTIVOS[c.motivo]) + '</td><td class="small">' + esc(AREAS[c.lider].nombre) + '<div class="muted">' + esc(c.resp) + '</div></td><td class="small">' + ETAPAS[c.etapa] + '</td><td>' + ESTADO_CASO[c.estado] + '</td><td>' + ['Alta', 'Media', 'Baja'][c.prio] + '</td><td class="small">' + fDia(c.apertura) + '</td></tr>';
+    });
+    h += '</tbody></table></div><div class="pager"><span>Página ' + (cf.pag + 1) + ' de ' + pags + '</span><button type="button" class="btn sm" data-cpag="-1"' + (cf.pag === 0 ? ' disabled' : '') + '>Anterior</button><button type="button" class="btn sm" data-cpag="1"' + (cf.pag >= pags - 1 ? ' disabled' : '') + '>Siguiente</button></div></div>';
+    return h;
+  }
+
+  /* ---------------------------------------------------------------- vista: remisiones */
+  function vistaRemisiones() {
+    var r = S.rol, mias = S.rf === 'mias' && r.registra.length;
+    var lista = DB.rem.filter(function (x) { return mias ? r.registra.indexOf(x.para) >= 0 : true; }).sort(function (a, b) { return (a.estado === 'Pendiente' ? 0 : 1) - (b.estado === 'Pendiente' ? 0 : 1) || b.dia - a.dia; }).slice(0, 150);
+    var h = '<div class="v-head"><div><h1 class="v-title">Remisiones entre áreas</h1><p class="v-sub">Cuando un área remite, la otra recibe el aviso y responde aquí. En Microsoft, Power Automate publica el aviso en el canal de Teams del área.</p></div>' +
+      (r.registra.length ? '<div class="filters"><select id="rFil" aria-label="Qué remisiones ver"><option value="mias"' + (S.rf === 'mias' ? ' selected' : '') + '>Hacia mis áreas</option><option value="todas"' + (S.rf === 'todas' ? ' selected' : '') + '>Todas</option></select></div>' : '') + '</div>';
+    h += '<div class="panel"><h2>' + (mias ? 'Hacia ' + esc(r.registra.map(function (k) { return AREAS[k].nombre; }).join(', ')) : 'Todas las áreas') + ' <small>Se muestran las 150 más recientes</small></h2><div class="scroll-x"><table class="data"><thead><tr><th>Fecha</th><th>Estudiante</th><th>De → Para</th><th>Motivo</th><th>Estado</th><th></th></tr></thead><tbody>';
+    lista.forEach(function (x) {
+      var e = DB.est[x.est], visible = nivelVista(x.para) === 'resumen' && nivelVista(x.de) === 'resumen';
+      h += '<tr><td class="small">' + fDia(x.dia) + '</td><td><button type="button" class="btn ghost sm" data-open="' + e.i + '" data-sub="casos">' + esc(nombreEst(e)) + '</button></td><td class="small">' + esc(AREAS[x.de].nombre) + ' → ' + esc(AREAS[x.para].nombre) + '</td><td class="small">' + esc(visible ? motivoRem(x) : 'No visible para tu rol') + '</td><td>' + chipRem(x) + '</td><td class="num">' + (x.estado === 'Pendiente' && r.registra.indexOf(x.para) >= 0 ? '<button type="button" class="btn sm" data-aceptar="' + x.n + '">Aceptar</button>' : '') + '</td></tr>';
+    });
+    return h + '</tbody></table></div></div>';
+  }
+
+  /* ---------------------------------------------------------------- vista: guía */
+  function vistaGuia() {
+    var M2 = [['Dato o acción', 'Coordinación', 'Psicología', 'Salud', 'Trabajo social', 'Desarrollo est.', 'Docente', 'Auditoría'],
+      ['Datos básicos del estudiante', 'Sí', 'Sí', 'Sí', 'Sí', 'Sí', 'Sí', 'Sí'],
+      ['Documento completo', 'Sí', 'Parcial', 'Parcial', 'Parcial', 'Parcial', 'Parcial', 'Parcial'],
+      ['Datos sensibles (etnia, discapacidad, víctima, estrato)', 'Sí', 'Sí', 'Sí', 'Sí', 'No', 'No', 'No'],
+      ['Resumen de atenciones de Bienestar', 'Sí', 'Sí', 'Sí', 'Sí', 'Sí', 'No', 'No'],
+      ['Resumen de atenciones de Desarrollo estudiantil', 'Sí', 'Sí', 'Sí', 'Sí', 'Sí', 'Sí', 'No'],
+      ['Nota clínica de Psicología', 'No', 'Sí', 'No', 'No', 'No', 'No', 'No'],
+      ['Nota clínica de Salud', 'No', 'No', 'Sí', 'No', 'No', 'No', 'No'],
+      ['Registrar atenciones', 'Áreas no clínicas', 'Psicología', 'Salud', 'T. social y apoyo', 'Monitorías y tutorías', 'Tutorías', 'No'],
+      ['Borrar registros', 'No', 'No', 'No', 'No', 'No', 'No', 'No'],
+      ['Ver trazabilidad completa', 'Sí', 'No', 'No', 'No', 'No', 'No', 'Sí']];
+    var celda = function (v) { return v === 'Sí' ? '<span class="yes">Sí</span>' : v === 'No' ? '<span class="no">No</span>' : '<span class="part">' + esc(v) + '</span>'; };
+    var tablas = [
+      ['Estudiante', 'Ficha única: código (clave), documento, nombres, contacto, procedencia; datos sensibles en columnas protegidas.', '≈ 20.000'],
+      ['Facultad y Programa', 'Catálogos para filtrar y para la seguridad por programa.', '≈ 40'],
+      ['Período académico', 'Equivalencias como 2026II y 20263C → 2026-II.', 'pocas'],
+      ['Matrícula del período', 'Una fila por estudiante y período: matrícula, cancelación, promedio, plan. Es la base de Excel de hoy.', '≈ 18.000 por período'],
+      ['Área y Servicio', 'Catálogo de Bienestar y Desarrollo estudiantil; marca qué servicios son clínicos.', '≈ 40'],
+      ['Atención (actividad)', 'Cada atención o seguimiento: fecha, área, servicio, resumen no clínico, próxima acción, profesional. Aparece en la línea de tiempo del estudiante.', '100.000+ al año'],
+      ['Nota clínica', 'Contenido reservado de Psicología o Salud, ligado a la atención. Tabla con dueño y roles propios.', 'según demanda'],
+      ['Caso de acompañamiento', 'Agrupa atenciones y remisiones; etapas Detección → Cierre.', 'miles'],
+      ['Remisión', 'De un área a otra, con estado y respuesta; dispara avisos en Teams.', 'miles'],
+      ['Beneficio', 'Almuerzo, refrigerio, transporte, monitorías y ayudantías por período.', '≈ 10.000 por período'],
+      ['Alerta temprana', 'Generada al cargar la matrícula: promedio bajo, sin matrícula, cancelación.', 'miles'],
+      ['Consentimiento', 'Autorizaciones de tratamiento de datos y de atención psicológica, con soporte.', '≈ 20.000']
+    ];
+    var h = '<div class="v-head"><div><h1 class="v-title">Guía de implementación en Microsoft</h1><p class="v-sub">Cómo pasa este prototipo a Power Apps, Dataverse, Power Automate y Power BI, publicado dentro de Teams, cuidando los datos psicológicos.</p></div></div>';
+    h += '<div class="grid-2"><div class="panel prose"><h3>Recomendación</h3><p>Usar una <b>app de Power Apps basada en modelo sobre Dataverse</b> y publicarla como pestaña en Teams. Así se ve dentro de Teams, como en tu ejemplo, pero con las protecciones que exigen los datos psicológicos.</p>' +
+      '<ul><li><b>Solo con Teams no alcanza.</b> Dataverse for Teams no tiene auditoría, ni seguridad por columna, ni varias unidades de negocio, y no admite apps basadas en modelo. Las listas de SharePoint se vuelven lentas y difíciles de proteger con más de 100.000 registros.</li>' +
+      '<li><b>Dataverse completo sí:</b> roles por área, columnas protegidas, auditoría de cambios, registro de lecturas con Microsoft Purview, búsqueda rápida sobre todos los registros y una línea de tiempo por estudiante.</li>' +
+      '<li><b>Licencias:</b> los profesionales que usen la app necesitan Power Apps Premium (hay precios para educación). Los 20.000 estudiantes no necesitan licencia porque son registros, no usuarios. El prototipo inicial puede hacerse gratis en un entorno de desarrollador.</li></ul></div>' +
+      '<div class="panel"><h3 style="font:700 17px/1.25 var(--font-display);margin:0 0 10px">Cómo encajan las piezas</h3><div class="arch">' +
+      capa('Dónde se usa', 'Microsoft Teams', 'Pestaña en el equipo de Bienestar; también en el navegador.') +
+      capa('Aplicación', 'Power Apps · app basada en modelo', 'Formularios con pestañas, vistas, línea de tiempo y etapas del caso.') +
+      capa('Datos y seguridad', 'Dataverse + Entra ID', 'Tablas, roles por área, columnas protegidas, auditoría, MFA y grupos.', true) +
+      '<div class="arch-row">' + capa('Automatización', 'Power Automate', 'Remisiones, alertas tempranas, recordatorios y cargas.') + capa('Análisis', 'Power BI', 'Tableros agregados, sin datos clínicos.') + '</div>' +
+      '</div><p class="hint" style="margin:10px 0 0">La base de Excel (o el sistema académico) entra a Dataverse con una carga programada que actualiza por código y período.</p></div></div>';
+    h += '<div class="panel"><h2>Roles y privacidad <small>Lo que el selector «Ver como» simula</small></h2><div class="scroll-x"><table class="data"><thead><tr>' + M2[0].map(function (c) { return '<th>' + esc(c) + '</th>'; }).join('') + '</tr></thead><tbody>' +
+      M2.slice(1).map(function (f) { return '<tr><td><b>' + esc(f[0]) + '</b></td>' + f.slice(1).map(function (v) { return '<td class="small">' + celda(v) + '</td>'; }).join('') + '</tr>'; }).join('') + '</tbody></table></div>' +
+      '<p class="hint" style="margin:10px 0 0">En Dataverse: roles de seguridad por área, equipos ligados a grupos de Entra ID, perfiles de seguridad de columna para documento, datos sensibles y contenido clínico, sin permiso de borrar (se anula con motivo) y auditoría activa en todas las tablas.</p></div>';
+    h += '<div class="panel"><h2>Modelo de datos en Dataverse <small>12 grupos de tablas</small></h2><div class="scroll-x"><table class="data"><thead><tr><th>Tabla</th><th>Para qué sirve</th><th class="num">Volumen estimado</th></tr></thead><tbody>' +
+      tablas.map(function (t) { return '<tr><td><b>' + esc(t[0]) + '</b></td><td>' + esc(t[1]) + '</td><td class="num small">' + esc(t[2]) + '</td></tr>'; }).join('') + '</tbody></table></div></div>';
+    h += '<div class="grid-2"><div class="panel prose"><h3>Plan por fases</h3><ol>' +
+      '<li><b>Aprobaciones y entornos.</b> TI confirma licencias y crea tres entornos: desarrollo con datos ficticios, pruebas y producción. Jurídica valida el tratamiento de datos sensibles.</li>' +
+      '<li><b>Datos y seguridad en desarrollo.</b> Tablas, roles, columnas protegidas y auditoría; carga de datos ficticios; pruebas con cada rol.</li>' +
+      '<li><b>App y flujos.</b> Formularios con pestañas, línea de tiempo, casos con etapas, remisiones con aviso en Teams, alertas tempranas. Piloto con dos áreas.</li>' +
+      '<li><b>Paso a producción.</b> Solución administrada, carga real desde Excel con claves (código y período), capacitación y acuerdo de confidencialidad de los usuarios.</li>' +
+      '<li><b>Tableros y mejora.</b> Power BI con datos agregados, revisión trimestral de accesos y de la trazabilidad.</li></ol></div>' +
+      '<div class="panel prose"><h3>Reglas para los datos psicológicos</h3><ul>' +
+      '<li>La nota clínica vive en su propia tabla; las demás áreas solo ven que hubo atención.</li>' +
+      '<li>Consentimiento informado obligatorio antes de registrar la primera nota clínica.</li>' +
+      '<li>Nadie borra: se anula con motivo y queda la huella.</li>' +
+      '<li>Sin exportar a Excel ni a Power BI el contenido clínico.</li>' +
+      '<li>Datos reales solo en producción. Desarrollo y pruebas usan datos ficticios.</li>' +
+      '<li>Marco a validar con Jurídica: Ley 1581 de 2012 (datos sensibles), Ley 1090 de 2006 (secreto profesional del psicólogo), Resolución 1995 de 1999 (historia clínica) y Ley 1098 de 2006 (menores de edad).</li></ul></div></div>';
+    h += '<div class="panel"><h2>Del prototipo a Power Apps</h2><div class="scroll-x"><table class="data"><thead><tr><th>En el prototipo</th><th>En Microsoft</th></tr></thead><tbody>' +
+      [['Pestañas de estudiantes', 'Formulario del estudiante en la app basada en modelo; cada registro se puede abrir en una pestaña o ventana nueva'],
+        ['Línea de tiempo de atenciones', 'Control Escala de tiempo con la tabla Atención como actividad'],
+        ['Registrar atención con huella', 'Formulario rápido; Dataverse guarda autor, fecha y cambios automáticamente'],
+        ['Nota clínica reservada', 'Tabla aparte con rol de Psicología o Salud y perfil de seguridad de columna'],
+        ['«Ver como» por rol', 'Roles de seguridad asignados a equipos de Entra ID por área'],
+        ['Remisiones y bandeja', 'Vista filtrada por área y flujo de Power Automate con aviso en Teams'],
+        ['Etapas del caso', 'Flujo de proceso de negocio: Detección, Valoración, Plan, Seguimiento y Cierre'],
+        ['Inicio con cifras', 'Informe de Power BI incrustado, con seguridad por filas y sin datos clínicos'],
+        ['Trazabilidad', 'Auditoría de Dataverse y registro de actividad en Microsoft Purview']].map(function (f) { return '<tr><td><b>' + esc(f[0]) + '</b></td><td>' + esc(f[1]) + '</td></tr>'; }).join('') + '</tbody></table></div></div>';
+    return h;
+  }
+
+  function capa(etq, titulo, texto, clave) { return '<div class="arch-box' + (clave ? ' key' : '') + '"><span class="arch-etq">' + esc(etq) + '</span><b>' + esc(titulo) + '</b><span class="small">' + esc(texto) + '</span></div>'; }
+
+  /* ---------------------------------------------------------------- registrar atención */
+  var drawer = $('#drawer');
+  function abrirRegistro(e) {
+    var r = S.rol;
+    var casos = casosAbiertos(e.i);
+    var hoy = new Date(), hh = String(hoy.getHours()).padStart(2, '0') + ':' + String(hoy.getMinutes()).padStart(2, '0');
+    drawer.innerHTML = '<div class="drawer-panel" role="dialog" aria-modal="true" aria-labelledby="dTit"><div class="drawer-head"><div><h2 id="dTit">Registrar atención</h2><div class="small muted">' + esc(nombreEst(e)) + ' · <span class="mono">' + esc(e.codigo) + '</span></div></div><button type="button" class="btn sm" data-cerrar-drawer="1" aria-label="Cerrar">' + ICON_X + '</button></div>' +
+      '<form id="fReg" class="drawer-body" novalidate>' +
+      '<div class="row2"><div class="field"><label for="fArea">Área</label><select id="fArea">' + r.registra.map(function (k) { return '<option value="' + k + '">' + esc(AREAS[k].nombre) + '</option>'; }).join('') + '</select></div>' +
+      '<div class="field"><label for="fServ">Servicio</label><select id="fServ"></select></div></div>' +
+      '<div class="row2"><div class="field"><label for="fFecha">Fecha</label><input type="date" id="fFecha" value="2026-10-08" max="2026-10-08"></div><div class="field"><label for="fHora">Hora</label><input type="time" id="fHora" value="' + hh + '"></div></div>' +
+      '<div class="row2"><div class="field"><label for="fMod">Modalidad</label><select id="fMod">' + MODALIDAD.map(function (m, k) { return '<option value="' + k + '">' + m + '</option>'; }).join('') + '</select></div>' +
+      '<div class="field"><label for="fTipo">Tipo</label><select id="fTipo">' + TIPOS.map(function (m, k) { return '<option value="' + k + '"' + (k === 1 ? ' selected' : '') + '>' + m + '</option>'; }).join('') + '</select></div></div>' +
+      '<div class="field"><label for="fRes">Resumen visible para la red de acompañamiento</label><textarea id="fRes" maxlength="500" placeholder="Qué se hizo y qué se acordó. Sin diagnósticos ni detalles íntimos."></textarea><span class="hint" id="fResHint">Lo verán los profesionales con acceso. Máximo 500 caracteres.</span></div>' +
+      '<div class="row2"><div class="field"><label for="fAcc">Próxima acción (opcional)</label><input id="fAcc" maxlength="120" placeholder="Ej.: tutoría el martes"></div><div class="field"><label for="fProx">Fecha de la próxima acción</label><input type="date" id="fProx" min="2026-10-08"></div></div>' +
+      '<div class="field"><label for="fCaso">Vincular a un caso</label><select id="fCaso"><option value="">Sin caso</option>' + casos.map(function (c) { return '<option value="' + esc(c.id) + '">' + esc(c.id + ' · ' + MOTIVOS[c.motivo]) + '</option>'; }).join('') + '</select></div>' +
+      '<div class="row2"><div class="field"><label for="fRemA">Remitir a otra área (opcional)</label><select id="fRemA"><option value="">No remitir</option>' + AREAS.map(function (a, k) { return '<option value="' + k + '">' + esc(a.nombre) + '</option>'; }).join('') + '</select></div><div class="field"><label for="fRemM">Motivo de la remisión</label><input id="fRemM" maxlength="140" placeholder="Sin datos clínicos"></div></div>' +
+      '<div class="box-res" id="boxCli" hidden><div class="t">' + ICON_LOCK + 'Nota clínica reservada</div><div class="field"><label for="fCli">Contenido clínico</label><textarea id="fCli" maxlength="2000" placeholder="Motivo de consulta, valoración y plan. Solo lo verá tu área."></textarea></div>' +
+      '<label class="small" style="display:flex;gap:8px;align-items:flex-start"><input type="checkbox" id="fCons" style="margin-top:3px"> El estudiante firmó el consentimiento informado y está vigente.</label></div>' +
+      '<div class="firma">Se guardará con tu huella: <b>' + esc(r.usuario) + '</b> · ' + esc(r.nombre) + ' · fecha y hora del sistema. Después no se borra; solo se puede anular con motivo.</div>' +
+      '<p class="err" id="fErr" role="alert" hidden></p></form>' +
+      '<div class="drawer-foot"><span class="small muted">Datos de prueba: se borran al recargar</span><div style="display:flex;gap:8px"><button type="button" class="btn" data-cerrar-drawer="1">Cancelar</button><button type="submit" form="fReg" class="btn primary">Guardar atención</button></div></div></div>';
+    drawer.hidden = false;
+    var fArea = $('#fArea');
+    function syncArea() {
+      var k = +fArea.value, ar = AREAS[k];
+      $('#fServ').innerHTML = ar.servicios.map(function (s, i) { return '<option value="' + i + '">' + esc(s) + '</option>'; }).join('');
+      $('#boxCli').hidden = !ar.clinica;
+      var res = $('#fRes');
+      if (ar.clinica) { res.value = 'Atención de ' + ar.nombre + ' realizada.'; res.readOnly = true; $('#fResHint').textContent = 'En áreas clínicas el resumen visible es estándar; el contenido va en la nota reservada.'; }
+      else { if (res.readOnly) res.value = ''; res.readOnly = false; $('#fResHint').textContent = 'Lo verán los profesionales con acceso. Máximo 500 caracteres.'; }
+    }
+    fArea.addEventListener('change', syncArea);
+    syncArea();
+    $('#fReg').addEventListener('submit', function (ev) { ev.preventDefault(); guardarAtencion(e); });
+    $('#fReg').addEventListener('input', function () { $('#fErr').hidden = true; });
+    setTimeout(function () { fArea.focus(); }, 30);
+  }
+  function cerrarDrawer() { drawer.hidden = true; drawer.innerHTML = ''; }
+  function guardarAtencion(e) {
+    var r = S.rol, area = +$('#fArea').value, ar = AREAS[area], err = $('#fErr');
+    var res = $('#fRes').value.trim(), cli = ar.clinica ? $('#fCli').value.trim() : '', fecha = $('#fFecha').value, hora = $('#fHora').value || '08:00';
+    var remA = $('#fRemA').value, remM = $('#fRemM').value.trim(), prox = $('#fProx').value, acc = $('#fAcc').value.trim();
+    var msg = '';
+    if (!fecha) msg = 'Indica la fecha de la atención.';
+    else if (fecha > '2026-10-08') msg = 'La fecha no puede ser posterior a hoy.';
+    else if (!ar.clinica && res.length < 10) msg = 'Escribe un resumen de al menos 10 caracteres.';
+    else if (ar.clinica && cli.length < 10) msg = 'Escribe la nota clínica (al menos 10 caracteres).';
+    else if (ar.clinica && !$('#fCons').checked) msg = 'Sin consentimiento informado vigente no se puede registrar la nota clínica.';
+    else if (remA !== '' && +remA === area) msg = 'No puedes remitir a la misma área.';
+    else if (remA !== '' && remM.length < 5) msg = 'Escribe el motivo de la remisión.';
+    else if (prox && !acc) msg = 'Si indicas la fecha, describe la próxima acción.';
+    if (msg) { err.textContent = msg; err.hidden = false; return; }
+    var p = fecha.split('-').map(Number), hm = hora.split(':').map(Number);
+    var j = DB.nAt++;
+    A.est[j] = e.i; A.dia[j] = diaDe(p[0], p[1] - 1, p[2]); A.min[j] = hm[0] * 60 + hm[1]; A.area[j] = area; A.serv[j] = +$('#fServ').value;
+    A.prof[j] = 0; A.mod[j] = +$('#fMod').value; A.tipo[j] = +$('#fTipo').value; A.estado[j] = 0; A.cli[j] = cli ? 1 : 0;
+    A.prox[j] = prox ? diaDe(+prox.slice(0, 4), +prox.slice(5, 7) - 1, +prox.slice(8, 10)) : -1;
+    var rem = null;
+    if (remA !== '') {
+      rem = { est: e.i, caso: $('#fCaso').value, de: area, para: +remA, dia: A.dia[j], motivo: remM, estado: 'Pendiente', por: r.usuario };
+      agregarRemision(rem);
+    }
+    DB.custom.set(j, { prof: r.usuario, rol: r.nombre, res: res, acc: acc, cli: cli, creado: new Date(), rem: rem });
+    if (!DB.extra.has(e.i)) DB.extra.set(e.i, []);
+    DB.extra.get(e.i).push(j);
+    S.nuevas[j] = true;
+    auditar(e, 'Registró atención', ar.servicios[A.serv[j]]);
+    if (cli) auditar(e, 'Registró nota clínica (reservada)', 'Tabla protegida de ' + ar.nombre);
+    if (rem) auditar(e, 'Remitió a ' + AREAS[rem.para].nombre, remM);
+    cerrarDrawer();
+    S.sub[e.i] = 'atenciones'; S.areaF[e.i] = null;
+    render();
+    toast('Atención guardada con tu huella y visible para la red' + (rem ? '. Remisión enviada a ' + AREAS[rem.para].nombre + ' (en Microsoft llegaría el aviso por Teams).' : '.'));
+  }
+
+  /* ---------------------------------------------------------------- avisos */
+  var toastT = 0;
+  function toast(t) { var el = $('#toast'); el.textContent = t; el.hidden = false; clearTimeout(toastT); toastT = setTimeout(function () { el.hidden = true; }, 4200); }
+
+  /* ---------------------------------------------------------------- eventos */
+  document.addEventListener('click', function (ev) {
+    var t = ev.target.closest('button, tr.row, [data-open]');
+    if (!t) return;
+    var d = t.dataset;
+    if (d.nav) { S.seccion = d.nav; S.activo = null; render(); view.scrollTop = 0; return; }
+    if (d.tab != null) { S.activo = d.tab === 'sec' ? null : +d.tab; render(); return; }
+    if (d.close != null) { var i = +d.close; S.tabs = S.tabs.filter(function (x) { return x !== i; }); if (S.activo === i) S.activo = S.tabs.length ? S.tabs[S.tabs.length - 1] : null; render(); return; }
+    if (d.open != null) { abrirEstudiante(+d.open, d.sub); return; }
+    if (d.sub && S.activo !== null) { S.sub[S.activo] = d.sub; render(); return; }
+    if (d.areaf != null && S.activo !== null) { S.areaF[S.activo] = d.areaf === '' ? null : +d.areaf; render(); return; }
+    if (d.act === 'registrar' && S.activo !== null) { abrirRegistro(DB.est[S.activo]); return; }
+    if (d.cerrarDrawer) { cerrarDrawer(); return; }
+    if (d.nota != null) { var j = +d.nota; S.verNota[j] = true; auditar(DB.est[A.est[j]], 'Consultó nota clínica', AREAS[A.area[j]].nombre + ' · ' + fDia(A.dia[j])); render(); toast('Lectura de la nota clínica registrada en la trazabilidad.'); return; }
+    if (d.anular != null) { S.anulando = +d.anular; render(); var inp = $('#anulMot'); if (inp) inp.focus(); return; }
+    if (d.anularCancel) { S.anulando = null; render(); return; }
+    if (d.aceptar != null) { var x = DB.rem[+d.aceptar]; if (x && x.estado === 'Pendiente') { x.estado = 'Aceptada'; auditar(DB.est[x.est], 'Aceptó remisión', AREAS[x.de].nombre + ' → ' + AREAS[x.para].nombre); render(); toast('Remisión aceptada. El área que remitió recibe el aviso.'); } return; }
+    if (d.pag) { S.f.pag = Math.max(0, S.f.pag + (+d.pag)); $('#resEst').innerHTML = resultadosEst(); return; }
+    if (d.cpag) { S.cf.pag = Math.max(0, S.cf.pag + (+d.cpag)); render(); return; }
+  });
+  document.addEventListener('keydown', function (ev) {
+    if (ev.key === 'Escape' && !drawer.hidden) { cerrarDrawer(); return; }
+    if ((ev.key === 'Enter' || ev.key === ' ') && ev.target.matches && ev.target.matches('tr.row')) { ev.preventDefault(); ev.target.click(); }
+  });
+  drawer.addEventListener('click', function (ev) { if (ev.target === drawer) cerrarDrawer(); });
+  document.addEventListener('submit', function (ev) {
+    var f = ev.target.closest('[data-form-anular]');
+    if (!f) return;
+    ev.preventDefault();
+    var j = +f.dataset.formAnular, mot = $('#anulMot').value.trim();
+    if (mot.length < 5) { $('#anulMot').setAttribute('aria-invalid', 'true'); toast('Escribe el motivo de la anulación (al menos 5 caracteres).'); return; }
+    A.estado[j] = 2; DB.custom.get(j).anulMotivo = mot; S.anulando = null;
+    auditar(DB.est[A.est[j]], 'Anuló atención', mot);
+    render(); toast('Atención anulada. Sigue visible, tachada, con tu nombre y el motivo.');
+  });
+  var qT = 0;
+  view.addEventListener('input', function (ev) {
+    if (ev.target.id === 'q') { S.f.q = ev.target.value; S.f.pag = 0; clearTimeout(qT); qT = setTimeout(function () { $('#resEst').innerHTML = resultadosEst(); }, 120); }
+  });
+  view.addEventListener('change', function (ev) {
+    var id = ev.target.id;
+    if (id === 'fFac') { S.f.fac = ev.target.value; S.f.prog = ''; S.f.pag = 0; render(); $('#fFac').focus(); }
+    else if (id === 'fProg') { S.f.prog = ev.target.value; S.f.pag = 0; $('#resEst').innerHTML = resultadosEst(); }
+    else if (id === 'fMat') { S.f.mat = ev.target.value; S.f.pag = 0; $('#resEst').innerHTML = resultadosEst(); }
+    else if (id === 'fAl') { S.f.alerta = ev.target.checked; S.f.pag = 0; $('#resEst').innerHTML = resultadosEst(); }
+    else if (id === 'fCa') { S.f.caso = ev.target.checked; S.f.pag = 0; $('#resEst').innerHTML = resultadosEst(); }
+    else if (id === 'cEst') { S.cf.estado = ev.target.value; S.cf.pag = 0; render(); }
+    else if (id === 'cArea') { S.cf.area = ev.target.value; S.cf.pag = 0; render(); }
+    else if (id === 'rFil') { S.rf = ev.target.value; render(); }
+  });
+  var roleSel = $('#roleSel');
+  roleSel.innerHTML = ROLES.map(function (r, k) { return '<option value="' + k + '">' + esc(r.nombre) + '</option>'; }).join('');
+  roleSel.addEventListener('change', function () {
+    S.rol = ROLES[+roleSel.value]; S.verNota = {}; S.anulando = null;
+    $('#meName').textContent = S.rol.usuario; $('#meRole').textContent = S.rol.nombre; $('#meIni').textContent = iniciales(S.rol.usuario);
+    cerrarDrawer(); render();
+    toast('Ahora ves la app como ' + S.rol.nombre + '. ' + S.rol.desc);
+  });
+  $('#noticeClose').addEventListener('click', function () { $('#notice').hidden = true; try { localStorage.setItem('bitacora-aviso', '1'); } catch (e) { } });
+  try { if (localStorage.getItem('bitacora-aviso') === '1') $('#notice').hidden = true; } catch (e) { }
+
+  /* ---------------------------------------------------------------- arranque */
+  requestAnimationFrame(function () {
+    setTimeout(function () {
+      generar();
+      var demo = DB.est.find(function (e) { return e.alertas.length && casosAbiertos(e.i).length && totalAt(e.i) >= 8 && (function () { for (var j = A.start[e.i]; j < A.start[e.i + 1]; j++) if (A.area[j] === 0) return true; return false; })(); });
+      var m = /^#est-(\d{10})$/.exec(location.hash || '');
+      var deep = m ? DB.est.find(function (e) { return e.codigo === m[1]; }) : null;
+      render();
+      if (deep) abrirEstudiante(deep.i);
+      else if (demo) { S.tabs.push(demo.i); auditar(demo, 'Consultó la ficha', 'Abrió la pestaña del estudiante'); renderTabs(); }
+    }, 20);
+  });
+})();
+</script>
