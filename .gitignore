@@ -1,0 +1,10 @@
+# Datos personales de estudiantes: nunca al repositorio (es público).
+# Los libros de Excel y las extracciones se guardan en el OneDrive institucional.
+*.xlsx
+*.xlsm
+*.xls
+*.csv
+~$*
+
+__pycache__/
+*.pyc
