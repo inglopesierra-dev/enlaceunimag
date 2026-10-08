@@ -585,22 +585,22 @@ If(IsBlank(ThisItem.Remitido), ThisItem.Origen, "De: " & ThisItem.Remitido) & If
 **OnSelect**
 
 ```
-IfError(Switch(varUnidadPend,
-    "DEA", Patch('Seguimiento Desarrollo Estudiantil', LookUp('Seguimiento Desarrollo Estudiantil', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}),
-    "DPS", Patch('Seguimiento Psicología DE', LookUp('Seguimiento Psicología DE', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}),
-    "PSI", Patch('Seguimiento Psicología', LookUp('Seguimiento Psicología', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}),
-    "SAL", Patch('Seguimiento Salud', LookUp('Seguimiento Salud', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}),
-    "GAV", Patch('Seguimiento GAV', LookUp('Seguimiento GAV', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}),
-    "CES", Patch('Seguimiento Centro de Escucha', LookUp('Seguimiento Centro de Escucha', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}),
-    "TSO", Patch('Seguimiento Trabajo Social', LookUp('Seguimiento Trabajo Social', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}),
-    "ENL", Patch('Seguimiento Enlaces', LookUp('Seguimiento Enlaces', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}),
-    "PRP", Patch('Seguimiento Riesgo Psicosocial', LookUp('Seguimiento Riesgo Psicosocial', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}),
-    "PRS", Patch('Seguimiento Prevención Salud', LookUp('Seguimiento Prevención Salud', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}),
-    "ORE", Patch('Seguimiento Orientación Espiritual', LookUp('Seguimiento Orientación Espiritual', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}),
-    "CAI", Patch('Seguimiento Infancia CAI', LookUp('Seguimiento Infancia CAI', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}),
-    "SAF", Patch('Seguimiento Sala Amiga', LookUp('Seguimiento Sala Amiga', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}),
-    "IPS", Patch('Seguimiento IPS FUNPRONIMA', LookUp('Seguimiento IPS FUNPRONIMA', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo})
-), Notify("No se pudo tomar: " & FirstError.Message, NotificationType.Error), Notify("Quedó a tu nombre y en curso.", NotificationType.Success))
+Switch(varUnidadPend,
+    "DEA", IfError(Patch('Seguimiento Desarrollo Estudiantil', LookUp('Seguimiento Desarrollo Estudiantil', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}), Notify("No se pudo tomar: " & FirstError.Message, NotificationType.Error), Notify("Quedó a tu nombre y en curso.", NotificationType.Success)),
+    "DPS", IfError(Patch('Seguimiento Psicología DE', LookUp('Seguimiento Psicología DE', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}), Notify("No se pudo tomar: " & FirstError.Message, NotificationType.Error), Notify("Quedó a tu nombre y en curso.", NotificationType.Success)),
+    "PSI", IfError(Patch('Seguimiento Psicología', LookUp('Seguimiento Psicología', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}), Notify("No se pudo tomar: " & FirstError.Message, NotificationType.Error), Notify("Quedó a tu nombre y en curso.", NotificationType.Success)),
+    "SAL", IfError(Patch('Seguimiento Salud', LookUp('Seguimiento Salud', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}), Notify("No se pudo tomar: " & FirstError.Message, NotificationType.Error), Notify("Quedó a tu nombre y en curso.", NotificationType.Success)),
+    "GAV", IfError(Patch('Seguimiento GAV', LookUp('Seguimiento GAV', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}), Notify("No se pudo tomar: " & FirstError.Message, NotificationType.Error), Notify("Quedó a tu nombre y en curso.", NotificationType.Success)),
+    "CES", IfError(Patch('Seguimiento Centro de Escucha', LookUp('Seguimiento Centro de Escucha', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}), Notify("No se pudo tomar: " & FirstError.Message, NotificationType.Error), Notify("Quedó a tu nombre y en curso.", NotificationType.Success)),
+    "TSO", IfError(Patch('Seguimiento Trabajo Social', LookUp('Seguimiento Trabajo Social', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}), Notify("No se pudo tomar: " & FirstError.Message, NotificationType.Error), Notify("Quedó a tu nombre y en curso.", NotificationType.Success)),
+    "ENL", IfError(Patch('Seguimiento Enlaces', LookUp('Seguimiento Enlaces', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}), Notify("No se pudo tomar: " & FirstError.Message, NotificationType.Error), Notify("Quedó a tu nombre y en curso.", NotificationType.Success)),
+    "PRP", IfError(Patch('Seguimiento Riesgo Psicosocial', LookUp('Seguimiento Riesgo Psicosocial', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}), Notify("No se pudo tomar: " & FirstError.Message, NotificationType.Error), Notify("Quedó a tu nombre y en curso.", NotificationType.Success)),
+    "PRS", IfError(Patch('Seguimiento Prevención Salud', LookUp('Seguimiento Prevención Salud', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}), Notify("No se pudo tomar: " & FirstError.Message, NotificationType.Error), Notify("Quedó a tu nombre y en curso.", NotificationType.Success)),
+    "ORE", IfError(Patch('Seguimiento Orientación Espiritual', LookUp('Seguimiento Orientación Espiritual', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}), Notify("No se pudo tomar: " & FirstError.Message, NotificationType.Error), Notify("Quedó a tu nombre y en curso.", NotificationType.Success)),
+    "CAI", IfError(Patch('Seguimiento Infancia CAI', LookUp('Seguimiento Infancia CAI', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}), Notify("No se pudo tomar: " & FirstError.Message, NotificationType.Error), Notify("Quedó a tu nombre y en curso.", NotificationType.Success)),
+    "SAF", IfError(Patch('Seguimiento Sala Amiga', LookUp('Seguimiento Sala Amiga', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}), Notify("No se pudo tomar: " & FirstError.Message, NotificationType.Error), Notify("Quedó a tu nombre y en curso.", NotificationType.Success)),
+    "IPS", IfError(Patch('Seguimiento IPS FUNPRONIMA', LookUp('Seguimiento IPS FUNPRONIMA', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}), Notify("No se pudo tomar: " & FirstError.Message, NotificationType.Error), Notify("Quedó a tu nombre y en curso.", NotificationType.Success))
+)
 ```
 
 ##### rectPendLinea · Rectángulo
@@ -1651,22 +1651,22 @@ Switch(ThisItem.Estado, "Pendiente", fxC.AvisoSuave, "Anulado", fxC.Fondo, "Cerr
 **OnSelect**
 
 ```
-IfError(Switch(varUnidad,
-    "DEA", Patch('Seguimiento Desarrollo Estudiantil', LookUp('Seguimiento Desarrollo Estudiantil', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}),
-    "DPS", Patch('Seguimiento Psicología DE', LookUp('Seguimiento Psicología DE', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}),
-    "PSI", Patch('Seguimiento Psicología', LookUp('Seguimiento Psicología', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}),
-    "SAL", Patch('Seguimiento Salud', LookUp('Seguimiento Salud', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}),
-    "GAV", Patch('Seguimiento GAV', LookUp('Seguimiento GAV', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}),
-    "CES", Patch('Seguimiento Centro de Escucha', LookUp('Seguimiento Centro de Escucha', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}),
-    "TSO", Patch('Seguimiento Trabajo Social', LookUp('Seguimiento Trabajo Social', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}),
-    "ENL", Patch('Seguimiento Enlaces', LookUp('Seguimiento Enlaces', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}),
-    "PRP", Patch('Seguimiento Riesgo Psicosocial', LookUp('Seguimiento Riesgo Psicosocial', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}),
-    "PRS", Patch('Seguimiento Prevención Salud', LookUp('Seguimiento Prevención Salud', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}),
-    "ORE", Patch('Seguimiento Orientación Espiritual', LookUp('Seguimiento Orientación Espiritual', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}),
-    "CAI", Patch('Seguimiento Infancia CAI', LookUp('Seguimiento Infancia CAI', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}),
-    "SAF", Patch('Seguimiento Sala Amiga', LookUp('Seguimiento Sala Amiga', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}),
-    "IPS", Patch('Seguimiento IPS FUNPRONIMA', LookUp('Seguimiento IPS FUNPRONIMA', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)})
-), Notify("No se pudo anular: " & FirstError.Message, NotificationType.Error), Notify("Registro anulado.", NotificationType.Success); Set(varAnulando, false))
+Switch(varUnidad,
+    "DEA", IfError(Patch('Seguimiento Desarrollo Estudiantil', LookUp('Seguimiento Desarrollo Estudiantil', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}), Notify("No se pudo anular: " & FirstError.Message, NotificationType.Error), Notify("Registro anulado.", NotificationType.Success); Set(varAnulando, false)),
+    "DPS", IfError(Patch('Seguimiento Psicología DE', LookUp('Seguimiento Psicología DE', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}), Notify("No se pudo anular: " & FirstError.Message, NotificationType.Error), Notify("Registro anulado.", NotificationType.Success); Set(varAnulando, false)),
+    "PSI", IfError(Patch('Seguimiento Psicología', LookUp('Seguimiento Psicología', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}), Notify("No se pudo anular: " & FirstError.Message, NotificationType.Error), Notify("Registro anulado.", NotificationType.Success); Set(varAnulando, false)),
+    "SAL", IfError(Patch('Seguimiento Salud', LookUp('Seguimiento Salud', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}), Notify("No se pudo anular: " & FirstError.Message, NotificationType.Error), Notify("Registro anulado.", NotificationType.Success); Set(varAnulando, false)),
+    "GAV", IfError(Patch('Seguimiento GAV', LookUp('Seguimiento GAV', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}), Notify("No se pudo anular: " & FirstError.Message, NotificationType.Error), Notify("Registro anulado.", NotificationType.Success); Set(varAnulando, false)),
+    "CES", IfError(Patch('Seguimiento Centro de Escucha', LookUp('Seguimiento Centro de Escucha', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}), Notify("No se pudo anular: " & FirstError.Message, NotificationType.Error), Notify("Registro anulado.", NotificationType.Success); Set(varAnulando, false)),
+    "TSO", IfError(Patch('Seguimiento Trabajo Social', LookUp('Seguimiento Trabajo Social', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}), Notify("No se pudo anular: " & FirstError.Message, NotificationType.Error), Notify("Registro anulado.", NotificationType.Success); Set(varAnulando, false)),
+    "ENL", IfError(Patch('Seguimiento Enlaces', LookUp('Seguimiento Enlaces', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}), Notify("No se pudo anular: " & FirstError.Message, NotificationType.Error), Notify("Registro anulado.", NotificationType.Success); Set(varAnulando, false)),
+    "PRP", IfError(Patch('Seguimiento Riesgo Psicosocial', LookUp('Seguimiento Riesgo Psicosocial', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}), Notify("No se pudo anular: " & FirstError.Message, NotificationType.Error), Notify("Registro anulado.", NotificationType.Success); Set(varAnulando, false)),
+    "PRS", IfError(Patch('Seguimiento Prevención Salud', LookUp('Seguimiento Prevención Salud', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}), Notify("No se pudo anular: " & FirstError.Message, NotificationType.Error), Notify("Registro anulado.", NotificationType.Success); Set(varAnulando, false)),
+    "ORE", IfError(Patch('Seguimiento Orientación Espiritual', LookUp('Seguimiento Orientación Espiritual', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}), Notify("No se pudo anular: " & FirstError.Message, NotificationType.Error), Notify("Registro anulado.", NotificationType.Success); Set(varAnulando, false)),
+    "CAI", IfError(Patch('Seguimiento Infancia CAI', LookUp('Seguimiento Infancia CAI', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}), Notify("No se pudo anular: " & FirstError.Message, NotificationType.Error), Notify("Registro anulado.", NotificationType.Success); Set(varAnulando, false)),
+    "SAF", IfError(Patch('Seguimiento Sala Amiga', LookUp('Seguimiento Sala Amiga', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}), Notify("No se pudo anular: " & FirstError.Message, NotificationType.Error), Notify("Registro anulado.", NotificationType.Success); Set(varAnulando, false)),
+    "IPS", IfError(Patch('Seguimiento IPS FUNPRONIMA', LookUp('Seguimiento IPS FUNPRONIMA', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}), Notify("No se pudo anular: " & FirstError.Message, NotificationType.Error), Notify("Registro anulado.", NotificationType.Success); Set(varAnulando, false))
+)
 ```
 
 ##### btnCancelarAnular · Botón (clásico)
@@ -1955,25 +1955,21 @@ IfError(Switch(varUnidad,
 ```
 Set(varDestino, LookUp(fxReservadas, Nombre = ddDestino.Selected.Nombre).Codigo);
 Set(varRem, {'Código': varEst.'Código', Estudiante: varEst.'Nombre completo', Fecha: Today(), 'Tipo de registro': "Remisión recibida", Motivo: ddMotivoRem.Selected.Value, Resumen: Trim(txtNotaRem.Text), Estado: "Pendiente", Prioridad: ddPrioridadRem.Selected.Value, Origen: "Remisión de otra unidad", 'Remitido por': fxRemitente, 'Menor de edad': If(Not(IsBlank(varEdad)) And varEdad < 18, "Sí", "No"), 'Autorización de datos': "Pendiente", 'Registrado por': fxNombreYo, 'Correo de quien registra': fxYo});
-IfError(
-    Switch(varDestino,
-    "DEA", Patch('Seguimiento Desarrollo Estudiantil', Defaults('Seguimiento Desarrollo Estudiantil'), varRem),
-    "DPS", Patch('Seguimiento Psicología DE', Defaults('Seguimiento Psicología DE'), varRem),
-    "PSI", Patch('Seguimiento Psicología', Defaults('Seguimiento Psicología'), varRem),
-    "SAL", Patch('Seguimiento Salud', Defaults('Seguimiento Salud'), varRem),
-    "GAV", Patch('Seguimiento GAV', Defaults('Seguimiento GAV'), varRem),
-    "CES", Patch('Seguimiento Centro de Escucha', Defaults('Seguimiento Centro de Escucha'), varRem),
-    "TSO", Patch('Seguimiento Trabajo Social', Defaults('Seguimiento Trabajo Social'), varRem),
-    "ENL", Patch('Seguimiento Enlaces', Defaults('Seguimiento Enlaces'), varRem),
-    "PRP", Patch('Seguimiento Riesgo Psicosocial', Defaults('Seguimiento Riesgo Psicosocial'), varRem),
-    "PRS", Patch('Seguimiento Prevención Salud', Defaults('Seguimiento Prevención Salud'), varRem),
-    "ORE", Patch('Seguimiento Orientación Espiritual', Defaults('Seguimiento Orientación Espiritual'), varRem),
-    "CAI", Patch('Seguimiento Infancia CAI', Defaults('Seguimiento Infancia CAI'), varRem),
-    "SAF", Patch('Seguimiento Sala Amiga', Defaults('Seguimiento Sala Amiga'), varRem),
-    "IPS", Patch('Seguimiento IPS FUNPRONIMA', Defaults('Seguimiento IPS FUNPRONIMA'), varRem)
-),
-    Notify("No se pudo remitir: " & FirstError.Message, NotificationType.Error),
-    Notify("Remisión enviada a " & ddDestino.Selected.Nombre & ".", NotificationType.Success); Reset(txtNotaRem)
+Switch(varDestino,
+    "DEA", IfError(Patch('Seguimiento Desarrollo Estudiantil', Defaults('Seguimiento Desarrollo Estudiantil'), varRem), Notify("No se pudo remitir: " & FirstError.Message, NotificationType.Error), Notify("Remisión enviada a " & ddDestino.Selected.Nombre & ".", NotificationType.Success); Reset(txtNotaRem)),
+    "DPS", IfError(Patch('Seguimiento Psicología DE', Defaults('Seguimiento Psicología DE'), varRem), Notify("No se pudo remitir: " & FirstError.Message, NotificationType.Error), Notify("Remisión enviada a " & ddDestino.Selected.Nombre & ".", NotificationType.Success); Reset(txtNotaRem)),
+    "PSI", IfError(Patch('Seguimiento Psicología', Defaults('Seguimiento Psicología'), varRem), Notify("No se pudo remitir: " & FirstError.Message, NotificationType.Error), Notify("Remisión enviada a " & ddDestino.Selected.Nombre & ".", NotificationType.Success); Reset(txtNotaRem)),
+    "SAL", IfError(Patch('Seguimiento Salud', Defaults('Seguimiento Salud'), varRem), Notify("No se pudo remitir: " & FirstError.Message, NotificationType.Error), Notify("Remisión enviada a " & ddDestino.Selected.Nombre & ".", NotificationType.Success); Reset(txtNotaRem)),
+    "GAV", IfError(Patch('Seguimiento GAV', Defaults('Seguimiento GAV'), varRem), Notify("No se pudo remitir: " & FirstError.Message, NotificationType.Error), Notify("Remisión enviada a " & ddDestino.Selected.Nombre & ".", NotificationType.Success); Reset(txtNotaRem)),
+    "CES", IfError(Patch('Seguimiento Centro de Escucha', Defaults('Seguimiento Centro de Escucha'), varRem), Notify("No se pudo remitir: " & FirstError.Message, NotificationType.Error), Notify("Remisión enviada a " & ddDestino.Selected.Nombre & ".", NotificationType.Success); Reset(txtNotaRem)),
+    "TSO", IfError(Patch('Seguimiento Trabajo Social', Defaults('Seguimiento Trabajo Social'), varRem), Notify("No se pudo remitir: " & FirstError.Message, NotificationType.Error), Notify("Remisión enviada a " & ddDestino.Selected.Nombre & ".", NotificationType.Success); Reset(txtNotaRem)),
+    "ENL", IfError(Patch('Seguimiento Enlaces', Defaults('Seguimiento Enlaces'), varRem), Notify("No se pudo remitir: " & FirstError.Message, NotificationType.Error), Notify("Remisión enviada a " & ddDestino.Selected.Nombre & ".", NotificationType.Success); Reset(txtNotaRem)),
+    "PRP", IfError(Patch('Seguimiento Riesgo Psicosocial', Defaults('Seguimiento Riesgo Psicosocial'), varRem), Notify("No se pudo remitir: " & FirstError.Message, NotificationType.Error), Notify("Remisión enviada a " & ddDestino.Selected.Nombre & ".", NotificationType.Success); Reset(txtNotaRem)),
+    "PRS", IfError(Patch('Seguimiento Prevención Salud', Defaults('Seguimiento Prevención Salud'), varRem), Notify("No se pudo remitir: " & FirstError.Message, NotificationType.Error), Notify("Remisión enviada a " & ddDestino.Selected.Nombre & ".", NotificationType.Success); Reset(txtNotaRem)),
+    "ORE", IfError(Patch('Seguimiento Orientación Espiritual', Defaults('Seguimiento Orientación Espiritual'), varRem), Notify("No se pudo remitir: " & FirstError.Message, NotificationType.Error), Notify("Remisión enviada a " & ddDestino.Selected.Nombre & ".", NotificationType.Success); Reset(txtNotaRem)),
+    "CAI", IfError(Patch('Seguimiento Infancia CAI', Defaults('Seguimiento Infancia CAI'), varRem), Notify("No se pudo remitir: " & FirstError.Message, NotificationType.Error), Notify("Remisión enviada a " & ddDestino.Selected.Nombre & ".", NotificationType.Success); Reset(txtNotaRem)),
+    "SAF", IfError(Patch('Seguimiento Sala Amiga', Defaults('Seguimiento Sala Amiga'), varRem), Notify("No se pudo remitir: " & FirstError.Message, NotificationType.Error), Notify("Remisión enviada a " & ddDestino.Selected.Nombre & ".", NotificationType.Success); Reset(txtNotaRem)),
+    "IPS", IfError(Patch('Seguimiento IPS FUNPRONIMA', Defaults('Seguimiento IPS FUNPRONIMA'), varRem), Notify("No se pudo remitir: " & FirstError.Message, NotificationType.Error), Notify("Remisión enviada a " & ddDestino.Selected.Nombre & ".", NotificationType.Success); Reset(txtNotaRem))
 )
 ```
 
@@ -2813,26 +2809,22 @@ Set(varError, If(
 ));
 If(IsBlank(varError),
     Set(varNuevo, {'Código': varEst.'Código', Estudiante: varEst.'Nombre completo', Fecha: dpSegFecha.SelectedDate, 'Tipo de registro': ddSegTipo.Selected.Value, Servicio: ddSegServicio.Selected.Servicio, Modalidad: ddSegModalidad.Selected.Value, Motivo: ddSegMotivo.Selected.Value, Resumen: Trim(txtSegResumen.Text), 'Próxima acción': Trim(txtSegProxima.Text), 'Fecha próxima acción': dpSegProxima.SelectedDate, Estado: ddSegEstado.Selected.Value, Prioridad: ddSegPrioridad.Selected.Value, Origen: "Iniciativa de la unidad", 'Menor de edad': If(Not(IsBlank(varEdad)) And varEdad < 18, "Sí", "No"), 'Autorización de datos': ddSegAutorizacion.Selected.Value, 'Registrado por': fxNombreYo, 'Correo de quien registra': fxYo, 'Asignado a': fxYo});
-    IfError(
-        Switch(varUnidad,
-    "DEA", Patch('Seguimiento Desarrollo Estudiantil', Defaults('Seguimiento Desarrollo Estudiantil'), varNuevo),
-    "DPS", Patch('Seguimiento Psicología DE', Defaults('Seguimiento Psicología DE'), varNuevo),
-    "PSI", Patch('Seguimiento Psicología', Defaults('Seguimiento Psicología'), varNuevo),
-    "SAL", Patch('Seguimiento Salud', Defaults('Seguimiento Salud'), varNuevo),
-    "GAV", Patch('Seguimiento GAV', Defaults('Seguimiento GAV'), varNuevo),
-    "CES", Patch('Seguimiento Centro de Escucha', Defaults('Seguimiento Centro de Escucha'), varNuevo),
-    "TSO", Patch('Seguimiento Trabajo Social', Defaults('Seguimiento Trabajo Social'), varNuevo),
-    "ENL", Patch('Seguimiento Enlaces', Defaults('Seguimiento Enlaces'), varNuevo),
-    "PRP", Patch('Seguimiento Riesgo Psicosocial', Defaults('Seguimiento Riesgo Psicosocial'), varNuevo),
-    "PRS", Patch('Seguimiento Prevención Salud', Defaults('Seguimiento Prevención Salud'), varNuevo),
-    "ORE", Patch('Seguimiento Orientación Espiritual', Defaults('Seguimiento Orientación Espiritual'), varNuevo),
-    "CAI", Patch('Seguimiento Infancia CAI', Defaults('Seguimiento Infancia CAI'), varNuevo),
-    "SAF", Patch('Seguimiento Sala Amiga', Defaults('Seguimiento Sala Amiga'), varNuevo),
-    "IPS", Patch('Seguimiento IPS FUNPRONIMA', Defaults('Seguimiento IPS FUNPRONIMA'), varNuevo)
-),
-        Set(varError, "No se pudo guardar: " & FirstError.Message),
-        Notify("Registro guardado.", NotificationType.Success); Set(varTab, "seguimiento"); Navigate(scrFicha, ScreenTransition.None)
-    )
+    Switch(varUnidad,
+    "DEA", IfError(Patch('Seguimiento Desarrollo Estudiantil', Defaults('Seguimiento Desarrollo Estudiantil'), varNuevo), Set(varError, "No se pudo guardar: " & FirstError.Message), Notify("Registro guardado.", NotificationType.Success); Set(varTab, "seguimiento"); Navigate(scrFicha, ScreenTransition.None)),
+    "DPS", IfError(Patch('Seguimiento Psicología DE', Defaults('Seguimiento Psicología DE'), varNuevo), Set(varError, "No se pudo guardar: " & FirstError.Message), Notify("Registro guardado.", NotificationType.Success); Set(varTab, "seguimiento"); Navigate(scrFicha, ScreenTransition.None)),
+    "PSI", IfError(Patch('Seguimiento Psicología', Defaults('Seguimiento Psicología'), varNuevo), Set(varError, "No se pudo guardar: " & FirstError.Message), Notify("Registro guardado.", NotificationType.Success); Set(varTab, "seguimiento"); Navigate(scrFicha, ScreenTransition.None)),
+    "SAL", IfError(Patch('Seguimiento Salud', Defaults('Seguimiento Salud'), varNuevo), Set(varError, "No se pudo guardar: " & FirstError.Message), Notify("Registro guardado.", NotificationType.Success); Set(varTab, "seguimiento"); Navigate(scrFicha, ScreenTransition.None)),
+    "GAV", IfError(Patch('Seguimiento GAV', Defaults('Seguimiento GAV'), varNuevo), Set(varError, "No se pudo guardar: " & FirstError.Message), Notify("Registro guardado.", NotificationType.Success); Set(varTab, "seguimiento"); Navigate(scrFicha, ScreenTransition.None)),
+    "CES", IfError(Patch('Seguimiento Centro de Escucha', Defaults('Seguimiento Centro de Escucha'), varNuevo), Set(varError, "No se pudo guardar: " & FirstError.Message), Notify("Registro guardado.", NotificationType.Success); Set(varTab, "seguimiento"); Navigate(scrFicha, ScreenTransition.None)),
+    "TSO", IfError(Patch('Seguimiento Trabajo Social', Defaults('Seguimiento Trabajo Social'), varNuevo), Set(varError, "No se pudo guardar: " & FirstError.Message), Notify("Registro guardado.", NotificationType.Success); Set(varTab, "seguimiento"); Navigate(scrFicha, ScreenTransition.None)),
+    "ENL", IfError(Patch('Seguimiento Enlaces', Defaults('Seguimiento Enlaces'), varNuevo), Set(varError, "No se pudo guardar: " & FirstError.Message), Notify("Registro guardado.", NotificationType.Success); Set(varTab, "seguimiento"); Navigate(scrFicha, ScreenTransition.None)),
+    "PRP", IfError(Patch('Seguimiento Riesgo Psicosocial', Defaults('Seguimiento Riesgo Psicosocial'), varNuevo), Set(varError, "No se pudo guardar: " & FirstError.Message), Notify("Registro guardado.", NotificationType.Success); Set(varTab, "seguimiento"); Navigate(scrFicha, ScreenTransition.None)),
+    "PRS", IfError(Patch('Seguimiento Prevención Salud', Defaults('Seguimiento Prevención Salud'), varNuevo), Set(varError, "No se pudo guardar: " & FirstError.Message), Notify("Registro guardado.", NotificationType.Success); Set(varTab, "seguimiento"); Navigate(scrFicha, ScreenTransition.None)),
+    "ORE", IfError(Patch('Seguimiento Orientación Espiritual', Defaults('Seguimiento Orientación Espiritual'), varNuevo), Set(varError, "No se pudo guardar: " & FirstError.Message), Notify("Registro guardado.", NotificationType.Success); Set(varTab, "seguimiento"); Navigate(scrFicha, ScreenTransition.None)),
+    "CAI", IfError(Patch('Seguimiento Infancia CAI', Defaults('Seguimiento Infancia CAI'), varNuevo), Set(varError, "No se pudo guardar: " & FirstError.Message), Notify("Registro guardado.", NotificationType.Success); Set(varTab, "seguimiento"); Navigate(scrFicha, ScreenTransition.None)),
+    "SAF", IfError(Patch('Seguimiento Sala Amiga', Defaults('Seguimiento Sala Amiga'), varNuevo), Set(varError, "No se pudo guardar: " & FirstError.Message), Notify("Registro guardado.", NotificationType.Success); Set(varTab, "seguimiento"); Navigate(scrFicha, ScreenTransition.None)),
+    "IPS", IfError(Patch('Seguimiento IPS FUNPRONIMA', Defaults('Seguimiento IPS FUNPRONIMA'), varNuevo), Set(varError, "No se pudo guardar: " & FirstError.Message), Notify("Registro guardado.", NotificationType.Success); Set(varTab, "seguimiento"); Navigate(scrFicha, ScreenTransition.None))
+)
 )
 ```
 

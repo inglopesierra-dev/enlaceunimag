@@ -440,22 +440,22 @@
                   HoverColor: =fxC.Blanco
                   HoverFill: =ColorFade(fxC.Acento, -15%)
                   OnSelect: |-
-                    =IfError(Switch(varUnidadPend,
-                        "DEA", Patch('Seguimiento Desarrollo Estudiantil', LookUp('Seguimiento Desarrollo Estudiantil', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}),
-                        "DPS", Patch('Seguimiento Psicología DE', LookUp('Seguimiento Psicología DE', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}),
-                        "PSI", Patch('Seguimiento Psicología', LookUp('Seguimiento Psicología', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}),
-                        "SAL", Patch('Seguimiento Salud', LookUp('Seguimiento Salud', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}),
-                        "GAV", Patch('Seguimiento GAV', LookUp('Seguimiento GAV', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}),
-                        "CES", Patch('Seguimiento Centro de Escucha', LookUp('Seguimiento Centro de Escucha', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}),
-                        "TSO", Patch('Seguimiento Trabajo Social', LookUp('Seguimiento Trabajo Social', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}),
-                        "ENL", Patch('Seguimiento Enlaces', LookUp('Seguimiento Enlaces', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}),
-                        "PRP", Patch('Seguimiento Riesgo Psicosocial', LookUp('Seguimiento Riesgo Psicosocial', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}),
-                        "PRS", Patch('Seguimiento Prevención Salud', LookUp('Seguimiento Prevención Salud', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}),
-                        "ORE", Patch('Seguimiento Orientación Espiritual', LookUp('Seguimiento Orientación Espiritual', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}),
-                        "CAI", Patch('Seguimiento Infancia CAI', LookUp('Seguimiento Infancia CAI', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}),
-                        "SAF", Patch('Seguimiento Sala Amiga', LookUp('Seguimiento Sala Amiga', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}),
-                        "IPS", Patch('Seguimiento IPS FUNPRONIMA', LookUp('Seguimiento IPS FUNPRONIMA', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo})
-                    ), Notify("No se pudo tomar: " & FirstError.Message, NotificationType.Error), Notify("Quedó a tu nombre y en curso.", NotificationType.Success))
+                    =Switch(varUnidadPend,
+                        "DEA", IfError(Patch('Seguimiento Desarrollo Estudiantil', LookUp('Seguimiento Desarrollo Estudiantil', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}), Notify("No se pudo tomar: " & FirstError.Message, NotificationType.Error), Notify("Quedó a tu nombre y en curso.", NotificationType.Success)),
+                        "DPS", IfError(Patch('Seguimiento Psicología DE', LookUp('Seguimiento Psicología DE', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}), Notify("No se pudo tomar: " & FirstError.Message, NotificationType.Error), Notify("Quedó a tu nombre y en curso.", NotificationType.Success)),
+                        "PSI", IfError(Patch('Seguimiento Psicología', LookUp('Seguimiento Psicología', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}), Notify("No se pudo tomar: " & FirstError.Message, NotificationType.Error), Notify("Quedó a tu nombre y en curso.", NotificationType.Success)),
+                        "SAL", IfError(Patch('Seguimiento Salud', LookUp('Seguimiento Salud', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}), Notify("No se pudo tomar: " & FirstError.Message, NotificationType.Error), Notify("Quedó a tu nombre y en curso.", NotificationType.Success)),
+                        "GAV", IfError(Patch('Seguimiento GAV', LookUp('Seguimiento GAV', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}), Notify("No se pudo tomar: " & FirstError.Message, NotificationType.Error), Notify("Quedó a tu nombre y en curso.", NotificationType.Success)),
+                        "CES", IfError(Patch('Seguimiento Centro de Escucha', LookUp('Seguimiento Centro de Escucha', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}), Notify("No se pudo tomar: " & FirstError.Message, NotificationType.Error), Notify("Quedó a tu nombre y en curso.", NotificationType.Success)),
+                        "TSO", IfError(Patch('Seguimiento Trabajo Social', LookUp('Seguimiento Trabajo Social', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}), Notify("No se pudo tomar: " & FirstError.Message, NotificationType.Error), Notify("Quedó a tu nombre y en curso.", NotificationType.Success)),
+                        "ENL", IfError(Patch('Seguimiento Enlaces', LookUp('Seguimiento Enlaces', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}), Notify("No se pudo tomar: " & FirstError.Message, NotificationType.Error), Notify("Quedó a tu nombre y en curso.", NotificationType.Success)),
+                        "PRP", IfError(Patch('Seguimiento Riesgo Psicosocial', LookUp('Seguimiento Riesgo Psicosocial', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}), Notify("No se pudo tomar: " & FirstError.Message, NotificationType.Error), Notify("Quedó a tu nombre y en curso.", NotificationType.Success)),
+                        "PRS", IfError(Patch('Seguimiento Prevención Salud', LookUp('Seguimiento Prevención Salud', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}), Notify("No se pudo tomar: " & FirstError.Message, NotificationType.Error), Notify("Quedó a tu nombre y en curso.", NotificationType.Success)),
+                        "ORE", IfError(Patch('Seguimiento Orientación Espiritual', LookUp('Seguimiento Orientación Espiritual', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}), Notify("No se pudo tomar: " & FirstError.Message, NotificationType.Error), Notify("Quedó a tu nombre y en curso.", NotificationType.Success)),
+                        "CAI", IfError(Patch('Seguimiento Infancia CAI', LookUp('Seguimiento Infancia CAI', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}), Notify("No se pudo tomar: " & FirstError.Message, NotificationType.Error), Notify("Quedó a tu nombre y en curso.", NotificationType.Success)),
+                        "SAF", IfError(Patch('Seguimiento Sala Amiga', LookUp('Seguimiento Sala Amiga', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}), Notify("No se pudo tomar: " & FirstError.Message, NotificationType.Error), Notify("Quedó a tu nombre y en curso.", NotificationType.Success)),
+                        "IPS", IfError(Patch('Seguimiento IPS FUNPRONIMA', LookUp('Seguimiento IPS FUNPRONIMA', ID = ThisItem.Id), {Estado: "En curso", 'Asignado a': fxYo}), Notify("No se pudo tomar: " & FirstError.Message, NotificationType.Error), Notify("Quedó a tu nombre y en curso.", NotificationType.Success))
+                    )
                   PressedFill: =ColorFade(fxC.Acento, -25%)
                   RadiusBottomLeft: =6
                   RadiusBottomRight: =6

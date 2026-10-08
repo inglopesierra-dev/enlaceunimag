@@ -46,6 +46,14 @@ for a, b in (("Á", "A"), ("É", "E"), ("Í", "I"), ("Ó", "O"), ("Ú", "U"), ("
     NORM = f'Substitute({NORM}, "{a}", "{b}")'
 
 
+def switch_guardar(var, cuerpo, si_error, si_ok):
+    """Switch sobre las listas reservadas con el manejo de errores dentro de cada rama.
+
+    Cada rama devuelve lo mismo (el resultado de Notify), así el Switch no mezcla registros de listas distintas."""
+    ramas = [f'    {s(u["codigo"])}, IfError({cuerpo(q(u["lista"]))}, {si_error}, {si_ok})' for u in RESERVADAS]
+    return f"Switch({var},\n" + ",\n".join(ramas) + "\n)"
+
+
 def switch_unidades(var, cuerpo):
     """Switch sobre las listas reservadas. cuerpo(L) devuelve la fórmula para la lista L."""
     ramas = [f'    {s(u["codigo"])}, {cuerpo(q(u["lista"]))}' for u in RESERVADAS]
@@ -245,7 +253,9 @@ Navigate(scrFicha, ScreenTransition.None)"""
               "24", "146", "Parent.Width - 48", "22", 11, "fxC.Tenue"),
         galeria("galResultados", "0", "172", "Parent.Width", "Parent.Height - 180", busqueda, 72, plantilla_res, OnSelect=abrir),
     ])
-    tomar = switch_unidades("varUnidadPend", lambda L: f'Patch({L}, LookUp({L}, ID = ThisItem.Id), {{Estado: "En curso", {q("Asignado a")}: fxYo}})')
+    tomar = switch_guardar("varUnidadPend", lambda L: f'Patch({L}, LookUp({L}, ID = ThisItem.Id), {{Estado: "En curso", {q("Asignado a")}: fxYo}})',
+                           'Notify("No se pudo tomar: " & FirstError.Message, NotificationType.Error)',
+                           'Notify("Quedó a tu nombre y en curso.", NotificationType.Success)')
     pendientes = "Sort(" + switch_unidades("varUnidadPend", lambda L: (
         f'ForAll(Filter({L}, Estado = "Pendiente"), {{Id: ID, Codigo: {q("Código")}, Estudiante: Estudiante, Fecha: Fecha, '
         f'Tipo: {q("Tipo de registro")}, Servicio: Servicio, Motivo: Motivo, Remitido: {q("Remitido por")}, Prioridad: Prioridad, Origen: Origen}})')) + ", Fecha, SortOrder.Descending)"
@@ -264,7 +274,7 @@ Navigate(scrFicha, ScreenTransition.None)"""
               "16", "56", "Parent.TemplateWidth - 130", "20", 11,
               'If(ThisItem.Prioridad = "Urgente", fxC.Error, fxC.Tenue)', OnSelect="Select(Parent)"),
         boton("btnTomar", s("Tomar"), "Parent.TemplateWidth - 104", "24", "88", "34",
-              f'IfError({tomar}, Notify("No se pudo tomar: " & FirstError.Message, NotificationType.Error), Notify("Quedó a tu nombre y en curso.", NotificationType.Success))',
+              tomar,
               Tooltip=s("Asignármela y pasarla a En curso")),
         rect("rectPendLinea", "16", "Parent.TemplateHeight - 1", "Parent.TemplateWidth - 32", "1", "fxC.Borde"),
     ]
@@ -410,7 +420,9 @@ Set(varAnulando, false)"""
                       f"FechaProx: {q('Fecha próxima acción')}, Estado: Estado, Prioridad: Prioridad, Origen: Origen, Remitido: {q('Remitido por')}, "
                       f"Registrado: {q('Registrado por')}, Autorizacion: {q('Autorización de datos')}, Anulacion: {q('Motivo de anulación')}, Asignado: {q('Asignado a')}}})")
     items_seg = "Sort(" + switch_unidades("varUnidad", proy) + ", Fecha, SortOrder.Descending)"
-    anular = switch_unidades("varUnidad", lambda L: f'Patch({L}, LookUp({L}, ID = varAnular.Id), {{Estado: "Anulado", {q("Motivo de anulación")}: Trim(txtMotivoAnular.Text)}})')
+    anular = switch_guardar("varUnidad", lambda L: f'Patch({L}, LookUp({L}, ID = varAnular.Id), {{Estado: "Anulado", {q("Motivo de anulación")}: Trim(txtMotivoAnular.Text)}})',
+                            'Notify("No se pudo anular: " & FirstError.Message, NotificationType.Error)',
+                            'Notify("Registro anulado.", NotificationType.Success); Set(varAnulando, false)')
     gestiona = "varUnidad in fxGestionaReservadas.Codigo"
     plantilla_seg = [
         label("lblSegTitulo", 'Text(ThisItem.Fecha, "dd/mm/yyyy") & "  ·  " & ThisItem.Tipo & If(IsBlank(ThisItem.Servicio), "", "  ·  " & ThisItem.Servicio) & If(IsBlank(ThisItem.Motivo), "", "  ·  " & ThisItem.Motivo)',
@@ -441,7 +453,7 @@ Set(varAnulando, false)"""
               "20", "44", "Parent.Width - 40", "40", 11, "fxC.Tenue", Wrap="true"),
         entrada("txtMotivoAnular", "20", "90", "Parent.Width - 40", "64", "Motivo de la anulación", multilinea=True),
         boton("btnConfirmarAnular", s("Anular"), "Parent.Width - 236", "172", "100", "38",
-              f'IfError({anular}, Notify("No se pudo anular: " & FirstError.Message, NotificationType.Error), Notify("Registro anulado.", NotificationType.Success); Set(varAnulando, false))',
+              anular,
               fill="fxC.Error", DisplayMode="If(Len(Trim(txtMotivoAnular.Text)) < 5, DisplayMode.Disabled, DisplayMode.Edit)"),
         boton("btnCancelarAnular", s("Cancelar"), "Parent.Width - 124", "172", "100", "38", "Set(varAnulando, false)",
               fill="fxC.Blanco", color="fxC.Texto", borde="fxC.Borde", HoverFill="fxC.Fondo", PressedFill="fxC.Fondo", HoverColor="fxC.Texto"),
@@ -461,7 +473,9 @@ Set(varAnulando, false)"""
 
     # Remitir
     destino = "LookUp(fxReservadas, Nombre = ddDestino.Selected.Nombre).Codigo"
-    remitir = switch_unidades("varDestino", lambda L: f"Patch({L}, Defaults({L}), varRem)")
+    remitir = switch_guardar("varDestino", lambda L: f"Patch({L}, Defaults({L}), varRem)",
+                             'Notify("No se pudo remitir: " & FirstError.Message, NotificationType.Error)',
+                             'Notify("Remisión enviada a " & ddDestino.Selected.Nombre & ".", NotificationType.Success); Reset(txtNotaRem)')
     registro_rem = (f'{{{q("Código")}: varEst.{q("Código")}, Estudiante: varEst.{q("Nombre completo")}, Fecha: Today(), '
                     f'{q("Tipo de registro")}: "Remisión recibida", Motivo: ddMotivoRem.Selected.Value, Resumen: Trim(txtNotaRem.Text), '
                     f'Estado: "Pendiente", Prioridad: ddPrioridadRem.Selected.Value, Origen: "Remisión de otra unidad", '
@@ -469,11 +483,7 @@ Set(varAnulando, false)"""
                     f'{q("Autorización de datos")}: "Pendiente", {q("Registrado por")}: fxNombreYo, {q("Correo de quien registra")}: fxYo}}')
     enviar = f"""Set(varDestino, {destino});
 Set(varRem, {registro_rem});
-IfError(
-    {remitir},
-    Notify("No se pudo remitir: " & FirstError.Message, NotificationType.Error),
-    Notify("Remisión enviada a " & ddDestino.Selected.Nombre & ".", NotificationType.Success); Reset(txtNotaRem)
-)"""
+{remitir}"""
     mis_rem = "Sort(" + switch_unidades(destino, lambda L: (
         f'ForAll(Filter({L}, {q("Código")} = varEst.{q("Código")} And {q("Correo de quien registra")} = fxYo And {q("Tipo de registro")} = "Remisión recibida"), '
         f'{{Id: ID, Fecha: Fecha, Estado: Estado, Motivo: Motivo, Prioridad: Prioridad, Asignado: {q("Asignado a")}}})')) + ", Fecha, SortOrder.Descending)"
@@ -593,13 +603,11 @@ def p_reg_seguimiento():
                 f'Origen: "Iniciativa de la unidad", {q("Menor de edad")}: If(Not(IsBlank(varEdad)) And varEdad < 18, "Sí", "No"), '
                 f'{q("Autorización de datos")}: ddSegAutorizacion.Selected.Value, {q("Registrado por")}: fxNombreYo, '
                 f'{q("Correo de quien registra")}: fxYo, {q("Asignado a")}: fxYo}}')
-    patch = switch_unidades("varUnidad", lambda L: f"Patch({L}, Defaults({L}), varNuevo)")
+    patch = switch_guardar("varUnidad", lambda L: f"Patch({L}, Defaults({L}), varNuevo)",
+                           'Set(varError, "No se pudo guardar: " & FirstError.Message)',
+                           'Notify("Registro guardado.", NotificationType.Success); Set(varTab, "seguimiento"); Navigate(scrFicha, ScreenTransition.None)')
     guardar = f"""Set(varNuevo, {registro});
-    IfError(
-        {patch},
-        Set(varError, "No se pudo guardar: " & FirstError.Message),
-        Notify("Registro guardado.", NotificationType.Success); Set(varTab, "seguimiento"); Navigate(scrFicha, ScreenTransition.None)
-    )"""
+    {patch}"""
     hijos, onvisible = formulario("Seg", '"Nuevo registro · " & LookUp(fxUnidades, Codigo = varUnidad).Nombre',
                                   s("Reservado: solo lo verán esta unidad y Administración. La historia clínica sigue en el sistema del área; aquí va la constancia y el plan."),
                                   campos, validacion, registro, guardar, "seguimiento")
