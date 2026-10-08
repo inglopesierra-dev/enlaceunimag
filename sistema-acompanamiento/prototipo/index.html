@@ -2161,8 +2161,8 @@ table.matrix td { font-size: 13px; }
   document.addEventListener('keydown', function (ev) {
     if (ev.key === 'Escape' && !drawer.hidden) { cerrarDrawer(); return; }
     if ((ev.key === 'Enter' || ev.key === ' ') && ev.target.matches && ev.target.matches('tr.row')) { ev.preventDefault(); ev.target.click(); return; }
-    if ((ev.key === 'ArrowRight' || ev.key === 'ArrowLeft' || ev.key === 'Home' || ev.key === 'End') && ev.target.matches && ev.target.matches('.subtab')) {
-      var tabs = $$('.subtab'), k = tabs.indexOf(ev.target);
+    if ((ev.key === 'ArrowRight' || ev.key === 'ArrowLeft' || ev.key === 'Home' || ev.key === 'End') && ev.target.matches && ev.target.matches('.subtab, .unit-tabs [role="tab"]')) {
+      var tabs = $$('[role="tab"]', ev.target.closest('[role="tablist"]')), k = tabs.indexOf(ev.target);
       k = ev.key === 'Home' ? 0 : ev.key === 'End' ? tabs.length - 1 : (k + (ev.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length;
       ev.preventDefault(); tabs[k].click();
     }
