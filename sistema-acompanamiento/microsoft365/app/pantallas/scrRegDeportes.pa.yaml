@@ -1,0 +1,524 @@
+Screens:
+  scrRegDeportes:
+    Properties:
+      Fill: =fxC.Fondo
+      OnVisible: |-
+        =Set(varError, Blank());
+        Reset(dpDepFecha);
+        Reset(ddDepTipo);
+        Reset(ddDepDisciplina);
+        Reset(ddDepAscun);
+        Reset(ddDepNivel);
+        Reset(ddDepEstado);
+        Reset(txtDepEvento);
+        Reset(dpDepDevolucion);
+        Reset(txtDepObs)
+    Children:
+      - rectEncDep:
+          Control: Rectangle
+          Properties:
+            Fill: =fxC.Acento
+            Height: =64
+            Width: =Parent.Width
+            X: =0
+            Y: =0
+      - lblEncTituloDep:
+          Control: Label
+          Properties:
+            Color: =fxC.Blanco
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =64
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =18
+            Text: ="Acompañamiento Estudiantil"
+            Width: =520
+            X: =72
+            Y: =0
+      - lblEncUsuarioDep:
+          Control: Label
+          Properties:
+            Align: =Align.Right
+            Color: =fxC.Blanco
+            Font: =Font.'Segoe UI'
+            Height: =64
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =11
+            Text: =fxNombreYo & "  ·  " & If(fxEsAdmin, "Administración", If(IsEmpty(fxGestiona), "Personal", Concat(fxGestiona, Corto, ", ")))
+            Width: =600
+            X: =Parent.Width - 624
+            Y: =0
+      - icoAtrasDep:
+          Control: Classic/Icon
+          Variant: ArrowLeft
+          Properties:
+            AccessibleLabel: ="Volver"
+            Color: =fxC.Blanco
+            Height: =40
+            Icon: =Icon.ArrowLeft
+            OnSelect: =Set(varTab, "bienestar"); Navigate(scrFicha, ScreenTransition.None)
+            PaddingBottom: =8
+            PaddingLeft: =8
+            PaddingRight: =8
+            PaddingTop: =8
+            Tooltip: ="Volver"
+            Width: =40
+            X: =16
+            Y: =12
+      - lblTituloDep:
+          Control: Label
+          Properties:
+            Color: =fxC.Texto
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =30
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =18
+            Text: ="Nuevo registro de Deportes"
+            Width: =Parent.Width - 48
+            X: =24
+            Y: =80
+      - lblEstudianteDep:
+          Control: Label
+          Properties:
+            Color: =fxC.Tenue
+            Font: =Font.'Segoe UI'
+            Height: =22
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =12
+            Text: =varEst.'Nombre completo' & "  ·  Código " & varEst.'Código' & If(Not(IsBlank(varEdad)) And varEdad < 18, "  ·  Menor de edad", "")
+            Width: =Parent.Width - 48
+            X: =24
+            Y: =112
+      - lblAvisoDep:
+          Control: Label
+          Properties:
+            Color: =fxC.Tenue
+            Font: =Font.'Segoe UI'
+            Height: =34
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =11
+            Text: ="Visible para todo el personal del sistema. No escribas aquí datos de salud ni situaciones personales."
+            Width: =Parent.Width - 48
+            Wrap: =true
+            X: =24
+            Y: =138
+      - conFormDep:
+          Control: GroupContainer
+          Variant: manualLayoutContainer
+          Properties:
+            BorderColor: =fxC.Borde
+            BorderThickness: =1
+            DropShadow: =DropShadow.None
+            Fill: =fxC.Blanco
+            Height: =Parent.Height - 198
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Width: =Parent.Width - 48
+            X: =24
+            Y: =178
+          Children:
+            - lbldpDepFecha:
+                Control: Label
+                Properties:
+                  Color: =fxC.Tenue
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =20
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: ="Fecha *"
+                  Width: =(Parent.Width - 96) / 3
+                  X: =24 + 0 * ((Parent.Width - 96) / 3 + 24)
+                  Y: =16
+            - dpDepFecha:
+                Control: Classic/DatePicker
+                Properties:
+                  BorderColor: =fxC.Borde
+                  Color: =fxC.Texto
+                  DefaultDate: =Today()
+                  Font: =Font.'Segoe UI'
+                  Format: =DateTimeFormat.ShortDate
+                  Height: =40
+                  IconBackground: =fxC.Acento
+                  IconFill: =fxC.Blanco
+                  Size: =12
+                  Width: =(Parent.Width - 96) / 3
+                  X: =24 + 0 * ((Parent.Width - 96) / 3 + 24)
+                  Y: =38
+            - lblddDepTipo:
+                Control: Label
+                Properties:
+                  Color: =fxC.Tenue
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =20
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: ="Tipo de registro"
+                  Width: =(Parent.Width - 96) / 3
+                  X: =24 + 1 * ((Parent.Width - 96) / 3 + 24)
+                  Y: =16
+            - ddDepTipo:
+                Control: Classic/DropDown
+                Properties:
+                  BorderColor: =fxC.Borde
+                  BorderThickness: =1
+                  ChevronBackground: =fxC.Blanco
+                  ChevronFill: =fxC.Tenue
+                  Color: =fxC.Texto
+                  Font: =Font.'Segoe UI'
+                  Height: =40
+                  HoverFill: =fxC.AcentoSuave
+                  Items: =["Deportista inscrito", "Representación en evento", "Préstamo de implementos", "Actividad física musicalizada", "Pausas activas"]
+                  PaddingLeft: =10
+                  SelectionFill: =fxC.Acento
+                  Size: =12
+                  Width: =(Parent.Width - 96) / 3
+                  X: =24 + 1 * ((Parent.Width - 96) / 3 + 24)
+                  Y: =38
+            - lblddDepDisciplina:
+                Control: Label
+                Properties:
+                  Color: =fxC.Tenue
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =20
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: ="Disciplina o servicio"
+                  Width: =(Parent.Width - 96) / 3
+                  X: =24 + 2 * ((Parent.Width - 96) / 3 + 24)
+                  Y: =16
+            - ddDepDisciplina:
+                Control: Classic/DropDown
+                Properties:
+                  BorderColor: =fxC.Borde
+                  BorderThickness: =1
+                  ChevronBackground: =fxC.Blanco
+                  ChevronFill: =fxC.Tenue
+                  Color: =fxC.Texto
+                  Font: =Font.'Segoe UI'
+                  Height: =40
+                  HoverFill: =fxC.AcentoSuave
+                  Items: =Sort(Filter('Catálogo de servicios', Unidad = "DEP" And Activo = "Sí"), Orden).Servicio
+                  PaddingLeft: =10
+                  SelectionFill: =fxC.Acento
+                  Size: =12
+                  Width: =(Parent.Width - 96) / 3
+                  X: =24 + 2 * ((Parent.Width - 96) / 3 + 24)
+                  Y: =38
+            - lblddDepAscun:
+                Control: Label
+                Properties:
+                  Color: =fxC.Tenue
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =20
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: ="Pertenece a ASCUN"
+                  Width: =(Parent.Width - 96) / 3
+                  X: =24 + 0 * ((Parent.Width - 96) / 3 + 24)
+                  Y: =92
+            - ddDepAscun:
+                Control: Classic/DropDown
+                Properties:
+                  BorderColor: =fxC.Borde
+                  BorderThickness: =1
+                  ChevronBackground: =fxC.Blanco
+                  ChevronFill: =fxC.Tenue
+                  Color: =fxC.Texto
+                  Default: ="No"
+                  Font: =Font.'Segoe UI'
+                  Height: =40
+                  HoverFill: =fxC.AcentoSuave
+                  Items: =["Sí", "No"]
+                  PaddingLeft: =10
+                  SelectionFill: =fxC.Acento
+                  Size: =12
+                  Width: =(Parent.Width - 96) / 3
+                  X: =24 + 0 * ((Parent.Width - 96) / 3 + 24)
+                  Y: =114
+            - lblddDepNivel:
+                Control: Label
+                Properties:
+                  Color: =fxC.Tenue
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =20
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: ="Nivel"
+                  Width: =(Parent.Width - 96) / 3
+                  X: =24 + 1 * ((Parent.Width - 96) / 3 + 24)
+                  Y: =92
+            - ddDepNivel:
+                Control: Classic/DropDown
+                Properties:
+                  BorderColor: =fxC.Borde
+                  BorderThickness: =1
+                  ChevronBackground: =fxC.Blanco
+                  ChevronFill: =fxC.Tenue
+                  Color: =fxC.Texto
+                  Font: =Font.'Segoe UI'
+                  Height: =40
+                  HoverFill: =fxC.AcentoSuave
+                  Items: =["Recreativo", "Formativo", "Selección Unimagdalena", "Alto rendimiento"]
+                  PaddingLeft: =10
+                  SelectionFill: =fxC.Acento
+                  Size: =12
+                  Width: =(Parent.Width - 96) / 3
+                  X: =24 + 1 * ((Parent.Width - 96) / 3 + 24)
+                  Y: =114
+            - lblddDepEstado:
+                Control: Label
+                Properties:
+                  Color: =fxC.Tenue
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =20
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: ="Estado"
+                  Width: =(Parent.Width - 96) / 3
+                  X: =24 + 2 * ((Parent.Width - 96) / 3 + 24)
+                  Y: =92
+            - ddDepEstado:
+                Control: Classic/DropDown
+                Properties:
+                  BorderColor: =fxC.Borde
+                  BorderThickness: =1
+                  ChevronBackground: =fxC.Blanco
+                  ChevronFill: =fxC.Tenue
+                  Color: =fxC.Texto
+                  Default: ="Activo"
+                  Font: =Font.'Segoe UI'
+                  Height: =40
+                  HoverFill: =fxC.AcentoSuave
+                  Items: =["Activo", "Inactivo", "Prestado", "Devuelto"]
+                  PaddingLeft: =10
+                  SelectionFill: =fxC.Acento
+                  Size: =12
+                  Width: =(Parent.Width - 96) / 3
+                  X: =24 + 2 * ((Parent.Width - 96) / 3 + 24)
+                  Y: =114
+            - lbltxtDepEvento:
+                Control: Label
+                Properties:
+                  Color: =fxC.Tenue
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =20
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: ="Evento o implemento"
+                  Width: =2 * (Parent.Width - 96) / 3 + 24
+                  X: =24 + 0 * ((Parent.Width - 96) / 3 + 24)
+                  Y: =168
+            - txtDepEvento:
+                Control: Classic/TextInput
+                Properties:
+                  BorderColor: =fxC.Borde
+                  BorderThickness: =1
+                  Color: =fxC.Texto
+                  Default: =""
+                  FocusedBorderColor: =fxC.Acento
+                  FocusedBorderThickness: =2
+                  Font: =Font.'Segoe UI'
+                  Height: =40
+                  HintText: ="Torneo, evento o implemento prestado"
+                  HoverBorderColor: =fxC.Acento
+                  PaddingLeft: =10
+                  RadiusBottomLeft: =6
+                  RadiusBottomRight: =6
+                  RadiusTopLeft: =6
+                  RadiusTopRight: =6
+                  Size: =12
+                  Width: =2 * (Parent.Width - 96) / 3 + 24
+                  X: =24 + 0 * ((Parent.Width - 96) / 3 + 24)
+                  Y: =190
+            - lbldpDepDevolucion:
+                Control: Label
+                Properties:
+                  Color: =fxC.Tenue
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =20
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: ="Fecha de devolución (préstamos)"
+                  Width: =(Parent.Width - 96) / 3
+                  X: =24 + 2 * ((Parent.Width - 96) / 3 + 24)
+                  Y: =168
+            - dpDepDevolucion:
+                Control: Classic/DatePicker
+                Properties:
+                  BorderColor: =fxC.Borde
+                  Color: =fxC.Texto
+                  DefaultDate: =Blank()
+                  Font: =Font.'Segoe UI'
+                  Format: =DateTimeFormat.ShortDate
+                  Height: =40
+                  IconBackground: =fxC.Acento
+                  IconFill: =fxC.Blanco
+                  Size: =12
+                  Width: =(Parent.Width - 96) / 3
+                  X: =24 + 2 * ((Parent.Width - 96) / 3 + 24)
+                  Y: =190
+            - lbltxtDepObs:
+                Control: Label
+                Properties:
+                  Color: =fxC.Tenue
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =20
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: ="Observación"
+                  Width: =3 * (Parent.Width - 96) / 3 + 48
+                  X: =24 + 0 * ((Parent.Width - 96) / 3 + 24)
+                  Y: =244
+            - txtDepObs:
+                Control: Classic/TextInput
+                Properties:
+                  BorderColor: =fxC.Borde
+                  BorderThickness: =1
+                  Color: =fxC.Texto
+                  Default: =""
+                  FocusedBorderColor: =fxC.Acento
+                  FocusedBorderThickness: =2
+                  Font: =Font.'Segoe UI'
+                  Height: =96
+                  HintText: |-
+                    ="Sin datos de salud ni lesiones: eso va a Salud."
+                  HoverBorderColor: =fxC.Acento
+                  Mode: =TextMode.MultiLine
+                  PaddingLeft: =10
+                  RadiusBottomLeft: =6
+                  RadiusBottomRight: =6
+                  RadiusTopLeft: =6
+                  RadiusTopRight: =6
+                  Size: =12
+                  Width: =3 * (Parent.Width - 96) / 3 + 48
+                  X: =24 + 0 * ((Parent.Width - 96) / 3 + 24)
+                  Y: =266
+            - lblErrorDep:
+                Control: Label
+                Properties:
+                  Color: =fxC.Error
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =24
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =12
+                  Text: =varError
+                  Visible: =Not(IsBlank(varError))
+                  Width: =Parent.Width - 48
+                  X: =24
+                  Y: =378
+            - btnGuardarDep:
+                Control: Classic/Button
+                Properties:
+                  BorderColor: =fxC.Acento
+                  BorderThickness: =0
+                  Color: =fxC.Blanco
+                  Fill: =fxC.Acento
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =40
+                  HoverColor: =fxC.Blanco
+                  HoverFill: =ColorFade(fxC.Acento, -15%)
+                  OnSelect: |-
+                    =Set(varError, If(
+                        IsBlank(dpDepFecha.SelectedDate), "Indica la fecha.",
+                        ddDepTipo.Selected.Value = "Préstamo de implementos" And IsBlank(Trim(txtDepEvento.Text)), "Escribe qué implemento se prestó.",
+                        Blank()
+                    ));
+                    If(IsBlank(varError),
+                        IfError(
+                            Patch(Deportes, Defaults(Deportes), {'Código': varEst.'Código', Estudiante: varEst.'Nombre completo', Fecha: dpDepFecha.SelectedDate, 'Tipo de registro': ddDepTipo.Selected.Value, 'Disciplina o servicio': ddDepDisciplina.Selected.Servicio, ASCUN: ddDepAscun.Selected.Value, Nivel: ddDepNivel.Selected.Value, 'Evento o implemento': Trim(txtDepEvento.Text), 'Fecha de devolución': dpDepDevolucion.SelectedDate, Periodo: varEst.Periodo, Estado: ddDepEstado.Selected.Value, 'Observación': Trim(txtDepObs.Text), 'Registrado por': fxNombreYo}),
+                            Set(varError, "No se pudo guardar: " & FirstError.Message),
+                            Notify("Registro guardado.", NotificationType.Success); Set(varTab, "bienestar"); Navigate(scrFicha, ScreenTransition.None)
+                        )
+                    )
+                  PressedFill: =ColorFade(fxC.Acento, -25%)
+                  RadiusBottomLeft: =6
+                  RadiusBottomRight: =6
+                  RadiusTopLeft: =6
+                  RadiusTopRight: =6
+                  Size: =12
+                  Text: ="Guardar"
+                  Width: =160
+                  X: =24
+                  Y: =410
+            - btnCancelarDep:
+                Control: Classic/Button
+                Properties:
+                  BorderColor: =fxC.Borde
+                  BorderThickness: =1
+                  Color: =fxC.Texto
+                  Fill: =fxC.Blanco
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =40
+                  HoverColor: =fxC.Texto
+                  HoverFill: =fxC.Fondo
+                  OnSelect: =Set(varTab, "bienestar"); Navigate(scrFicha, ScreenTransition.None)
+                  PressedFill: =fxC.Fondo
+                  RadiusBottomLeft: =6
+                  RadiusBottomRight: =6
+                  RadiusTopLeft: =6
+                  RadiusTopRight: =6
+                  Size: =12
+                  Text: ="Cancelar"
+                  Width: =120
+                  X: =196
+                  Y: =410

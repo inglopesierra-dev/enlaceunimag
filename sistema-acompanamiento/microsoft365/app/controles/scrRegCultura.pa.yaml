@@ -1,0 +1,437 @@
+- rectEncCul:
+    Control: Rectangle
+    Properties:
+      Fill: =fxC.Acento
+      Height: =64
+      Width: =Parent.Width
+      X: =0
+      Y: =0
+- lblEncTituloCul:
+    Control: Label
+    Properties:
+      Color: =fxC.Blanco
+      Font: =Font.'Segoe UI'
+      FontWeight: =FontWeight.Semibold
+      Height: =64
+      PaddingBottom: =0
+      PaddingLeft: =0
+      PaddingRight: =0
+      PaddingTop: =0
+      Size: =18
+      Text: ="Acompañamiento Estudiantil"
+      Width: =520
+      X: =72
+      Y: =0
+- lblEncUsuarioCul:
+    Control: Label
+    Properties:
+      Align: =Align.Right
+      Color: =fxC.Blanco
+      Font: =Font.'Segoe UI'
+      Height: =64
+      PaddingBottom: =0
+      PaddingLeft: =0
+      PaddingRight: =0
+      PaddingTop: =0
+      Size: =11
+      Text: =fxNombreYo & "  ·  " & If(fxEsAdmin, "Administración", If(IsEmpty(fxGestiona), "Personal", Concat(fxGestiona, Corto, ", ")))
+      Width: =600
+      X: =Parent.Width - 624
+      Y: =0
+- icoAtrasCul:
+    Control: Classic/Icon
+    Variant: ArrowLeft
+    Properties:
+      AccessibleLabel: ="Volver"
+      Color: =fxC.Blanco
+      Height: =40
+      Icon: =Icon.ArrowLeft
+      OnSelect: =Set(varTab, "bienestar"); Navigate(scrFicha, ScreenTransition.None)
+      PaddingBottom: =8
+      PaddingLeft: =8
+      PaddingRight: =8
+      PaddingTop: =8
+      Tooltip: ="Volver"
+      Width: =40
+      X: =16
+      Y: =12
+- lblTituloCul:
+    Control: Label
+    Properties:
+      Color: =fxC.Texto
+      Font: =Font.'Segoe UI'
+      FontWeight: =FontWeight.Semibold
+      Height: =30
+      PaddingBottom: =0
+      PaddingLeft: =0
+      PaddingRight: =0
+      PaddingTop: =0
+      Size: =18
+      Text: ="Nuevo registro de Cultura"
+      Width: =Parent.Width - 48
+      X: =24
+      Y: =80
+- lblEstudianteCul:
+    Control: Label
+    Properties:
+      Color: =fxC.Tenue
+      Font: =Font.'Segoe UI'
+      Height: =22
+      PaddingBottom: =0
+      PaddingLeft: =0
+      PaddingRight: =0
+      PaddingTop: =0
+      Size: =12
+      Text: =varEst.'Nombre completo' & "  ·  Código " & varEst.'Código' & If(Not(IsBlank(varEdad)) And varEdad < 18, "  ·  Menor de edad", "")
+      Width: =Parent.Width - 48
+      X: =24
+      Y: =112
+- lblAvisoCul:
+    Control: Label
+    Properties:
+      Color: =fxC.Tenue
+      Font: =Font.'Segoe UI'
+      Height: =34
+      PaddingBottom: =0
+      PaddingLeft: =0
+      PaddingRight: =0
+      PaddingTop: =0
+      Size: =11
+      Text: ="Visible para todo el personal del sistema. No escribas aquí datos de salud ni situaciones personales."
+      Width: =Parent.Width - 48
+      Wrap: =true
+      X: =24
+      Y: =138
+- conFormCul:
+    Control: GroupContainer
+    Variant: manualLayoutContainer
+    Properties:
+      BorderColor: =fxC.Borde
+      BorderThickness: =1
+      DropShadow: =DropShadow.None
+      Fill: =fxC.Blanco
+      Height: =Parent.Height - 198
+      RadiusBottomLeft: =8
+      RadiusBottomRight: =8
+      RadiusTopLeft: =8
+      RadiusTopRight: =8
+      Width: =Parent.Width - 48
+      X: =24
+      Y: =178
+    Children:
+      - lbldpCulFecha:
+          Control: Label
+          Properties:
+            Color: =fxC.Tenue
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =20
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =11
+            Text: ="Fecha *"
+            Width: =(Parent.Width - 96) / 3
+            X: =24 + 0 * ((Parent.Width - 96) / 3 + 24)
+            Y: =16
+      - dpCulFecha:
+          Control: Classic/DatePicker
+          Properties:
+            BorderColor: =fxC.Borde
+            Color: =fxC.Texto
+            DefaultDate: =Today()
+            Font: =Font.'Segoe UI'
+            Format: =DateTimeFormat.ShortDate
+            Height: =40
+            IconBackground: =fxC.Acento
+            IconFill: =fxC.Blanco
+            Size: =12
+            Width: =(Parent.Width - 96) / 3
+            X: =24 + 0 * ((Parent.Width - 96) / 3 + 24)
+            Y: =38
+      - lblddCulTipo:
+          Control: Label
+          Properties:
+            Color: =fxC.Tenue
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =20
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =11
+            Text: ="Tipo de registro"
+            Width: =(Parent.Width - 96) / 3
+            X: =24 + 1 * ((Parent.Width - 96) / 3 + 24)
+            Y: =16
+      - ddCulTipo:
+          Control: Classic/DropDown
+          Properties:
+            BorderColor: =fxC.Borde
+            BorderThickness: =1
+            ChevronBackground: =fxC.Blanco
+            ChevronFill: =fxC.Tenue
+            Color: =fxC.Texto
+            Font: =Font.'Segoe UI'
+            Height: =40
+            HoverFill: =fxC.AcentoSuave
+            Items: =["Integrante de taller", "Grupo representativo", "Presentación o evento"]
+            PaddingLeft: =10
+            SelectionFill: =fxC.Acento
+            Size: =12
+            Width: =(Parent.Width - 96) / 3
+            X: =24 + 1 * ((Parent.Width - 96) / 3 + 24)
+            Y: =38
+      - lblddCulTaller:
+          Control: Label
+          Properties:
+            Color: =fxC.Tenue
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =20
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =11
+            Text: ="Taller o grupo"
+            Width: =(Parent.Width - 96) / 3
+            X: =24 + 2 * ((Parent.Width - 96) / 3 + 24)
+            Y: =16
+      - ddCulTaller:
+          Control: Classic/DropDown
+          Properties:
+            BorderColor: =fxC.Borde
+            BorderThickness: =1
+            ChevronBackground: =fxC.Blanco
+            ChevronFill: =fxC.Tenue
+            Color: =fxC.Texto
+            Font: =Font.'Segoe UI'
+            Height: =40
+            HoverFill: =fxC.AcentoSuave
+            Items: =Sort(Filter('Catálogo de servicios', Unidad = "CUL" And Activo = "Sí"), Orden).Servicio
+            PaddingLeft: =10
+            SelectionFill: =fxC.Acento
+            Size: =12
+            Width: =(Parent.Width - 96) / 3
+            X: =24 + 2 * ((Parent.Width - 96) / 3 + 24)
+            Y: =38
+      - lblddCulRol:
+          Control: Label
+          Properties:
+            Color: =fxC.Tenue
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =20
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =11
+            Text: ="Rol"
+            Width: =(Parent.Width - 96) / 3
+            X: =24 + 0 * ((Parent.Width - 96) / 3 + 24)
+            Y: =92
+      - ddCulRol:
+          Control: Classic/DropDown
+          Properties:
+            BorderColor: =fxC.Borde
+            BorderThickness: =1
+            ChevronBackground: =fxC.Blanco
+            ChevronFill: =fxC.Tenue
+            Color: =fxC.Texto
+            Font: =Font.'Segoe UI'
+            Height: =40
+            HoverFill: =fxC.AcentoSuave
+            Items: =["Integrante", "Monitor o monitora", "Solista"]
+            PaddingLeft: =10
+            SelectionFill: =fxC.Acento
+            Size: =12
+            Width: =(Parent.Width - 96) / 3
+            X: =24 + 0 * ((Parent.Width - 96) / 3 + 24)
+            Y: =114
+      - lblddCulEstado:
+          Control: Label
+          Properties:
+            Color: =fxC.Tenue
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =20
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =11
+            Text: ="Estado"
+            Width: =(Parent.Width - 96) / 3
+            X: =24 + 1 * ((Parent.Width - 96) / 3 + 24)
+            Y: =92
+      - ddCulEstado:
+          Control: Classic/DropDown
+          Properties:
+            BorderColor: =fxC.Borde
+            BorderThickness: =1
+            ChevronBackground: =fxC.Blanco
+            ChevronFill: =fxC.Tenue
+            Color: =fxC.Texto
+            Default: ="Activo"
+            Font: =Font.'Segoe UI'
+            Height: =40
+            HoverFill: =fxC.AcentoSuave
+            Items: =["Activo", "Inactivo"]
+            PaddingLeft: =10
+            SelectionFill: =fxC.Acento
+            Size: =12
+            Width: =(Parent.Width - 96) / 3
+            X: =24 + 1 * ((Parent.Width - 96) / 3 + 24)
+            Y: =114
+      - lbltxtCulEvento:
+          Control: Label
+          Properties:
+            Color: =fxC.Tenue
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =20
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =11
+            Text: ="Evento"
+            Width: =(Parent.Width - 96) / 3
+            X: =24 + 2 * ((Parent.Width - 96) / 3 + 24)
+            Y: =92
+      - txtCulEvento:
+          Control: Classic/TextInput
+          Properties:
+            BorderColor: =fxC.Borde
+            BorderThickness: =1
+            Color: =fxC.Texto
+            Default: =""
+            FocusedBorderColor: =fxC.Acento
+            FocusedBorderThickness: =2
+            Font: =Font.'Segoe UI'
+            Height: =40
+            HintText: ="Presentación o evento, si aplica"
+            HoverBorderColor: =fxC.Acento
+            PaddingLeft: =10
+            RadiusBottomLeft: =6
+            RadiusBottomRight: =6
+            RadiusTopLeft: =6
+            RadiusTopRight: =6
+            Size: =12
+            Width: =(Parent.Width - 96) / 3
+            X: =24 + 2 * ((Parent.Width - 96) / 3 + 24)
+            Y: =114
+      - lbltxtCulObs:
+          Control: Label
+          Properties:
+            Color: =fxC.Tenue
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =20
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =11
+            Text: ="Observación"
+            Width: =3 * (Parent.Width - 96) / 3 + 48
+            X: =24 + 0 * ((Parent.Width - 96) / 3 + 24)
+            Y: =168
+      - txtCulObs:
+          Control: Classic/TextInput
+          Properties:
+            BorderColor: =fxC.Borde
+            BorderThickness: =1
+            Color: =fxC.Texto
+            Default: =""
+            FocusedBorderColor: =fxC.Acento
+            FocusedBorderThickness: =2
+            Font: =Font.'Segoe UI'
+            Height: =96
+            HintText: ="Sin datos de salud ni situaciones personales."
+            HoverBorderColor: =fxC.Acento
+            Mode: =TextMode.MultiLine
+            PaddingLeft: =10
+            RadiusBottomLeft: =6
+            RadiusBottomRight: =6
+            RadiusTopLeft: =6
+            RadiusTopRight: =6
+            Size: =12
+            Width: =3 * (Parent.Width - 96) / 3 + 48
+            X: =24 + 0 * ((Parent.Width - 96) / 3 + 24)
+            Y: =190
+      - lblErrorCul:
+          Control: Label
+          Properties:
+            Color: =fxC.Error
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =24
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =12
+            Text: =varError
+            Visible: =Not(IsBlank(varError))
+            Width: =Parent.Width - 48
+            X: =24
+            Y: =302
+      - btnGuardarCul:
+          Control: Classic/Button
+          Properties:
+            BorderColor: =fxC.Acento
+            BorderThickness: =0
+            Color: =fxC.Blanco
+            Fill: =fxC.Acento
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =40
+            HoverColor: =fxC.Blanco
+            HoverFill: =ColorFade(fxC.Acento, -15%)
+            OnSelect: |-
+              =Set(varError, If(IsBlank(dpCulFecha.SelectedDate), "Indica la fecha.", Blank()));
+              If(IsBlank(varError),
+                  IfError(
+                      Patch(Cultura, Defaults(Cultura), {'Código': varEst.'Código', Estudiante: varEst.'Nombre completo', Fecha: dpCulFecha.SelectedDate, 'Tipo de registro': ddCulTipo.Selected.Value, 'Taller o grupo': ddCulTaller.Selected.Servicio, Rol: ddCulRol.Selected.Value, Evento: Trim(txtCulEvento.Text), Periodo: varEst.Periodo, Estado: ddCulEstado.Selected.Value, 'Observación': Trim(txtCulObs.Text), 'Registrado por': fxNombreYo}),
+                      Set(varError, "No se pudo guardar: " & FirstError.Message),
+                      Notify("Registro guardado.", NotificationType.Success); Set(varTab, "bienestar"); Navigate(scrFicha, ScreenTransition.None)
+                  )
+              )
+            PressedFill: =ColorFade(fxC.Acento, -25%)
+            RadiusBottomLeft: =6
+            RadiusBottomRight: =6
+            RadiusTopLeft: =6
+            RadiusTopRight: =6
+            Size: =12
+            Text: ="Guardar"
+            Width: =160
+            X: =24
+            Y: =334
+      - btnCancelarCul:
+          Control: Classic/Button
+          Properties:
+            BorderColor: =fxC.Borde
+            BorderThickness: =1
+            Color: =fxC.Texto
+            Fill: =fxC.Blanco
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =40
+            HoverColor: =fxC.Texto
+            HoverFill: =fxC.Fondo
+            OnSelect: =Set(varTab, "bienestar"); Navigate(scrFicha, ScreenTransition.None)
+            PressedFill: =fxC.Fondo
+            RadiusBottomLeft: =6
+            RadiusBottomRight: =6
+            RadiusTopLeft: =6
+            RadiusTopRight: =6
+            Size: =12
+            Text: ="Cancelar"
+            Width: =120
+            X: =196
+            Y: =334

@@ -1,16 +1,33 @@
 # Arquitectura y licencias
 
-## Decisión: Power Apps sobre Dataverse, publicado en Teams
+## Decisión: dos caminos, empezando con lo que ya hay
 
-El sistema guarda seguimientos de varias áreas, incluidas notas psicológicas y de salud. Esto exige cuatro cosas: separar el contenido clínico del resto, controlar quién ve cada columna, auditar quién hizo qué y responder rápido con más de 100.000 registros.
+La licencia que reportó Bienestar es «Pro Plus». Ese nombre corresponde a las aplicaciones de escritorio de Office. El plan de la universidad que trae SharePoint, Forms, Power Apps y Power Automate (por ejemplo Office 365 A1 Plus, A3 o A5) incluye Power Apps y Power Automate solo con conectores estándar. Por eso el sistema tiene dos caminos con el mismo modelo de unidades y permisos (`microsoft365/modelo.json`):
 
-| Opción | ¿Sirve? | Por qué |
+| | Camino A: Microsoft 365 (ahora) | Camino B: Dataverse (si se compran licencias) |
 |---|---|---|
-| Solo Teams con Listas o SharePoint | No | Las listas se degradan pasados 5.000 elementos por vista y los permisos por elemento no escalan a 20.000 estudiantes. No hay seguridad por columna para datos clínicos. |
-| Power Apps con Dataverse for Teams | No | Microsoft documenta que no tiene auditoría, ni seguridad por columna, ni varias unidades de negocio, y que no admite apps basadas en modelo. El tope es de 2 GB por equipo. |
-| **Power Apps (app basada en modelo) con Dataverse completo, publicada como pestaña de Teams** | **Sí** | Ofrece roles y equipos por área, perfiles de seguridad de columna, auditoría y registro de accesos, búsqueda en Dataverse, una línea de tiempo por estudiante y flujos de proceso. Se usa dentro de Teams, como en el ejemplo. |
+| Datos | Listas de SharePoint: una por unidad reservada, más las listas compartidas | Tablas de Dataverse (`dataverse/esquema.json`) |
+| App | Power Apps de lienzo (`microsoft365/app`) | App basada en modelo con línea de tiempo |
+| Licencias | Las de Microsoft 365 de la universidad | Power Apps Premium para quien registra o consulta |
+| Separación entre unidades | Permisos por lista y permisos de nivel de elemento para las remisiones | Unidades de negocio, equipos y perfiles de seguridad de columna |
+| Auditoría | Historial de versiones; Auditoría de Purview si el plan la incluye | Auditoría de Dataverse con registro de lecturas |
+| Guía | `05-guia-microsoft365.md` | Este documento y `04-plan-de-implementacion.md` |
 
-## Componentes
+Por qué el camino A sí sirve, aunque antes se descartaron las listas:
+- **Volumen.** La búsqueda usa columnas indexadas y consultas delegables, así que funciona con 20.000 estudiantes y más de 100.000 registros sin pasar el umbral de 5.000 elementos.
+- **Permisos.** No se usan permisos únicos por elemento. Cada unidad tiene su propia lista con permisos propios, y las remisiones usan la opción de lista «leer y editar solo lo propio», que no crea permisos por elemento.
+- **Seguridad por columna.** No hace falta: los datos sensibles están en listas aparte («Condiciones de ingreso» y las listas reservadas), no en columnas de una lista compartida.
+
+Lo que el camino A no da, y el B sí, es un registro de quién **leyó** cada registro, salvo que el plan incluya Auditoría de Purview. Si Jurídica lo exige para GAV o Psicología, ese es el argumento para el camino B en esas unidades.
+
+| Opción evaluada | ¿Sirve? | Por qué |
+|---|---|---|
+| Solo Teams, con una lista compartida para todo | No | Una sola lista no separa lo que ve cada unidad y no hay seguridad por columna. |
+| Power Apps con Dataverse for Teams | No | Microsoft documenta que no tiene auditoría, seguridad por columna ni varias unidades de negocio. El tope es de 2 GB por equipo. |
+| **Camino A: SharePoint con una lista por unidad, Power Apps de lienzo y Power Automate** | **Sí, ahora** | Cabe en las licencias actuales y separa el acceso por unidad desde SharePoint. |
+| **Camino B: Power Apps con Dataverse completo, en Teams** | **Sí, cuando haya licencias** | Controles más finos y auditoría de lecturas. |
+
+## Componentes del camino B (Dataverse)
 
 | Componente | Función |
 |---|---|
@@ -23,7 +40,7 @@ El sistema guarda seguimientos de varias áreas, incluidas notas psicológicas y
 | Microsoft Entra ID | Cuentas institucionales, grupos de seguridad por área (ligados a equipos de Dataverse), MFA y acceso condicional. |
 | Microsoft Purview | Registro de actividad de Dataverse (incluidas lecturas) para auditoría de cumplimiento, si el licenciamiento lo permite. |
 
-## Entornos
+## Entornos del camino B
 
 | Entorno | Tipo | Datos | Uso |
 |---|---|---|---|
@@ -31,7 +48,7 @@ El sistema guarda seguimientos de varias áreas, incluidas notas psicológicas y
 | Pruebas | Sandbox | Ficticios o anonimizados | Pruebas de aceptación con cada rol. |
 | Producción | Production, entorno administrado | Reales | Solo recibe soluciones administradas por canalizaciones. Sin agentes de IA conectados. |
 
-## Licencias que debe confirmar TI
+## Licencias del camino B que debe confirmar TI
 
 Estos puntos se verifican en el Centro de administración de Microsoft 365 (Facturación > Licencias) y en el Centro de administración de Power Platform (Licencias > Complementos de capacidad). Los precios para educación se confirman con el partner de Microsoft.
 
@@ -42,7 +59,14 @@ Estos puntos se verifican en el Centro de administración de Microsoft 365 (Fact
 5. **Power BI Pro** para quien crea o consume informes. A5 lo incluye para personal docente y administrativo; con A3 se compra aparte. Otra opción es una capacidad de Fabric.
 6. **Prototipo sin costo.** El Plan para desarrolladores de Power Apps es gratuito para construir y probar, sin uso en producción. Permite hasta tres entornos por persona, que se eliminan tras 90 días sin uso.
 
-## Cómo puede trabajar Claude dentro del entorno de desarrollo
+## Cómo puede trabajar Claude con la cuenta institucional
+
+Desde una sesión en la nube, Claude no puede entrar al Microsoft 365 de la universidad. Hay dos formas de dárselo:
+
+1. **Usar tu computador.** Instala la app de escritorio de Claude, inicia sesión y activa el uso del computador (*Settings > This computer > Computer use*). En claude.ai, antes de enviar el mensaje, elige tu computador en el botón **+** > **Dispositivos**. Así Claude trabaja en el navegador de tu equipo, donde ya iniciaste sesión con tu cuenta de la universidad, y tú apruebas cada aplicación. Sirve para el camino A: crear el sitio, las listas, los permisos y la app. En ese modo se trabaja con datos ficticios hasta que el diseño esté aprobado.
+2. **Conector de Dataverse (camino B).** Solo sirve en un entorno de desarrollo de Dataverse, con los pasos de abajo.
+
+### Conector de Dataverse para el camino B
 
 Existe un conector oficial «Microsoft Dataverse» para Claude que usa el servidor MCP de Dataverse. Para habilitarlo:
 
@@ -63,3 +87,10 @@ Notas: Microsoft marca esta función como versión preliminar, no recomendada pa
 - [Configurar el servidor MCP de Dataverse en un entorno](https://learn.microsoft.com/en-us/power-apps/maker/data-platform/data-platform-mcp-disable)
 - [Conectar clientes MCP que no son de Microsoft](https://learn.microsoft.com/en-us/power-apps/maker/data-platform/data-platform-mcp-other-clients)
 - [Incrustar una app basada en modelo en Teams](https://learn.microsoft.com/en-us/powerapps/teams/embed-model-driven-teams-personal)
+- [Crear una lista a partir de una hoja de cálculo (Microsoft Lists)](https://support.microsoft.com/en-us/topic/380cfeb5-6e14-438e-988a-c2b9bea574fa)
+- [Límites al importar a Listas desde Excel (Collab365)](https://go.collab365.com/microsoft-list-import-help)
+- [Exportar una tabla de Excel a SharePoint](https://support.microsoft.com/es-ES/Excel/export-an-excel-table-to-sharepoint)
+- [Plan de lanzamiento: apps de lienzo como archivos YAML legibles](https://learn.microsoft.com/en-us/power-platform/release-plan/2024wave1/power-apps/save-canvas-applications-as-human-readable-yaml-files)
+- [Esquema oficial de pa.yaml (PowerApps-Tooling)](https://github.com/microsoft/PowerApps-Tooling/blob/master/schemas/pa-yaml/v3.0/pa.schema.yaml)
+- [Ver y pegar código en Power Apps Studio (Pragmatic Works)](https://pragmaticworks.com/blog/power-apps-canvas-code-editor-everything-you-need-to-know)
+- [Documentación de PnP PowerShell](https://github.com/pnp/powershell/tree/dev/documentation)

@@ -1,0 +1,29 @@
+fxYo = Lower(User().Email);
+fxNombreYo = User().FullName;
+fxMisAccesos = Filter(Accesos, Correo = fxYo And Activo = "Sí");
+fxEsAdmin = Not(IsEmpty(Filter(fxMisAccesos, Unidad = "ADM")));
+fxUnidades = Table(
+    {Codigo: "DEP", Corto: "Deportes", Nombre: "Deportes", Nivel: "visible"},
+    {Codigo: "CUL", Corto: "Cultura", Nombre: "Cultura", Nivel: "visible"},
+    {Codigo: "PDH", Corto: "Programas DH", Nombre: "Programas de Desarrollo Humano", Nivel: "visible"},
+    {Codigo: "DEA", Corto: "DE académico", Nombre: "Desarrollo Estudiantil · académico", Nivel: "reservado"},
+    {Codigo: "DPS", Corto: "DE psicología", Nombre: "Desarrollo Estudiantil · psicología", Nivel: "reservado"},
+    {Codigo: "PSI", Corto: "Psicología", Nombre: "Programa de Atención Psicológica", Nivel: "reservado"},
+    {Codigo: "SAL", Corto: "Salud", Nombre: "Salud", Nivel: "reservado"},
+    {Codigo: "GAV", Corto: "GAV", Nombre: "GAV · violencia sexual y VBG", Nivel: "reservado"},
+    {Codigo: "CES", Corto: "Centro de Escucha", Nombre: "Centro de Escucha", Nivel: "reservado"},
+    {Codigo: "TSO", Corto: "Trabajo Social", Nombre: "Trabajo Social", Nivel: "reservado"},
+    {Codigo: "ENL", Corto: "Enlaces", Nombre: "Estrategia Enlaces", Nivel: "reservado"},
+    {Codigo: "PRP", Corto: "Riesgo psicosocial", Nombre: "Prevención del riesgo psicosocial", Nivel: "reservado"},
+    {Codigo: "PRS", Corto: "Prevención salud", Nombre: "Prevención para la salud", Nivel: "reservado"},
+    {Codigo: "ORE", Corto: "Orientación espiritual", Nombre: "Orientaciones y asesorías espirituales", Nivel: "reservado"},
+    {Codigo: "CAI", Corto: "Infancia CAI", Nombre: "Centro de Atención Integral a la Infancia", Nivel: "reservado"},
+    {Codigo: "SAF", Corto: "Sala Amiga", Nombre: "Sala Amiga de la Familia Lactante", Nivel: "reservado"},
+    {Codigo: "IPS", Corto: "IPS FUNPRONIMA", Nombre: "IPS FUNPRONIMA", Nivel: "reservado"}
+);
+fxReservadas = Filter(fxUnidades, Nivel = "reservado");
+fxGestiona = If(fxEsAdmin, fxUnidades, Filter(fxUnidades, Codigo in fxMisAccesos.Unidad));
+fxGestionaReservadas = Filter(fxGestiona, Nivel = "reservado");
+fxLectura = If(fxEsAdmin, fxReservadas, Filter(fxReservadas, Codigo in fxMisAccesos.Unidad Or (Codigo = "DEA" And "DPS" in fxMisAccesos.Unidad)));
+fxRemitente = fxNombreYo & " · " & If(fxEsAdmin, "Administración", Concat(Filter(fxUnidades, Codigo in fxMisAccesos.Unidad), Corto, ", "));
+fxC = {Acento: RGBA(10, 108, 118, 1), AcentoSuave: RGBA(230, 243, 244, 1), Texto: RGBA(22, 50, 79, 1), Tenue: RGBA(97, 113, 130, 1), Fondo: RGBA(245, 247, 248, 1), Borde: RGBA(217, 225, 234, 1), Reservado: RGBA(91, 63, 160, 1), ReservadoSuave: RGBA(239, 235, 249, 1), Aviso: RGBA(150, 85, 0, 1), AvisoSuave: RGBA(255, 244, 224, 1), Error: RGBA(180, 35, 24, 1), Blanco: RGBA(255, 255, 255, 1)};

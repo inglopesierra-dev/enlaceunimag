@@ -1,0 +1,1269 @@
+Screens:
+  scrFicha:
+    Properties:
+      Fill: =fxC.Fondo
+      OnVisible: |-
+        =Set(varEdad, With({n: varEst.'Fecha de nacimiento'}, If(IsBlank(n), Blank(), Year(Today()) - Year(n) - If(Month(Today()) * 100 + Day(Today()) < Month(n) * 100 + Day(n), 1, 0))));
+        If(IsBlank(varTab) Or (varTab = "seguimiento" And IsEmpty(fxLectura)), Set(varTab, "resumen"));
+        If(IsBlank(varUnidad) Or Not(varUnidad in fxLectura.Codigo), Set(varUnidad, First(fxLectura).Codigo));
+        Set(varAnulando, false)
+    Children:
+      - rectEncFicha:
+          Control: Rectangle
+          Properties:
+            Fill: =fxC.Acento
+            Height: =64
+            Width: =Parent.Width
+            X: =0
+            Y: =0
+      - lblEncTituloFicha:
+          Control: Label
+          Properties:
+            Color: =fxC.Blanco
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =64
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =18
+            Text: ="Acompañamiento Estudiantil"
+            Width: =520
+            X: =72
+            Y: =0
+      - lblEncUsuarioFicha:
+          Control: Label
+          Properties:
+            Align: =Align.Right
+            Color: =fxC.Blanco
+            Font: =Font.'Segoe UI'
+            Height: =64
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =11
+            Text: =fxNombreYo & "  ·  " & If(fxEsAdmin, "Administración", If(IsEmpty(fxGestiona), "Personal", Concat(fxGestiona, Corto, ", ")))
+            Width: =600
+            X: =Parent.Width - 624
+            Y: =0
+      - icoAtrasFicha:
+          Control: Classic/Icon
+          Variant: ArrowLeft
+          Properties:
+            AccessibleLabel: ="Volver"
+            Color: =fxC.Blanco
+            Height: =40
+            Icon: =Icon.ArrowLeft
+            OnSelect: =Navigate(scrInicio, ScreenTransition.None)
+            PaddingBottom: =8
+            PaddingLeft: =8
+            PaddingRight: =8
+            PaddingTop: =8
+            Tooltip: ="Volver"
+            Width: =40
+            X: =16
+            Y: =12
+      - conFichaHead:
+          Control: GroupContainer
+          Variant: manualLayoutContainer
+          Properties:
+            BorderColor: =fxC.Borde
+            BorderThickness: =1
+            DropShadow: =DropShadow.None
+            Fill: =fxC.Blanco
+            Height: =128
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Width: =Parent.Width - 48
+            X: =24
+            Y: =80
+          Children:
+            - lblNombre:
+                Control: Label
+                Properties:
+                  Color: =fxC.Texto
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =32
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =20
+                  Text: =varEst.'Nombre completo'
+                  Width: =Parent.Width - 48
+                  X: =24
+                  Y: =14
+            - lblIdent:
+                Control: Label
+                Properties:
+                  Color: =fxC.Tenue
+                  Font: =Font.'Segoe UI'
+                  Height: =22
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =12
+                  Text: ="Código " & varEst.'Código' & "  ·  " & varEst.'Tipo de documento' & " " & varEst.Documento & If(IsBlank(varEdad), "", "  ·  " & varEdad & " años")
+                  Width: =Parent.Width * 0.5
+                  X: =24
+                  Y: =48
+            - lblMenor:
+                Control: Label
+                Properties:
+                  Align: =Align.Center
+                  Color: =fxC.Aviso
+                  Fill: =fxC.AvisoSuave
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =26
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: |-
+                    ="Menor de edad: los datos sensibles requieren la autorización de su representante legal"
+                  Visible: =Not(IsBlank(varEdad)) And varEdad < 18
+                  Width: =Parent.Width * 0.5 - 24
+                  X: =Parent.Width * 0.5
+                  Y: =46
+            - htmlChips:
+                Control: HtmlViewer
+                Properties:
+                  Height: =40
+                  HtmlText: |-
+                    ="<div style='font-family:Segoe UI, sans-serif;font-size:12px'>" &
+                    Concat(
+                        Filter(
+                            Table(
+                                {t: varEst.Facultad, e: ""},
+                                {t: varEst.Programa, e: ""},
+                                {t: If(IsBlank(varEst.Periodo), "", "Periodo " & varEst.Periodo), e: ""},
+                                {t: If(varEst.Matriculado = "SI", "Matriculado", "No matriculado"), e: If(varEst.Matriculado = "SI", "ok", "aviso")},
+                                {t: If(IsBlank(varEst.Promedio), "Sin promedio", "Promedio " & Text(varEst.Promedio, "0.00")), e: ""},
+                                {t: If(IsBlank(varEst.Estrato), "", "Estrato " & varEst.Estrato), e: ""},
+                                {t: If(varEst.'Cupo especial' = "N/A", "", varEst.'Cupo especial'), e: ""}
+                            ),
+                            Not(IsBlank(t))
+                        ),
+                        "<span style='display:inline-block;margin:0 6px 6px 0;padding:3px 10px;border-radius:12px;background:" & Switch(e, "ok", "#E6F3F4", "aviso", "#FFF4E0", "#EEF2F6") & ";color:" & Switch(e, "ok", "#0A6C76", "aviso", "#965500", "#16324F") & "'>" & t & "</span>"
+                    ) & "</div>"
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Width: =Parent.Width - 48
+                  X: =24
+                  Y: =80
+      - btnTabResumen:
+          Control: Classic/Button
+          Properties:
+            BorderColor: =fxC.Borde
+            BorderThickness: =1
+            Color: =If(varTab = "resumen", fxC.Blanco, fxC.Texto)
+            Fill: =If(varTab = "resumen", fxC.Acento, fxC.Blanco)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =38
+            HoverColor: =fxC.Texto
+            HoverFill: =fxC.AcentoSuave
+            OnSelect: =Set(varTab, "resumen"); Set(varAnulando, false)
+            PressedFill: =fxC.AcentoSuave
+            RadiusBottomLeft: =6
+            RadiusBottomRight: =6
+            RadiusTopLeft: =6
+            RadiusTopRight: =6
+            Size: =12
+            Text: ="Resumen"
+            Visible: =true
+            Width: =188
+            X: =24 + 0 * 196
+            Y: =220
+      - btnTabBienestar:
+          Control: Classic/Button
+          Properties:
+            BorderColor: =fxC.Borde
+            BorderThickness: =1
+            Color: =If(varTab = "bienestar", fxC.Blanco, fxC.Texto)
+            Fill: =If(varTab = "bienestar", fxC.Acento, fxC.Blanco)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =38
+            HoverColor: =fxC.Texto
+            HoverFill: =fxC.AcentoSuave
+            OnSelect: =Set(varTab, "bienestar"); Set(varAnulando, false)
+            PressedFill: =fxC.AcentoSuave
+            RadiusBottomLeft: =6
+            RadiusBottomRight: =6
+            RadiusTopLeft: =6
+            RadiusTopRight: =6
+            Size: =12
+            Text: ="Bienestar"
+            Visible: =true
+            Width: =188
+            X: =24 + 1 * 196
+            Y: =220
+      - btnTabSeguimiento:
+          Control: Classic/Button
+          Properties:
+            BorderColor: =fxC.Borde
+            BorderThickness: =1
+            Color: =If(varTab = "seguimiento", fxC.Blanco, fxC.Texto)
+            Fill: =If(varTab = "seguimiento", fxC.Acento, fxC.Blanco)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =38
+            HoverColor: =fxC.Texto
+            HoverFill: =fxC.AcentoSuave
+            OnSelect: =Set(varTab, "seguimiento"); Set(varAnulando, false)
+            PressedFill: =fxC.AcentoSuave
+            RadiusBottomLeft: =6
+            RadiusBottomRight: =6
+            RadiusTopLeft: =6
+            RadiusTopRight: =6
+            Size: =12
+            Text: ="Seguimiento reservado"
+            Visible: =Not(IsEmpty(fxLectura))
+            Width: =188
+            X: =24 + 2 * 196
+            Y: =220
+      - btnTabRemitir:
+          Control: Classic/Button
+          Properties:
+            BorderColor: =fxC.Borde
+            BorderThickness: =1
+            Color: =If(varTab = "remitir", fxC.Blanco, fxC.Texto)
+            Fill: =If(varTab = "remitir", fxC.Acento, fxC.Blanco)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =38
+            HoverColor: =fxC.Texto
+            HoverFill: =fxC.AcentoSuave
+            OnSelect: =Set(varTab, "remitir"); Set(varAnulando, false)
+            PressedFill: =fxC.AcentoSuave
+            RadiusBottomLeft: =6
+            RadiusBottomRight: =6
+            RadiusTopLeft: =6
+            RadiusTopRight: =6
+            Size: =12
+            Text: ="Remitir"
+            Visible: =true
+            Width: =188
+            X: =If(IsEmpty(fxLectura), 24 + 2 * 196, 24 + 3 * 196)
+            Y: =220
+      - conResumen:
+          Control: GroupContainer
+          Variant: manualLayoutContainer
+          Properties:
+            BorderColor: =fxC.Borde
+            BorderThickness: =1
+            DropShadow: =DropShadow.None
+            Fill: =fxC.Blanco
+            Height: =Parent.Height - 290
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Visible: =varTab = "resumen"
+            Width: =Parent.Width - 48
+            X: =24
+            Y: =270
+          Children:
+            - htmlResumen:
+                Control: HtmlViewer
+                Properties:
+                  Height: =Parent.Height - 70
+                  HtmlText: |-
+                    ="<div style='font-family:Segoe UI, sans-serif;font-size:13px;color:#16324F;display:flex;gap:32px;flex-wrap:wrap'>" &
+                    "<div style='flex:1;min-width:280px'><div style='font-weight:600;margin-bottom:8px'>Datos básicos</div>" &
+                    Concat(Table(
+                            {k: "Nombres", v: varEst.Nombres},
+                            {k: "Apellidos", v: varEst.Apellidos},
+                            {k: "Documento", v: varEst.'Tipo de documento' & " " & varEst.Documento},
+                            {k: "Sexo", v: varEst.Sexo},
+                            {k: "Fecha de nacimiento", v: If(IsBlank(varEst.'Fecha de nacimiento'), "", Text(varEst.'Fecha de nacimiento', "dd/mm/yyyy") & If(IsBlank(varEdad), "", " (" & varEdad & " años)"))},
+                            {k: "Modalidad de ingreso", v: varEst.'Modalidad de ingreso'},
+                            {k: "Plan de estudio", v: varEst.'Plan de estudio'},
+                            {k: "Cancelación de semestre", v: varEst.'Cancelación de semestre'}
+                        ), "<div style='display:flex;border-bottom:1px solid #D9E1EA;padding:6px 0'><span style='width:45%;color:#617182'>" & k & "</span><span style='width:55%'>" & Coalesce(v, "Sin dato") & "</span></div>") &
+                    "</div><div style='flex:1;min-width:280px'><div style='font-weight:600;margin-bottom:8px'>Procedencia</div>" &
+                    Concat(Table(
+                            {k: "Origen", v: varEst.Origen},
+                            {k: "Municipio y departamento", v: varEst.'Municipio de origen' & ", " & varEst.'Departamento de origen'},
+                            {k: "Colegio", v: varEst.Colegio},
+                            {k: "Tipo de colegio", v: varEst.'Tipo de colegio'},
+                            {k: "Ubicación del colegio", v: varEst.'Municipio del colegio' & ", " & varEst.'Departamento del colegio'},
+                            {k: "Periodo original", v: varEst.'Periodo original'},
+                            {k: "Fecha de corte de la base", v: Text(varEst.'Fecha de corte', "dd/mm/yyyy")}
+                        ), "<div style='display:flex;border-bottom:1px solid #D9E1EA;padding:6px 0'><span style='width:45%;color:#617182'>" & k & "</span><span style='width:55%'>" & Coalesce(v, "Sin dato") & "</span></div>") &
+                    "</div></div>"
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Width: =Parent.Width - 48
+                  X: =24
+                  Y: =16
+            - lblResumenNota:
+                Control: Label
+                Properties:
+                  Color: =fxC.Tenue
+                  Font: =Font.'Segoe UI'
+                  Height: =36
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: ="Datos visibles para todo el personal del sistema. Los datos sensibles de ingreso (pertenencia étnica, víctima, discapacidad) solo los consulta Administración en SharePoint."
+                  Width: =Parent.Width - 48
+                  Wrap: =true
+                  X: =24
+                  Y: =Parent.Height - 48
+      - conBienestar:
+          Control: GroupContainer
+          Variant: manualLayoutContainer
+          Properties:
+            BorderColor: =fxC.Borde
+            BorderThickness: =1
+            DropShadow: =DropShadow.None
+            Fill: =fxC.Blanco
+            Height: =Parent.Height - 290
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Visible: =varTab = "bienestar"
+            Width: =Parent.Width - 48
+            X: =24
+            Y: =270
+          Children:
+            - lblBienBeneficios:
+                Control: Label
+                Properties:
+                  Color: =fxC.Texto
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =28
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =14
+                  Text: ="Beneficios"
+                  Width: =(Parent.Width - 96) / 3 - 110
+                  X: =24 + 0 * ((Parent.Width - 96) / 3 + 24)
+                  Y: =16
+            - btnAgregarBeneficios:
+                Control: Classic/Button
+                Properties:
+                  BorderColor: =fxC.Acento
+                  BorderThickness: =1
+                  Color: =fxC.Acento
+                  Fill: =fxC.Blanco
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =32
+                  HoverColor: =fxC.Acento
+                  HoverFill: =fxC.AcentoSuave
+                  OnSelect: =Navigate(scrRegBeneficio, ScreenTransition.None)
+                  PressedFill: =fxC.AcentoSuave
+                  RadiusBottomLeft: =6
+                  RadiusBottomRight: =6
+                  RadiusTopLeft: =6
+                  RadiusTopRight: =6
+                  Size: =12
+                  Text: ="+ Agregar"
+                  Visible: ="PDH" in fxGestiona.Codigo
+                  Width: =100
+                  X: =24 + 0 * ((Parent.Width - 96) / 3 + 24) + (Parent.Width - 96) / 3 - 100
+                  Y: =14
+            - htmlBienBeneficios:
+                Control: HtmlViewer
+                Properties:
+                  Height: =Parent.Height - 110
+                  HtmlText: |-
+                    =With({r: Filter(Beneficios, 'Código' = varEst.'Código')},
+                        "<div style='font-family:Segoe UI, sans-serif;font-size:13px;color:#16324F'>" & 
+                        If(IsEmpty(r), "<div style='color:#617182;padding:8px 0'>Sin registros en programas de Desarrollo Humano.</div>",
+                            Concat(Sort(r, 'Fecha de inicio', SortOrder.Descending), "<div style='border-bottom:1px solid #D9E1EA;padding:8px 0'><div style='font-weight:600'>" & Programa & "</div><div style='color:#617182'>" & Estado & If(IsBlank(Periodo), "", " · " & Periodo) & If(IsBlank(Detalle), "", " · " & Detalle) & "</div></div>")) & "</div>")
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Width: =(Parent.Width - 96) / 3
+                  X: =24 + 0 * ((Parent.Width - 96) / 3 + 24)
+                  Y: =52
+            - lblBienDeportes:
+                Control: Label
+                Properties:
+                  Color: =fxC.Texto
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =28
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =14
+                  Text: ="Deportes"
+                  Width: =(Parent.Width - 96) / 3 - 110
+                  X: =24 + 1 * ((Parent.Width - 96) / 3 + 24)
+                  Y: =16
+            - btnAgregarDeportes:
+                Control: Classic/Button
+                Properties:
+                  BorderColor: =fxC.Acento
+                  BorderThickness: =1
+                  Color: =fxC.Acento
+                  Fill: =fxC.Blanco
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =32
+                  HoverColor: =fxC.Acento
+                  HoverFill: =fxC.AcentoSuave
+                  OnSelect: =Navigate(scrRegDeportes, ScreenTransition.None)
+                  PressedFill: =fxC.AcentoSuave
+                  RadiusBottomLeft: =6
+                  RadiusBottomRight: =6
+                  RadiusTopLeft: =6
+                  RadiusTopRight: =6
+                  Size: =12
+                  Text: ="+ Agregar"
+                  Visible: ="DEP" in fxGestiona.Codigo
+                  Width: =100
+                  X: =24 + 1 * ((Parent.Width - 96) / 3 + 24) + (Parent.Width - 96) / 3 - 100
+                  Y: =14
+            - htmlBienDeportes:
+                Control: HtmlViewer
+                Properties:
+                  Height: =Parent.Height - 110
+                  HtmlText: |-
+                    =With({r: Filter(Deportes, 'Código' = varEst.'Código')},
+                        "<div style='font-family:Segoe UI, sans-serif;font-size:13px;color:#16324F'>" & If("DEPORTISTA" in Upper(varEst.'Cupo especial'), "<div style='margin-bottom:6px;color:#0A6C76'>Ingresó por cupo deportivo</div>", "") &
+                        If(IsEmpty(r), "<div style='color:#617182;padding:8px 0'>Sin registros en Deportes.</div>",
+                            Concat(Sort(r, Fecha, SortOrder.Descending), "<div style='border-bottom:1px solid #D9E1EA;padding:8px 0'><div style='font-weight:600'>" & 'Disciplina o servicio' & "</div><div style='color:#617182'>" & 'Tipo de registro' & If(ASCUN = "Sí", " · ASCUN", "") & If(IsBlank(Nivel), "", " · " & Nivel) & If(IsBlank(Estado), "", " · " & Estado) & "</div></div>")) & "</div>")
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Width: =(Parent.Width - 96) / 3
+                  X: =24 + 1 * ((Parent.Width - 96) / 3 + 24)
+                  Y: =52
+            - lblBienCultura:
+                Control: Label
+                Properties:
+                  Color: =fxC.Texto
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =28
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =14
+                  Text: ="Cultura"
+                  Width: =(Parent.Width - 96) / 3 - 110
+                  X: =24 + 2 * ((Parent.Width - 96) / 3 + 24)
+                  Y: =16
+            - btnAgregarCultura:
+                Control: Classic/Button
+                Properties:
+                  BorderColor: =fxC.Acento
+                  BorderThickness: =1
+                  Color: =fxC.Acento
+                  Fill: =fxC.Blanco
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =32
+                  HoverColor: =fxC.Acento
+                  HoverFill: =fxC.AcentoSuave
+                  OnSelect: =Navigate(scrRegCultura, ScreenTransition.None)
+                  PressedFill: =fxC.AcentoSuave
+                  RadiusBottomLeft: =6
+                  RadiusBottomRight: =6
+                  RadiusTopLeft: =6
+                  RadiusTopRight: =6
+                  Size: =12
+                  Text: ="+ Agregar"
+                  Visible: ="CUL" in fxGestiona.Codigo
+                  Width: =100
+                  X: =24 + 2 * ((Parent.Width - 96) / 3 + 24) + (Parent.Width - 96) / 3 - 100
+                  Y: =14
+            - htmlBienCultura:
+                Control: HtmlViewer
+                Properties:
+                  Height: =Parent.Height - 110
+                  HtmlText: |-
+                    =With({r: Filter(Cultura, 'Código' = varEst.'Código')},
+                        "<div style='font-family:Segoe UI, sans-serif;font-size:13px;color:#16324F'>" & If("ARTISTA" in Upper(varEst.'Cupo especial'), "<div style='margin-bottom:6px;color:#0A6C76'>Ingresó por cupo de artista</div>", "") &
+                        If(IsEmpty(r), "<div style='color:#617182;padding:8px 0'>Sin registros en Cultura.</div>",
+                            Concat(Sort(r, Fecha, SortOrder.Descending), "<div style='border-bottom:1px solid #D9E1EA;padding:8px 0'><div style='font-weight:600'>" & 'Taller o grupo' & "</div><div style='color:#617182'>" & 'Tipo de registro' & If(IsBlank(Rol), "", " · " & Rol) & If(IsBlank(Estado), "", " · " & Estado) & "</div></div>")) & "</div>")
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Width: =(Parent.Width - 96) / 3
+                  X: =24 + 2 * ((Parent.Width - 96) / 3 + 24)
+                  Y: =52
+            - lblBienNota:
+                Control: Label
+                Properties:
+                  Color: =fxC.Tenue
+                  Font: =Font.'Segoe UI'
+                  Height: =36
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: |-
+                    ="Visible para todo el personal del sistema: programas socioeconómicos, deporte y cultura. Para corregir un registro, ábrelo en la lista de SharePoint de su área."
+                  Width: =Parent.Width - 48
+                  Wrap: =true
+                  X: =24
+                  Y: =Parent.Height - 48
+      - conSeguimiento:
+          Control: GroupContainer
+          Variant: manualLayoutContainer
+          Properties:
+            BorderColor: =fxC.Borde
+            BorderThickness: =1
+            DropShadow: =DropShadow.None
+            Fill: =fxC.Blanco
+            Height: =Parent.Height - 290
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Visible: =varTab = "seguimiento"
+            Width: =Parent.Width - 48
+            X: =24
+            Y: =270
+          Children:
+            - galUnidadesSeg:
+                Control: Gallery
+                Variant: galleryHorizontal
+                Properties:
+                  Height: =44
+                  Items: =fxLectura
+                  LoadingSpinner: =LoadingSpinner.Data
+                  LoadingSpinnerColor: =fxC.Acento
+                  ShowScrollbar: =false
+                  TemplatePadding: =0
+                  TemplateSize: =170
+                  Width: =Parent.Width - 240
+                  X: =16
+                  Y: =12
+                Children:
+                  - btnUnidadSeg:
+                      Control: Classic/Button
+                      Properties:
+                        BorderColor: =fxC.Reservado
+                        BorderThickness: =1
+                        Color: =If(varUnidad = ThisItem.Codigo, fxC.Blanco, fxC.Reservado)
+                        Fill: =If(varUnidad = ThisItem.Codigo, fxC.Reservado, fxC.Blanco)
+                        Font: =Font.'Segoe UI'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =32
+                        HoverColor: =fxC.Reservado
+                        HoverFill: =fxC.ReservadoSuave
+                        OnSelect: =Set(varUnidad, ThisItem.Codigo); Set(varAnulando, false)
+                        PressedFill: =fxC.ReservadoSuave
+                        RadiusBottomLeft: =6
+                        RadiusBottomRight: =6
+                        RadiusTopLeft: =6
+                        RadiusTopRight: =6
+                        Size: =11
+                        Text: =ThisItem.Corto
+                        Width: =Parent.TemplateWidth - 8
+                        X: =4
+                        Y: =4
+            - btnNuevoRegistro:
+                Control: Classic/Button
+                Properties:
+                  BorderColor: =fxC.Acento
+                  BorderThickness: =0
+                  Color: =fxC.Blanco
+                  Fill: =fxC.Acento
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =36
+                  HoverColor: =fxC.Blanco
+                  HoverFill: =ColorFade(fxC.Acento, -15%)
+                  OnSelect: =Navigate(scrRegSeguimiento, ScreenTransition.None)
+                  PressedFill: =ColorFade(fxC.Acento, -25%)
+                  RadiusBottomLeft: =6
+                  RadiusBottomRight: =6
+                  RadiusTopLeft: =6
+                  RadiusTopRight: =6
+                  Size: =12
+                  Text: ="+ Nuevo registro"
+                  Visible: =varUnidad in fxGestionaReservadas.Codigo
+                  Width: =176
+                  X: =Parent.Width - 196
+                  Y: =16
+            - lblSegAviso:
+                Control: Label
+                Properties:
+                  Color: =fxC.Reservado
+                  Fill: =fxC.ReservadoSuave
+                  Font: =Font.'Segoe UI'
+                  Height: =36
+                  PaddingBottom: =0
+                  PaddingLeft: =10
+                  PaddingRight: =10
+                  PaddingTop: =0
+                  Size: =11
+                  Text: |-
+                    ="Reservado: solo lo ven " & LookUp(fxUnidades, Codigo = varUnidad).Nombre & " y Administración. No registres diagnósticos, medicamentos ni detalles íntimos: la historia clínica sigue en el sistema del área." & If(varUnidad in fxGestionaReservadas.Codigo, "", " Tienes acceso de consulta.")
+                  Width: =Parent.Width - 40
+                  Wrap: =true
+                  X: =20
+                  Y: =60
+            - lblSegVacio:
+                Control: Label
+                Properties:
+                  Color: =fxC.Tenue
+                  Font: =Font.'Segoe UI'
+                  Height: =24
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =12
+                  Text: ="Sin registros de esta unidad para el estudiante."
+                  Visible: =IsEmpty(galSeg.AllItems)
+                  Width: =Parent.Width - 40
+                  X: =20
+                  Y: =112
+            - galSeg:
+                Control: Gallery
+                Variant: galleryVertical
+                Properties:
+                  Height: =Parent.Height - 112
+                  Items: |-
+                    =Sort(Switch(varUnidad,
+                        "DEA", ForAll(Filter('Seguimiento Desarrollo Estudiantil', 'Código' = varEst.'Código'), {Id: ID, Fecha: Fecha, Tipo: 'Tipo de registro', Servicio: Servicio, Modalidad: Modalidad, Motivo: Motivo, Resumen: Resumen, Proxima: 'Próxima acción', FechaProx: 'Fecha próxima acción', Estado: Estado, Prioridad: Prioridad, Origen: Origen, Remitido: 'Remitido por', Registrado: 'Registrado por', Autorizacion: 'Autorización de datos', Anulacion: 'Motivo de anulación', Asignado: 'Asignado a'}),
+                        "DPS", ForAll(Filter('Seguimiento Psicología DE', 'Código' = varEst.'Código'), {Id: ID, Fecha: Fecha, Tipo: 'Tipo de registro', Servicio: Servicio, Modalidad: Modalidad, Motivo: Motivo, Resumen: Resumen, Proxima: 'Próxima acción', FechaProx: 'Fecha próxima acción', Estado: Estado, Prioridad: Prioridad, Origen: Origen, Remitido: 'Remitido por', Registrado: 'Registrado por', Autorizacion: 'Autorización de datos', Anulacion: 'Motivo de anulación', Asignado: 'Asignado a'}),
+                        "PSI", ForAll(Filter('Seguimiento Psicología', 'Código' = varEst.'Código'), {Id: ID, Fecha: Fecha, Tipo: 'Tipo de registro', Servicio: Servicio, Modalidad: Modalidad, Motivo: Motivo, Resumen: Resumen, Proxima: 'Próxima acción', FechaProx: 'Fecha próxima acción', Estado: Estado, Prioridad: Prioridad, Origen: Origen, Remitido: 'Remitido por', Registrado: 'Registrado por', Autorizacion: 'Autorización de datos', Anulacion: 'Motivo de anulación', Asignado: 'Asignado a'}),
+                        "SAL", ForAll(Filter('Seguimiento Salud', 'Código' = varEst.'Código'), {Id: ID, Fecha: Fecha, Tipo: 'Tipo de registro', Servicio: Servicio, Modalidad: Modalidad, Motivo: Motivo, Resumen: Resumen, Proxima: 'Próxima acción', FechaProx: 'Fecha próxima acción', Estado: Estado, Prioridad: Prioridad, Origen: Origen, Remitido: 'Remitido por', Registrado: 'Registrado por', Autorizacion: 'Autorización de datos', Anulacion: 'Motivo de anulación', Asignado: 'Asignado a'}),
+                        "GAV", ForAll(Filter('Seguimiento GAV', 'Código' = varEst.'Código'), {Id: ID, Fecha: Fecha, Tipo: 'Tipo de registro', Servicio: Servicio, Modalidad: Modalidad, Motivo: Motivo, Resumen: Resumen, Proxima: 'Próxima acción', FechaProx: 'Fecha próxima acción', Estado: Estado, Prioridad: Prioridad, Origen: Origen, Remitido: 'Remitido por', Registrado: 'Registrado por', Autorizacion: 'Autorización de datos', Anulacion: 'Motivo de anulación', Asignado: 'Asignado a'}),
+                        "CES", ForAll(Filter('Seguimiento Centro de Escucha', 'Código' = varEst.'Código'), {Id: ID, Fecha: Fecha, Tipo: 'Tipo de registro', Servicio: Servicio, Modalidad: Modalidad, Motivo: Motivo, Resumen: Resumen, Proxima: 'Próxima acción', FechaProx: 'Fecha próxima acción', Estado: Estado, Prioridad: Prioridad, Origen: Origen, Remitido: 'Remitido por', Registrado: 'Registrado por', Autorizacion: 'Autorización de datos', Anulacion: 'Motivo de anulación', Asignado: 'Asignado a'}),
+                        "TSO", ForAll(Filter('Seguimiento Trabajo Social', 'Código' = varEst.'Código'), {Id: ID, Fecha: Fecha, Tipo: 'Tipo de registro', Servicio: Servicio, Modalidad: Modalidad, Motivo: Motivo, Resumen: Resumen, Proxima: 'Próxima acción', FechaProx: 'Fecha próxima acción', Estado: Estado, Prioridad: Prioridad, Origen: Origen, Remitido: 'Remitido por', Registrado: 'Registrado por', Autorizacion: 'Autorización de datos', Anulacion: 'Motivo de anulación', Asignado: 'Asignado a'}),
+                        "ENL", ForAll(Filter('Seguimiento Enlaces', 'Código' = varEst.'Código'), {Id: ID, Fecha: Fecha, Tipo: 'Tipo de registro', Servicio: Servicio, Modalidad: Modalidad, Motivo: Motivo, Resumen: Resumen, Proxima: 'Próxima acción', FechaProx: 'Fecha próxima acción', Estado: Estado, Prioridad: Prioridad, Origen: Origen, Remitido: 'Remitido por', Registrado: 'Registrado por', Autorizacion: 'Autorización de datos', Anulacion: 'Motivo de anulación', Asignado: 'Asignado a'}),
+                        "PRP", ForAll(Filter('Seguimiento Riesgo Psicosocial', 'Código' = varEst.'Código'), {Id: ID, Fecha: Fecha, Tipo: 'Tipo de registro', Servicio: Servicio, Modalidad: Modalidad, Motivo: Motivo, Resumen: Resumen, Proxima: 'Próxima acción', FechaProx: 'Fecha próxima acción', Estado: Estado, Prioridad: Prioridad, Origen: Origen, Remitido: 'Remitido por', Registrado: 'Registrado por', Autorizacion: 'Autorización de datos', Anulacion: 'Motivo de anulación', Asignado: 'Asignado a'}),
+                        "PRS", ForAll(Filter('Seguimiento Prevención Salud', 'Código' = varEst.'Código'), {Id: ID, Fecha: Fecha, Tipo: 'Tipo de registro', Servicio: Servicio, Modalidad: Modalidad, Motivo: Motivo, Resumen: Resumen, Proxima: 'Próxima acción', FechaProx: 'Fecha próxima acción', Estado: Estado, Prioridad: Prioridad, Origen: Origen, Remitido: 'Remitido por', Registrado: 'Registrado por', Autorizacion: 'Autorización de datos', Anulacion: 'Motivo de anulación', Asignado: 'Asignado a'}),
+                        "ORE", ForAll(Filter('Seguimiento Orientación Espiritual', 'Código' = varEst.'Código'), {Id: ID, Fecha: Fecha, Tipo: 'Tipo de registro', Servicio: Servicio, Modalidad: Modalidad, Motivo: Motivo, Resumen: Resumen, Proxima: 'Próxima acción', FechaProx: 'Fecha próxima acción', Estado: Estado, Prioridad: Prioridad, Origen: Origen, Remitido: 'Remitido por', Registrado: 'Registrado por', Autorizacion: 'Autorización de datos', Anulacion: 'Motivo de anulación', Asignado: 'Asignado a'}),
+                        "CAI", ForAll(Filter('Seguimiento Infancia CAI', 'Código' = varEst.'Código'), {Id: ID, Fecha: Fecha, Tipo: 'Tipo de registro', Servicio: Servicio, Modalidad: Modalidad, Motivo: Motivo, Resumen: Resumen, Proxima: 'Próxima acción', FechaProx: 'Fecha próxima acción', Estado: Estado, Prioridad: Prioridad, Origen: Origen, Remitido: 'Remitido por', Registrado: 'Registrado por', Autorizacion: 'Autorización de datos', Anulacion: 'Motivo de anulación', Asignado: 'Asignado a'}),
+                        "SAF", ForAll(Filter('Seguimiento Sala Amiga', 'Código' = varEst.'Código'), {Id: ID, Fecha: Fecha, Tipo: 'Tipo de registro', Servicio: Servicio, Modalidad: Modalidad, Motivo: Motivo, Resumen: Resumen, Proxima: 'Próxima acción', FechaProx: 'Fecha próxima acción', Estado: Estado, Prioridad: Prioridad, Origen: Origen, Remitido: 'Remitido por', Registrado: 'Registrado por', Autorizacion: 'Autorización de datos', Anulacion: 'Motivo de anulación', Asignado: 'Asignado a'}),
+                        "IPS", ForAll(Filter('Seguimiento IPS FUNPRONIMA', 'Código' = varEst.'Código'), {Id: ID, Fecha: Fecha, Tipo: 'Tipo de registro', Servicio: Servicio, Modalidad: Modalidad, Motivo: Motivo, Resumen: Resumen, Proxima: 'Próxima acción', FechaProx: 'Fecha próxima acción', Estado: Estado, Prioridad: Prioridad, Origen: Origen, Remitido: 'Remitido por', Registrado: 'Registrado por', Autorizacion: 'Autorización de datos', Anulacion: 'Motivo de anulación', Asignado: 'Asignado a'})
+                    ), Fecha, SortOrder.Descending)
+                  LoadingSpinner: =LoadingSpinner.Data
+                  LoadingSpinnerColor: =fxC.Acento
+                  ShowScrollbar: =true
+                  TemplatePadding: =0
+                  TemplateSize: =132
+                  Width: =Parent.Width
+                  X: =0
+                  Y: =104
+                Children:
+                  - lblSegTitulo:
+                      Control: Label
+                      Properties:
+                        Color: =fxC.Texto
+                        Font: =Font.'Segoe UI'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =22
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: =Text(ThisItem.Fecha, "dd/mm/yyyy") & "  ·  " & ThisItem.Tipo & If(IsBlank(ThisItem.Servicio), "", "  ·  " & ThisItem.Servicio) & If(IsBlank(ThisItem.Motivo), "", "  ·  " & ThisItem.Motivo)
+                        Width: =Parent.TemplateWidth - 210
+                        X: =16
+                        Y: =10
+                  - lblSegEstado:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Center
+                        Color: =Switch(ThisItem.Estado, "Pendiente", fxC.Aviso, "Anulado", fxC.Tenue, "Cerrado", fxC.Acento, fxC.Reservado)
+                        Fill: =Switch(ThisItem.Estado, "Pendiente", fxC.AvisoSuave, "Anulado", fxC.Fondo, "Cerrado", fxC.AcentoSuave, fxC.ReservadoSuave)
+                        Font: =Font.'Segoe UI'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =24
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =11
+                        Text: =ThisItem.Estado
+                        Width: =110
+                        X: =Parent.TemplateWidth - 186
+                        Y: =10
+                  - icoAnular:
+                      Control: Classic/Icon
+                      Variant: Cancel
+                      Properties:
+                        AccessibleLabel: ="Anular registro"
+                        Color: =fxC.Error
+                        Height: =36
+                        Icon: =Icon.Cancel
+                        OnSelect: =Set(varAnular, ThisItem); Set(varAnulando, true); Reset(txtMotivoAnular)
+                        PaddingBottom: =8
+                        PaddingLeft: =8
+                        PaddingRight: =8
+                        PaddingTop: =8
+                        Tooltip: |-
+                          ="Anular (no se borra: queda en el historial)"
+                        Visible: =ThisItem.Estado <> "Anulado" And varUnidad in fxGestionaReservadas.Codigo
+                        Width: =36
+                        X: =Parent.TemplateWidth - 60
+                        Y: =6
+                  - lblSegResumen:
+                      Control: Label
+                      Properties:
+                        Color: =fxC.Texto
+                        Font: =Font.'Segoe UI'
+                        Height: =44
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Strikethrough: =ThisItem.Estado = "Anulado"
+                        Text: =ThisItem.Resumen
+                        VerticalAlign: =VerticalAlign.Top
+                        Width: =Parent.TemplateWidth - 32
+                        Wrap: =true
+                        X: =16
+                        Y: =36
+                  - lblSegMeta:
+                      Control: Label
+                      Properties:
+                        Color: =fxC.Tenue
+                        Font: =Font.'Segoe UI'
+                        Height: =38
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =11
+                        Text: |-
+                          ="Registró: " & ThisItem.Registrado & If(IsBlank(ThisItem.Asignado), "", "  ·  A cargo: " & ThisItem.Asignado) & If(IsBlank(ThisItem.Proxima), "", "  ·  Próxima acción: " & ThisItem.Proxima & If(IsBlank(ThisItem.FechaProx), "", " (" & Text(ThisItem.FechaProx, "dd/mm/yyyy") & ")")) & If(IsBlank(ThisItem.Remitido), "", "  ·  Remitido por: " & ThisItem.Remitido) & If(ThisItem.Estado = "Anulado", "  ·  Motivo de anulación: " & ThisItem.Anulacion, "")
+                        VerticalAlign: =VerticalAlign.Top
+                        Width: =Parent.TemplateWidth - 32
+                        Wrap: =true
+                        X: =16
+                        Y: =84
+                  - rectSegLinea:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =fxC.Borde
+                        Height: =1
+                        Width: =Parent.TemplateWidth - 32
+                        X: =16
+                        Y: =Parent.TemplateHeight - 1
+            - conAnular:
+                Control: GroupContainer
+                Variant: manualLayoutContainer
+                Properties:
+                  BorderColor: =fxC.Borde
+                  BorderThickness: =1
+                  DropShadow: =DropShadow.Bold
+                  Fill: =fxC.Blanco
+                  Height: =236
+                  RadiusBottomLeft: =8
+                  RadiusBottomRight: =8
+                  RadiusTopLeft: =8
+                  RadiusTopRight: =8
+                  Visible: =varAnulando
+                  Width: =420
+                  X: =Parent.Width - 444
+                  Y: =60
+                Children:
+                  - lblAnularTitulo:
+                      Control: Label
+                      Properties:
+                        Color: =fxC.Texto
+                        Font: =Font.'Segoe UI'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =24
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =14
+                        Text: ="Anular el registro del " & Text(varAnular.Fecha, "dd/mm/yyyy")
+                        Width: =Parent.Width - 40
+                        X: =20
+                        Y: =16
+                  - lblAnularAyuda:
+                      Control: Label
+                      Properties:
+                        Color: =fxC.Tenue
+                        Font: =Font.'Segoe UI'
+                        Height: =40
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =11
+                        Text: |-
+                          ="No se borra: queda en el historial de versiones con tu nombre. Escribe por qué se anula."
+                        Width: =Parent.Width - 40
+                        Wrap: =true
+                        X: =20
+                        Y: =44
+                  - txtMotivoAnular:
+                      Control: Classic/TextInput
+                      Properties:
+                        BorderColor: =fxC.Borde
+                        BorderThickness: =1
+                        Color: =fxC.Texto
+                        Default: =""
+                        FocusedBorderColor: =fxC.Acento
+                        FocusedBorderThickness: =2
+                        Font: =Font.'Segoe UI'
+                        Height: =64
+                        HintText: ="Motivo de la anulación"
+                        HoverBorderColor: =fxC.Acento
+                        Mode: =TextMode.MultiLine
+                        PaddingLeft: =10
+                        RadiusBottomLeft: =6
+                        RadiusBottomRight: =6
+                        RadiusTopLeft: =6
+                        RadiusTopRight: =6
+                        Size: =12
+                        Width: =Parent.Width - 40
+                        X: =20
+                        Y: =90
+                  - btnConfirmarAnular:
+                      Control: Classic/Button
+                      Properties:
+                        BorderColor: =fxC.Error
+                        BorderThickness: =0
+                        Color: =fxC.Blanco
+                        DisplayMode: =If(Len(Trim(txtMotivoAnular.Text)) < 5, DisplayMode.Disabled, DisplayMode.Edit)
+                        Fill: =fxC.Error
+                        Font: =Font.'Segoe UI'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =38
+                        HoverColor: =fxC.Blanco
+                        HoverFill: =ColorFade(fxC.Error, -15%)
+                        OnSelect: |-
+                          =IfError(Switch(varUnidad,
+                              "DEA", Patch('Seguimiento Desarrollo Estudiantil', LookUp('Seguimiento Desarrollo Estudiantil', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}),
+                              "DPS", Patch('Seguimiento Psicología DE', LookUp('Seguimiento Psicología DE', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}),
+                              "PSI", Patch('Seguimiento Psicología', LookUp('Seguimiento Psicología', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}),
+                              "SAL", Patch('Seguimiento Salud', LookUp('Seguimiento Salud', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}),
+                              "GAV", Patch('Seguimiento GAV', LookUp('Seguimiento GAV', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}),
+                              "CES", Patch('Seguimiento Centro de Escucha', LookUp('Seguimiento Centro de Escucha', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}),
+                              "TSO", Patch('Seguimiento Trabajo Social', LookUp('Seguimiento Trabajo Social', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}),
+                              "ENL", Patch('Seguimiento Enlaces', LookUp('Seguimiento Enlaces', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}),
+                              "PRP", Patch('Seguimiento Riesgo Psicosocial', LookUp('Seguimiento Riesgo Psicosocial', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}),
+                              "PRS", Patch('Seguimiento Prevención Salud', LookUp('Seguimiento Prevención Salud', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}),
+                              "ORE", Patch('Seguimiento Orientación Espiritual', LookUp('Seguimiento Orientación Espiritual', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}),
+                              "CAI", Patch('Seguimiento Infancia CAI', LookUp('Seguimiento Infancia CAI', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}),
+                              "SAF", Patch('Seguimiento Sala Amiga', LookUp('Seguimiento Sala Amiga', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)}),
+                              "IPS", Patch('Seguimiento IPS FUNPRONIMA', LookUp('Seguimiento IPS FUNPRONIMA', ID = varAnular.Id), {Estado: "Anulado", 'Motivo de anulación': Trim(txtMotivoAnular.Text)})
+                          ), Notify("No se pudo anular: " & FirstError.Message, NotificationType.Error), Notify("Registro anulado.", NotificationType.Success); Set(varAnulando, false))
+                        PressedFill: =ColorFade(fxC.Error, -25%)
+                        RadiusBottomLeft: =6
+                        RadiusBottomRight: =6
+                        RadiusTopLeft: =6
+                        RadiusTopRight: =6
+                        Size: =12
+                        Text: ="Anular"
+                        Width: =100
+                        X: =Parent.Width - 236
+                        Y: =172
+                  - btnCancelarAnular:
+                      Control: Classic/Button
+                      Properties:
+                        BorderColor: =fxC.Borde
+                        BorderThickness: =1
+                        Color: =fxC.Texto
+                        Fill: =fxC.Blanco
+                        Font: =Font.'Segoe UI'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =38
+                        HoverColor: =fxC.Texto
+                        HoverFill: =fxC.Fondo
+                        OnSelect: =Set(varAnulando, false)
+                        PressedFill: =fxC.Fondo
+                        RadiusBottomLeft: =6
+                        RadiusBottomRight: =6
+                        RadiusTopLeft: =6
+                        RadiusTopRight: =6
+                        Size: =12
+                        Text: ="Cancelar"
+                        Width: =100
+                        X: =Parent.Width - 124
+                        Y: =172
+      - conRemitir:
+          Control: GroupContainer
+          Variant: manualLayoutContainer
+          Properties:
+            BorderColor: =fxC.Borde
+            BorderThickness: =1
+            DropShadow: =DropShadow.None
+            Fill: =fxC.Blanco
+            Height: =Parent.Height - 290
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Visible: =varTab = "remitir"
+            Width: =Parent.Width - 48
+            X: =24
+            Y: =270
+          Children:
+            - lblRemTitulo:
+                Control: Label
+                Properties:
+                  Color: =fxC.Texto
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =28
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =14
+                  Text: ="Remitir a otra unidad"
+                  Width: =(Parent.Width - 72) / 2
+                  X: =24
+                  Y: =16
+            - lblRemAyuda:
+                Control: Label
+                Properties:
+                  Color: =fxC.Tenue
+                  Font: =Font.'Segoe UI'
+                  Height: =54
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: ="La remisión llega a la bandeja de la unidad destino. Tú solo verás el estado de las remisiones que hagas. Escribe hechos y lo que esperas, sin diagnósticos ni detalles íntimos."
+                  Width: =(Parent.Width - 72) / 2
+                  Wrap: =true
+                  X: =24
+                  Y: =46
+            - lblDestino:
+                Control: Label
+                Properties:
+                  Color: =fxC.Tenue
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =20
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: ="Unidad destino"
+                  Width: =(Parent.Width - 72) / 2
+                  X: =24
+                  Y: =106
+            - ddDestino:
+                Control: Classic/DropDown
+                Properties:
+                  BorderColor: =fxC.Borde
+                  BorderThickness: =1
+                  ChevronBackground: =fxC.Blanco
+                  ChevronFill: =fxC.Tenue
+                  Color: =fxC.Texto
+                  Font: =Font.'Segoe UI'
+                  Height: =40
+                  HoverFill: =fxC.AcentoSuave
+                  Items: =fxReservadas.Nombre
+                  PaddingLeft: =10
+                  SelectionFill: =fxC.Acento
+                  Size: =12
+                  Width: =(Parent.Width - 72) / 2
+                  X: =24
+                  Y: =128
+            - lblMotivoRem:
+                Control: Label
+                Properties:
+                  Color: =fxC.Tenue
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =20
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: ="Motivo general"
+                  Width: =(Parent.Width - 72) / 2 / 2 - 8
+                  X: =24
+                  Y: =178
+            - ddMotivoRem:
+                Control: Classic/DropDown
+                Properties:
+                  BorderColor: =fxC.Borde
+                  BorderThickness: =1
+                  ChevronBackground: =fxC.Blanco
+                  ChevronFill: =fxC.Tenue
+                  Color: =fxC.Texto
+                  Font: =Font.'Segoe UI'
+                  Height: =40
+                  HoverFill: =fxC.AcentoSuave
+                  Items: =["Académico", "Adaptación a la vida universitaria", "Socioeconómico", "Emocional o psicológico", "Salud física", "Convivencia o relaciones", "Familiar", "Violencias o acoso", "Consumo de sustancias", "Discapacidad o accesibilidad", "Orientación vocacional", "Otro"]
+                  PaddingLeft: =10
+                  SelectionFill: =fxC.Acento
+                  Size: =12
+                  Width: =(Parent.Width - 72) / 2 / 2 - 8
+                  X: =24
+                  Y: =200
+            - lblPrioridadRem:
+                Control: Label
+                Properties:
+                  Color: =fxC.Tenue
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =20
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: ="Prioridad"
+                  Width: =(Parent.Width - 72) / 2 / 2 - 8
+                  X: =24 + (Parent.Width - 72) / 2 / 2 + 8
+                  Y: =178
+            - ddPrioridadRem:
+                Control: Classic/DropDown
+                Properties:
+                  BorderColor: =fxC.Borde
+                  BorderThickness: =1
+                  ChevronBackground: =fxC.Blanco
+                  ChevronFill: =fxC.Tenue
+                  Color: =fxC.Texto
+                  Default: ="Normal"
+                  Font: =Font.'Segoe UI'
+                  Height: =40
+                  HoverFill: =fxC.AcentoSuave
+                  Items: =["Normal", "Alta", "Urgente"]
+                  PaddingLeft: =10
+                  SelectionFill: =fxC.Acento
+                  Size: =12
+                  Width: =(Parent.Width - 72) / 2 / 2 - 8
+                  X: =24 + (Parent.Width - 72) / 2 / 2 + 8
+                  Y: =200
+            - lblNotaRem:
+                Control: Label
+                Properties:
+                  Color: =fxC.Tenue
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =20
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: ="Qué observaste y qué esperas de la unidad"
+                  Width: =(Parent.Width - 72) / 2
+                  X: =24
+                  Y: =250
+            - txtNotaRem:
+                Control: Classic/TextInput
+                Properties:
+                  BorderColor: =fxC.Borde
+                  BorderThickness: =1
+                  Color: =fxC.Texto
+                  Default: =""
+                  FocusedBorderColor: =fxC.Acento
+                  FocusedBorderThickness: =2
+                  Font: =Font.'Segoe UI'
+                  Height: =Parent.Height - 360
+                  HintText: |-
+                    ="Por ejemplo: faltó a tres clases y dice que no puede pagar el transporte; pide orientación."
+                  HoverBorderColor: =fxC.Acento
+                  Mode: =TextMode.MultiLine
+                  PaddingLeft: =10
+                  RadiusBottomLeft: =6
+                  RadiusBottomRight: =6
+                  RadiusTopLeft: =6
+                  RadiusTopRight: =6
+                  Size: =12
+                  Width: =(Parent.Width - 72) / 2
+                  X: =24
+                  Y: =272
+            - btnEnviarRem:
+                Control: Classic/Button
+                Properties:
+                  BorderColor: =fxC.Acento
+                  BorderThickness: =0
+                  Color: =fxC.Blanco
+                  DisplayMode: =If(Len(Trim(txtNotaRem.Text)) < 10, DisplayMode.Disabled, DisplayMode.Edit)
+                  Fill: =fxC.Acento
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =40
+                  HoverColor: =fxC.Blanco
+                  HoverFill: =ColorFade(fxC.Acento, -15%)
+                  OnSelect: |-
+                    =Set(varDestino, LookUp(fxReservadas, Nombre = ddDestino.Selected.Nombre).Codigo);
+                    Set(varRem, {'Código': varEst.'Código', Estudiante: varEst.'Nombre completo', Fecha: Today(), 'Tipo de registro': "Remisión recibida", Motivo: ddMotivoRem.Selected.Value, Resumen: Trim(txtNotaRem.Text), Estado: "Pendiente", Prioridad: ddPrioridadRem.Selected.Value, Origen: "Remisión de otra unidad", 'Remitido por': fxRemitente, 'Menor de edad': If(Not(IsBlank(varEdad)) And varEdad < 18, "Sí", "No"), 'Autorización de datos': "Pendiente", 'Registrado por': fxNombreYo, 'Correo de quien registra': fxYo});
+                    IfError(
+                        Switch(varDestino,
+                        "DEA", Patch('Seguimiento Desarrollo Estudiantil', Defaults('Seguimiento Desarrollo Estudiantil'), varRem),
+                        "DPS", Patch('Seguimiento Psicología DE', Defaults('Seguimiento Psicología DE'), varRem),
+                        "PSI", Patch('Seguimiento Psicología', Defaults('Seguimiento Psicología'), varRem),
+                        "SAL", Patch('Seguimiento Salud', Defaults('Seguimiento Salud'), varRem),
+                        "GAV", Patch('Seguimiento GAV', Defaults('Seguimiento GAV'), varRem),
+                        "CES", Patch('Seguimiento Centro de Escucha', Defaults('Seguimiento Centro de Escucha'), varRem),
+                        "TSO", Patch('Seguimiento Trabajo Social', Defaults('Seguimiento Trabajo Social'), varRem),
+                        "ENL", Patch('Seguimiento Enlaces', Defaults('Seguimiento Enlaces'), varRem),
+                        "PRP", Patch('Seguimiento Riesgo Psicosocial', Defaults('Seguimiento Riesgo Psicosocial'), varRem),
+                        "PRS", Patch('Seguimiento Prevención Salud', Defaults('Seguimiento Prevención Salud'), varRem),
+                        "ORE", Patch('Seguimiento Orientación Espiritual', Defaults('Seguimiento Orientación Espiritual'), varRem),
+                        "CAI", Patch('Seguimiento Infancia CAI', Defaults('Seguimiento Infancia CAI'), varRem),
+                        "SAF", Patch('Seguimiento Sala Amiga', Defaults('Seguimiento Sala Amiga'), varRem),
+                        "IPS", Patch('Seguimiento IPS FUNPRONIMA', Defaults('Seguimiento IPS FUNPRONIMA'), varRem)
+                    ),
+                        Notify("No se pudo remitir: " & FirstError.Message, NotificationType.Error),
+                        Notify("Remisión enviada a " & ddDestino.Selected.Nombre & ".", NotificationType.Success); Reset(txtNotaRem)
+                    )
+                  PressedFill: =ColorFade(fxC.Acento, -25%)
+                  RadiusBottomLeft: =6
+                  RadiusBottomRight: =6
+                  RadiusTopLeft: =6
+                  RadiusTopRight: =6
+                  Size: =12
+                  Text: ="Enviar remisión"
+                  Width: =200
+                  X: =24
+                  Y: =Parent.Height - 72
+            - lblMisRemTitulo:
+                Control: Label
+                Properties:
+                  Color: =fxC.Texto
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =28
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =14
+                  Text: ="Tus remisiones a " & ddDestino.Selected.Nombre
+                  Width: =(Parent.Width - 72) / 2
+                  X: =48 + (Parent.Width - 72) / 2
+                  Y: =16
+            - lblMisRemVacio:
+                Control: Label
+                Properties:
+                  Color: =fxC.Tenue
+                  Font: =Font.'Segoe UI'
+                  Height: =24
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =12
+                  Text: ="No has remitido a este estudiante a esta unidad."
+                  Visible: =IsEmpty(galMisRem.AllItems)
+                  Width: =(Parent.Width - 72) / 2
+                  X: =48 + (Parent.Width - 72) / 2
+                  Y: =52
+            - galMisRem:
+                Control: Gallery
+                Variant: galleryVertical
+                Properties:
+                  Height: =Parent.Height - 64
+                  Items: |-
+                    =Sort(Switch(LookUp(fxReservadas, Nombre = ddDestino.Selected.Nombre).Codigo,
+                        "DEA", ForAll(Filter('Seguimiento Desarrollo Estudiantil', 'Código' = varEst.'Código' And 'Correo de quien registra' = fxYo And 'Tipo de registro' = "Remisión recibida"), {Id: ID, Fecha: Fecha, Estado: Estado, Motivo: Motivo, Prioridad: Prioridad, Asignado: 'Asignado a'}),
+                        "DPS", ForAll(Filter('Seguimiento Psicología DE', 'Código' = varEst.'Código' And 'Correo de quien registra' = fxYo And 'Tipo de registro' = "Remisión recibida"), {Id: ID, Fecha: Fecha, Estado: Estado, Motivo: Motivo, Prioridad: Prioridad, Asignado: 'Asignado a'}),
+                        "PSI", ForAll(Filter('Seguimiento Psicología', 'Código' = varEst.'Código' And 'Correo de quien registra' = fxYo And 'Tipo de registro' = "Remisión recibida"), {Id: ID, Fecha: Fecha, Estado: Estado, Motivo: Motivo, Prioridad: Prioridad, Asignado: 'Asignado a'}),
+                        "SAL", ForAll(Filter('Seguimiento Salud', 'Código' = varEst.'Código' And 'Correo de quien registra' = fxYo And 'Tipo de registro' = "Remisión recibida"), {Id: ID, Fecha: Fecha, Estado: Estado, Motivo: Motivo, Prioridad: Prioridad, Asignado: 'Asignado a'}),
+                        "GAV", ForAll(Filter('Seguimiento GAV', 'Código' = varEst.'Código' And 'Correo de quien registra' = fxYo And 'Tipo de registro' = "Remisión recibida"), {Id: ID, Fecha: Fecha, Estado: Estado, Motivo: Motivo, Prioridad: Prioridad, Asignado: 'Asignado a'}),
+                        "CES", ForAll(Filter('Seguimiento Centro de Escucha', 'Código' = varEst.'Código' And 'Correo de quien registra' = fxYo And 'Tipo de registro' = "Remisión recibida"), {Id: ID, Fecha: Fecha, Estado: Estado, Motivo: Motivo, Prioridad: Prioridad, Asignado: 'Asignado a'}),
+                        "TSO", ForAll(Filter('Seguimiento Trabajo Social', 'Código' = varEst.'Código' And 'Correo de quien registra' = fxYo And 'Tipo de registro' = "Remisión recibida"), {Id: ID, Fecha: Fecha, Estado: Estado, Motivo: Motivo, Prioridad: Prioridad, Asignado: 'Asignado a'}),
+                        "ENL", ForAll(Filter('Seguimiento Enlaces', 'Código' = varEst.'Código' And 'Correo de quien registra' = fxYo And 'Tipo de registro' = "Remisión recibida"), {Id: ID, Fecha: Fecha, Estado: Estado, Motivo: Motivo, Prioridad: Prioridad, Asignado: 'Asignado a'}),
+                        "PRP", ForAll(Filter('Seguimiento Riesgo Psicosocial', 'Código' = varEst.'Código' And 'Correo de quien registra' = fxYo And 'Tipo de registro' = "Remisión recibida"), {Id: ID, Fecha: Fecha, Estado: Estado, Motivo: Motivo, Prioridad: Prioridad, Asignado: 'Asignado a'}),
+                        "PRS", ForAll(Filter('Seguimiento Prevención Salud', 'Código' = varEst.'Código' And 'Correo de quien registra' = fxYo And 'Tipo de registro' = "Remisión recibida"), {Id: ID, Fecha: Fecha, Estado: Estado, Motivo: Motivo, Prioridad: Prioridad, Asignado: 'Asignado a'}),
+                        "ORE", ForAll(Filter('Seguimiento Orientación Espiritual', 'Código' = varEst.'Código' And 'Correo de quien registra' = fxYo And 'Tipo de registro' = "Remisión recibida"), {Id: ID, Fecha: Fecha, Estado: Estado, Motivo: Motivo, Prioridad: Prioridad, Asignado: 'Asignado a'}),
+                        "CAI", ForAll(Filter('Seguimiento Infancia CAI', 'Código' = varEst.'Código' And 'Correo de quien registra' = fxYo And 'Tipo de registro' = "Remisión recibida"), {Id: ID, Fecha: Fecha, Estado: Estado, Motivo: Motivo, Prioridad: Prioridad, Asignado: 'Asignado a'}),
+                        "SAF", ForAll(Filter('Seguimiento Sala Amiga', 'Código' = varEst.'Código' And 'Correo de quien registra' = fxYo And 'Tipo de registro' = "Remisión recibida"), {Id: ID, Fecha: Fecha, Estado: Estado, Motivo: Motivo, Prioridad: Prioridad, Asignado: 'Asignado a'}),
+                        "IPS", ForAll(Filter('Seguimiento IPS FUNPRONIMA', 'Código' = varEst.'Código' And 'Correo de quien registra' = fxYo And 'Tipo de registro' = "Remisión recibida"), {Id: ID, Fecha: Fecha, Estado: Estado, Motivo: Motivo, Prioridad: Prioridad, Asignado: 'Asignado a'})
+                    ), Fecha, SortOrder.Descending)
+                  LoadingSpinner: =LoadingSpinner.Data
+                  LoadingSpinnerColor: =fxC.Acento
+                  ShowScrollbar: =true
+                  TemplatePadding: =0
+                  TemplateSize: =64
+                  Width: =(Parent.Width - 72) / 2 + 12
+                  X: =36 + (Parent.Width - 72) / 2
+                  Y: =48
+                Children:
+                  - lblMiRemTitulo:
+                      Control: Label
+                      Properties:
+                        Color: =fxC.Texto
+                        Font: =Font.'Segoe UI'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =22
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: =Text(ThisItem.Fecha, "dd/mm/yyyy") & "  ·  " & ThisItem.Motivo
+                        Width: =Parent.TemplateWidth - 140
+                        X: =16
+                        Y: =8
+                  - lblMiRemEstado:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Center
+                        Color: =Switch(ThisItem.Estado, "Pendiente", fxC.Aviso, "Cerrado", fxC.Acento, "Anulado", fxC.Tenue, fxC.Reservado)
+                        Fill: =Switch(ThisItem.Estado, "Pendiente", fxC.AvisoSuave, "Cerrado", fxC.AcentoSuave, "Anulado", fxC.Fondo, fxC.ReservadoSuave)
+                        Font: =Font.'Segoe UI'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =24
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =11
+                        Text: =ThisItem.Estado
+                        Width: =108
+                        X: =Parent.TemplateWidth - 124
+                        Y: =8
+                  - lblMiRemDetalle:
+                      Control: Label
+                      Properties:
+                        Color: =fxC.Tenue
+                        Font: =Font.'Segoe UI'
+                        Height: =20
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =11
+                        Text: ="Prioridad " & Lower(ThisItem.Prioridad) & If(IsBlank(ThisItem.Asignado), "  ·  Sin asignar", "  ·  A cargo de " & ThisItem.Asignado)
+                        Width: =Parent.TemplateWidth - 32
+                        X: =16
+                        Y: =34
+                  - rectMiRemLinea:
+                      Control: Rectangle
+                      Properties:
+                        Fill: =fxC.Borde
+                        Height: =1
+                        Width: =Parent.TemplateWidth - 32
+                        X: =16
+                        Y: =Parent.TemplateHeight - 1

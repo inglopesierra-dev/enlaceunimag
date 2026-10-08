@@ -1,0 +1,287 @@
+{
+  "version": "1.0",
+  "descripcion": "Modelo del sistema de acompañamiento estudiantil sobre Microsoft 365 (SharePoint, Listas, Power Apps y Power Automate con conectores estándar). Es la fuente única: de aquí salen las plantillas, el script de aprovisionamiento, la app y la documentación.",
+  "sitio": {
+    "titulo": "Acompañamiento Estudiantil",
+    "url": "/sites/AcompanamientoEstudiantil",
+    "tipo": "Sitio de comunicación (no crea grupo de Microsoft 365 ni da edición a nadie por defecto)",
+    "idioma": "Español"
+  },
+  "niveles": {
+    "visible": "Visible para la red: lo ve todo el personal autorizado del sistema (datos básicos, estrato, beneficios, deporte y cultura).",
+    "reservado": "Reservado de la unidad: solo la unidad que lo registra y los dos administradores.",
+    "clinico": "Clínico: no se registra en este sistema; queda en la historia clínica del área. Aquí solo va la constancia de la atención."
+  },
+  "grupos_base": [
+    {
+      "codigo": "ADM",
+      "grupo": "AE Administradores",
+      "nombre": "Administración del sistema",
+      "descripcion": "Las dos personas con acceso a toda la información. Son propietarias del sitio (control total).",
+      "permiso_sitio": "Control total"
+    },
+    {
+      "codigo": "PER",
+      "grupo": "AE Personal",
+      "nombre": "Personal del sistema",
+      "descripcion": "Todas las personas que usan el sistema. Leen los datos visibles para la red y pueden remitir a cualquier unidad. Cada persona va aquí y, además, en el grupo de su unidad.",
+      "permiso_sitio": "Leer"
+    }
+  ],
+  "unidades": [
+    {"codigo": "DEP", "corto": "Deportes", "nombre": "Deportes", "area": "Deportes", "nivel": "visible", "lista": "Deportes", "grupo": "AE Deportes", "color": "#1F7A4D"},
+    {"codigo": "CUL", "corto": "Cultura", "nombre": "Cultura", "area": "Cultura", "nivel": "visible", "lista": "Cultura", "grupo": "AE Cultura", "color": "#B4417E"},
+    {"codigo": "PDH", "corto": "Programas DH", "nombre": "Programas de Desarrollo Humano", "area": "Desarrollo Humano", "nivel": "visible", "lista": "Beneficios", "grupo": "AE Programas DH", "color": "#C2671B"},
+    {"codigo": "DEA", "corto": "DE académico", "nombre": "Desarrollo Estudiantil · académico", "area": "Desarrollo Estudiantil", "nivel": "reservado", "lista": "Seguimiento Desarrollo Estudiantil", "url": "SegDesarrolloEstudiantil", "grupo": "AE DE Académico", "color": "#0A6C76"},
+    {"codigo": "DPS", "corto": "DE psicología", "nombre": "Desarrollo Estudiantil · psicología", "area": "Desarrollo Estudiantil", "nivel": "reservado", "lista": "Seguimiento Psicología DE", "url": "SegPsicologiaDE", "grupo": "AE DE Psicología", "color": "#0E8A8A", "tambien_consulta": ["DEA"]},
+    {"codigo": "PSI", "corto": "Psicología", "nombre": "Programa de Atención Psicológica", "area": "Programa de Atención Psicológica", "nivel": "reservado", "lista": "Seguimiento Psicología", "url": "SegPsicologia", "grupo": "AE Psicología", "color": "#5B3FA0"},
+    {"codigo": "SAL", "corto": "Salud", "nombre": "Salud", "area": "Salud", "nivel": "reservado", "lista": "Seguimiento Salud", "url": "SegSalud", "grupo": "AE Salud", "color": "#C0392B"},
+    {"codigo": "GAV", "corto": "GAV", "nombre": "GAV · violencia sexual y VBG", "area": "Desarrollo Humano", "nivel": "reservado", "lista": "Seguimiento GAV", "url": "SegGAV", "grupo": "AE GAV", "color": "#8E2C48"},
+    {"codigo": "CES", "corto": "Centro de Escucha", "nombre": "Centro de Escucha", "area": "Desarrollo Humano", "nivel": "reservado", "lista": "Seguimiento Centro de Escucha", "url": "SegCentroEscucha", "grupo": "AE Centro de Escucha", "color": "#6D4C8F"},
+    {"codigo": "TSO", "corto": "Trabajo Social", "nombre": "Trabajo Social", "area": "Desarrollo Humano", "nivel": "reservado", "lista": "Seguimiento Trabajo Social", "url": "SegTrabajoSocial", "grupo": "AE Trabajo Social", "color": "#9A5B13"},
+    {"codigo": "ENL", "corto": "Enlaces", "nombre": "Estrategia Enlaces", "area": "Desarrollo Humano", "nivel": "reservado", "lista": "Seguimiento Enlaces", "url": "SegEnlaces", "grupo": "AE Enlaces", "color": "#2A6FB0"},
+    {"codigo": "PRP", "corto": "Riesgo psicosocial", "nombre": "Prevención del riesgo psicosocial", "area": "Desarrollo Humano", "nivel": "reservado", "lista": "Seguimiento Riesgo Psicosocial", "url": "SegRiesgoPsicosocial", "grupo": "AE Riesgo Psicosocial", "color": "#7A5C1E"},
+    {"codigo": "PRS", "corto": "Prevención salud", "nombre": "Prevención para la salud", "area": "Desarrollo Humano", "nivel": "reservado", "lista": "Seguimiento Prevención Salud", "url": "SegPrevencionSalud", "grupo": "AE Prevención Salud", "color": "#3C7D3A"},
+    {"codigo": "ORE", "corto": "Orientación espiritual", "nombre": "Orientaciones y asesorías espirituales", "area": "Desarrollo Humano", "nivel": "reservado", "lista": "Seguimiento Orientación Espiritual", "url": "SegOrientacionEspiritual", "grupo": "AE Orientación Espiritual", "color": "#5E6B7A"},
+    {"codigo": "CAI", "corto": "Infancia CAI", "nombre": "Centro de Atención Integral a la Infancia", "area": "Desarrollo Humano", "nivel": "reservado", "lista": "Seguimiento Infancia CAI", "url": "SegInfanciaCAI", "grupo": "AE Infancia CAI", "color": "#D17A00"},
+    {"codigo": "SAF", "corto": "Sala Amiga", "nombre": "Sala Amiga de la Familia Lactante", "area": "Desarrollo Humano", "nivel": "reservado", "lista": "Seguimiento Sala Amiga", "url": "SegSalaAmiga", "grupo": "AE Sala Amiga", "color": "#B05A7A"},
+    {"codigo": "IPS", "corto": "IPS FUNPRONIMA", "nombre": "IPS FUNPRONIMA", "area": "Desarrollo Humano", "nivel": "reservado", "lista": "Seguimiento IPS FUNPRONIMA", "url": "SegIPSFunpronima", "grupo": "AE IPS FUNPRONIMA", "color": "#A03030"}
+  ],
+  "fuera_de_alcance": [
+    {"nombre": "Programa de Bienestar Laboral", "motivo": "Atiende a funcionarios, no a estudiantes."},
+    {"nombre": "Dirección de Talento Humano", "motivo": "Gestiona personal de la universidad, no estudiantes."}
+  ],
+  "catalogo": [
+    {"unidad": "DEP", "grupo": "Servicios", "items": ["Actividad física musicalizada", "Pausas activas", "Representación en eventos", "Préstamo de implementos"]},
+    {"unidad": "DEP", "grupo": "Disciplinas", "items": ["Ajedrez", "Atletismo", "Baloncesto", "Fitness-E. Corporal", "Fútbol 11", "Fútbol sala", "Karate Do", "Natación", "Patinaje", "Porrismo", "Rugby", "Sóftbol", "Taekwondo", "Tenis de campo", "Tenis de mesa", "Ultimate", "Voleibol / Voleibol playa"]},
+    {"unidad": "CUL", "grupo": "Talleres permanentes", "items": ["Artes plásticas", "Coro", "Danzas folclóricas", "Danzas modernas", "Guitarra y Grupo Fusión", "Jazz y percusión", "Literatura", "Orquesta tropical", "Piano", "Tambora", "Teatro", "Vientos", "Violín, viola y violonchelo"]},
+    {"unidad": "CUL", "grupo": "Estrategias", "items": ["Presentaciones y eventos culturales"]},
+    {"unidad": "PDH", "grupo": "Programas", "items": ["Almuerzos y refrigerios", "Alojamientos universitarios", "Becas para la permanencia y graduación", "PIC", "Reconocimiento y conmemoración"]},
+    {"unidad": "DEA", "grupo": "Servicios", "items": ["Seguimiento académico", "Alerta académica", "Orientación académica", "Tutoría o monitoría", "Permanencia y graduación"]},
+    {"unidad": "DPS", "grupo": "Servicios", "items": ["Acompañamiento psicológico", "Orientación vocacional", "Taller grupal"]},
+    {"unidad": "PSI", "grupo": "Servicios", "items": ["Atención psicológica individual", "Atención en crisis", "Intervención grupal"]},
+    {"unidad": "SAL", "grupo": "Servicios", "items": ["Atención médica en eventos", "Enfermería", "Fisioterapia", "Fonoaudiología", "Medicina", "Medicina del deporte", "Odontología", "Orientación en nutrición y dietética", "Psiquiatría", "Terapia ocupacional"]},
+    {"unidad": "GAV", "grupo": "Estrategia", "items": ["Atención de violencia sexual y VBG"]},
+    {"unidad": "CES", "grupo": "Estrategia", "items": ["Centro de Escucha"]},
+    {"unidad": "TSO", "grupo": "Servicios", "items": ["Trabajo social", "Fondo de calamidad"]},
+    {"unidad": "ENL", "grupo": "Estrategia", "items": ["Estrategia Enlaces"]},
+    {"unidad": "PRP", "grupo": "Estrategia", "items": ["Prevención del riesgo psicosocial"]},
+    {"unidad": "PRS", "grupo": "Estrategia", "items": ["Prevención para la salud"]},
+    {"unidad": "ORE", "grupo": "Estrategia", "items": ["Orientaciones y asesorías espirituales"]},
+    {"unidad": "CAI", "grupo": "Estrategia", "items": ["Centro de Atención Integral a la Infancia"]},
+    {"unidad": "SAF", "grupo": "Estrategia", "items": ["Sala Amiga de la Familia Lactante"]},
+    {"unidad": "IPS", "grupo": "Estrategia", "items": ["IPS FUNPRONIMA"]}
+  ],
+  "opciones": {
+    "si_no": ["Sí", "No"],
+    "tipo_registro_seguimiento": ["Atención", "Seguimiento", "Actividad grupal", "Solicitud del estudiante", "Remisión recibida", "Cierre"],
+    "estado_seguimiento": ["Pendiente", "En curso", "Cerrado", "Anulado"],
+    "prioridad": ["Normal", "Alta", "Urgente"],
+    "modalidad": ["Presencial", "Virtual", "Telefónica", "Visita", "Grupal"],
+    "motivo": ["Académico", "Adaptación a la vida universitaria", "Socioeconómico", "Emocional o psicológico", "Salud física", "Convivencia o relaciones", "Familiar", "Violencias o acoso", "Consumo de sustancias", "Discapacidad o accesibilidad", "Orientación vocacional", "Otro"],
+    "origen": ["Iniciativa de la unidad", "Formulario del estudiante", "Remisión de otra unidad", "Alerta académica"],
+    "autorizacion": ["Autorizada por el titular", "Autorizada por el representante legal", "Pendiente", "No autoriza datos sensibles"],
+    "tipo_registro_deportes": ["Deportista inscrito", "Representación en evento", "Préstamo de implementos", "Actividad física musicalizada", "Pausas activas"],
+    "nivel_deportes": ["Recreativo", "Formativo", "Selección Unimagdalena", "Alto rendimiento"],
+    "estado_deportes": ["Activo", "Inactivo", "Prestado", "Devuelto"],
+    "tipo_registro_cultura": ["Integrante de taller", "Grupo representativo", "Presentación o evento"],
+    "rol_cultura": ["Integrante", "Monitor o monitora", "Solista"],
+    "estado_participacion": ["Activo", "Inactivo"],
+    "estado_beneficio": ["Activo", "Suspendido", "Finalizado"],
+    "rol_acceso": ["Coordinación", "Profesional", "Apoyo"]
+  },
+  "cupo_especial": {
+    "regla": "En la lista Estudiantes solo queda el cupo especial que no revela un dato sensible. Lo demás va a la lista reservada «Condiciones de ingreso». Cualquier valor nuevo que no esté en la lista de visibles se trata como sensible.",
+    "visibles_si_contiene": ["N/A", "TALENTO", "ARTISTA", "DEPORTISTA", "BECA", "ZONA URBANA"],
+    "ejemplos_sensibles": ["DESPLAZADO POR LA VIOLENCIA", "AFROCOLOMBIANO", "INDIGENA", "MUJER BACHILLER CABEZA FAMILIA", "ESTUDIANTE CON DISCAPACIDAD"]
+  },
+  "listas": [
+    {
+      "titulo": "Estudiantes",
+      "url": "Estudiantes",
+      "nivel": "visible",
+      "descripcion": "Base de estudiantes del corte vigente. Una fila por estudiante. La carga Administración en cada corte.",
+      "editan": ["ADM"],
+      "leen": ["PER"],
+      "columnas": [
+        {"nombre": "Código", "interno": "Codigo", "tipo": "Texto", "requerido": true, "indexado": true, "unico": true, "ejemplo": "9026118045"},
+        {"nombre": "Documento", "interno": "Documento", "tipo": "Texto", "indexado": true, "ejemplo": "9912345678"},
+        {"nombre": "Tipo de documento", "interno": "TipoDocumento", "tipo": "Texto", "ejemplo": "C.C."},
+        {"nombre": "Nombres", "interno": "Nombres", "tipo": "Texto", "ejemplo": "LAURA CAMILA"},
+        {"nombre": "Apellidos", "interno": "Apellidos", "tipo": "Texto", "ejemplo": "PRUEBA FICTICIA"},
+        {"nombre": "Nombre completo", "interno": "NombreCompleto", "tipo": "Texto", "ejemplo": "LAURA CAMILA PRUEBA FICTICIA"},
+        {"nombre": "Búsqueda", "interno": "Busqueda", "tipo": "Texto", "indexado": true, "descripcion": "APELLIDOS NOMBRES en mayúsculas y sin tildes. La app busca aquí por apellido.", "ejemplo": "PRUEBA FICTICIA LAURA CAMILA"},
+        {"nombre": "Búsqueda por nombre", "interno": "BusquedaNombre", "tipo": "Texto", "indexado": true, "descripcion": "NOMBRES APELLIDOS en mayúsculas y sin tildes. La app busca aquí por nombre.", "ejemplo": "LAURA CAMILA PRUEBA FICTICIA"},
+        {"nombre": "Sexo", "interno": "Sexo", "tipo": "Texto", "ejemplo": "F"},
+        {"nombre": "Fecha de nacimiento", "interno": "FechaNacimiento", "tipo": "Fecha", "ejemplo": "2008-05-14"},
+        {"nombre": "Facultad", "interno": "Facultad", "tipo": "Texto", "indexado": true, "ejemplo": "SALUD"},
+        {"nombre": "Programa", "interno": "Programa", "tipo": "Texto", "indexado": true, "ejemplo": "ENFERMERÍA"},
+        {"nombre": "Periodo", "interno": "Periodo", "tipo": "Texto", "descripcion": "Periodo de reporte (los cuatrimestrales 20263C se reportan en 2026-II, como en «Cómo está mi facultad»).", "ejemplo": "2026-II"},
+        {"nombre": "Periodo original", "interno": "PeriodoOriginal", "tipo": "Texto", "ejemplo": "2026II"},
+        {"nombre": "Matriculado", "interno": "Matriculado", "tipo": "Texto", "ejemplo": "SI"},
+        {"nombre": "Cancelación de semestre", "interno": "CancelacionSemestre", "tipo": "Texto", "ejemplo": "NO"},
+        {"nombre": "Promedio", "interno": "Promedio", "tipo": "Numero", "decimales": 2, "ejemplo": 3.85},
+        {"nombre": "Plan de estudio", "interno": "PlanEstudio", "tipo": "Texto", "ejemplo": "4"},
+        {"nombre": "Modalidad de ingreso", "interno": "ModalidadIngreso", "tipo": "Texto", "ejemplo": "NUEVO"},
+        {"nombre": "Cupo especial", "interno": "CupoEspecial", "tipo": "Texto", "descripcion": "Solo valores no sensibles (talento, artista, deportista, beca). El resto está en «Condiciones de ingreso».", "ejemplo": "DEPORTISTA ACSUP 26 DE 2017"},
+        {"nombre": "Estrato", "interno": "Estrato", "tipo": "Texto", "ejemplo": "2"},
+        {"nombre": "Origen", "interno": "Origen", "tipo": "Texto", "ejemplo": "SANTA MARTA"},
+        {"nombre": "Departamento de origen", "interno": "DepartamentoOrigen", "tipo": "Texto", "ejemplo": "MAGDALENA"},
+        {"nombre": "Municipio de origen", "interno": "MunicipioOrigen", "tipo": "Texto", "ejemplo": "SANTA MARTA"},
+        {"nombre": "Colegio", "interno": "Colegio", "tipo": "Texto", "ejemplo": "INSTITUCIÓN EDUCATIVA DE PRUEBA"},
+        {"nombre": "Tipo de colegio", "interno": "TipoColegio", "tipo": "Texto", "ejemplo": "PUBLICO"},
+        {"nombre": "Departamento del colegio", "interno": "DepartamentoColegio", "tipo": "Texto", "ejemplo": "MAGDALENA"},
+        {"nombre": "Municipio del colegio", "interno": "MunicipioColegio", "tipo": "Texto", "ejemplo": "SANTA MARTA"},
+        {"nombre": "Fecha de corte", "interno": "FechaCorte", "tipo": "Fecha", "ejemplo": "2026-10-07"}
+      ]
+    },
+    {
+      "titulo": "Condiciones de ingreso",
+      "url": "CondicionesIngreso",
+      "nivel": "reservado",
+      "descripcion": "Cupos especiales que revelan datos sensibles (pertenencia étnica, víctima del conflicto, discapacidad, jefatura de hogar). Solo Administración, salvo que Jurídica autorice a otra unidad.",
+      "editan": ["ADM"],
+      "leen": [],
+      "columnas": [
+        {"nombre": "Código", "interno": "Codigo", "tipo": "Texto", "requerido": true, "indexado": true, "ejemplo": "9026118045"},
+        {"nombre": "Estudiante", "interno": "Estudiante", "tipo": "Texto", "ejemplo": "LAURA CAMILA PRUEBA FICTICIA"},
+        {"nombre": "Condición", "interno": "Condicion", "tipo": "Texto", "ejemplo": "CONDICIÓN FICTICIA"},
+        {"nombre": "Periodo", "interno": "Periodo", "tipo": "Texto", "ejemplo": "2026-II"},
+        {"nombre": "Fuente", "interno": "Fuente", "tipo": "Texto", "ejemplo": "Base académica"}
+      ]
+    },
+    {
+      "titulo": "Deportes",
+      "url": "Deportes",
+      "nivel": "visible",
+      "descripcion": "Deportistas por disciplina (con ASCUN y nivel), representación en eventos, préstamo de implementos y actividades.",
+      "editan": ["DEP"],
+      "leen": ["PER"],
+      "columnas": [
+        {"nombre": "Código", "interno": "Codigo", "tipo": "Texto", "requerido": true, "indexado": true, "ejemplo": "9026118045"},
+        {"nombre": "Estudiante", "interno": "Estudiante", "tipo": "Texto", "ejemplo": "LAURA CAMILA PRUEBA FICTICIA"},
+        {"nombre": "Tipo de registro", "interno": "TipoRegistro", "tipo": "Texto", "requerido": true, "opciones": "tipo_registro_deportes", "ejemplo": "Deportista inscrito"},
+        {"nombre": "Disciplina o servicio", "interno": "Disciplina", "tipo": "Texto", "catalogo": "DEP", "ejemplo": "Voleibol / Voleibol playa"},
+        {"nombre": "ASCUN", "interno": "ASCUN", "tipo": "Texto", "opciones": "si_no", "ejemplo": "Sí"},
+        {"nombre": "Nivel", "interno": "Nivel", "tipo": "Texto", "opciones": "nivel_deportes", "ejemplo": "Selección Unimagdalena"},
+        {"nombre": "Evento o implemento", "interno": "Evento", "tipo": "Texto", "ejemplo": "Juegos ASCUN regional"},
+        {"nombre": "Fecha", "interno": "Fecha", "tipo": "Fecha", "ejemplo": "2026-09-15"},
+        {"nombre": "Fecha de devolución", "interno": "FechaDevolucion", "tipo": "Fecha", "ejemplo": ""},
+        {"nombre": "Periodo", "interno": "Periodo", "tipo": "Texto", "ejemplo": "2026-II"},
+        {"nombre": "Estado", "interno": "Estado", "tipo": "Texto", "opciones": "estado_deportes", "ejemplo": "Activo"},
+        {"nombre": "Observación", "interno": "Observacion", "tipo": "TextoLargo", "ejemplo": "Sin datos de salud aquí."},
+        {"nombre": "Registrado por", "interno": "RegistradoPor", "tipo": "Texto", "ejemplo": "Nombre del profesional"}
+      ]
+    },
+    {
+      "titulo": "Cultura",
+      "url": "Cultura",
+      "nivel": "visible",
+      "descripcion": "Integrantes de talleres permanentes y grupos representativos, y participación en presentaciones.",
+      "editan": ["CUL"],
+      "leen": ["PER"],
+      "columnas": [
+        {"nombre": "Código", "interno": "Codigo", "tipo": "Texto", "requerido": true, "indexado": true, "ejemplo": "9026118045"},
+        {"nombre": "Estudiante", "interno": "Estudiante", "tipo": "Texto", "ejemplo": "LAURA CAMILA PRUEBA FICTICIA"},
+        {"nombre": "Tipo de registro", "interno": "TipoRegistro", "tipo": "Texto", "requerido": true, "opciones": "tipo_registro_cultura", "ejemplo": "Integrante de taller"},
+        {"nombre": "Taller o grupo", "interno": "TallerGrupo", "tipo": "Texto", "catalogo": "CUL", "ejemplo": "Danzas folclóricas"},
+        {"nombre": "Rol", "interno": "Rol", "tipo": "Texto", "opciones": "rol_cultura", "ejemplo": "Integrante"},
+        {"nombre": "Evento", "interno": "Evento", "tipo": "Texto", "ejemplo": ""},
+        {"nombre": "Fecha", "interno": "Fecha", "tipo": "Fecha", "ejemplo": "2026-08-20"},
+        {"nombre": "Periodo", "interno": "Periodo", "tipo": "Texto", "ejemplo": "2026-II"},
+        {"nombre": "Estado", "interno": "Estado", "tipo": "Texto", "opciones": "estado_participacion", "ejemplo": "Activo"},
+        {"nombre": "Observación", "interno": "Observacion", "tipo": "TextoLargo", "ejemplo": ""},
+        {"nombre": "Registrado por", "interno": "RegistradoPor", "tipo": "Texto", "ejemplo": "Nombre del profesional"}
+      ]
+    },
+    {
+      "titulo": "Beneficios",
+      "url": "Beneficios",
+      "nivel": "visible",
+      "descripcion": "Programas de Desarrollo Humano visibles para la red: almuerzos y refrigerios, alojamiento, becas, PIC y reconocimientos. El Fondo de calamidad no va aquí: es reservado de Trabajo Social.",
+      "editan": ["PDH"],
+      "leen": ["PER"],
+      "columnas": [
+        {"nombre": "Código", "interno": "Codigo", "tipo": "Texto", "requerido": true, "indexado": true, "ejemplo": "9026118045"},
+        {"nombre": "Estudiante", "interno": "Estudiante", "tipo": "Texto", "ejemplo": "LAURA CAMILA PRUEBA FICTICIA"},
+        {"nombre": "Programa", "interno": "Programa", "tipo": "Texto", "requerido": true, "catalogo": "PDH", "ejemplo": "Almuerzos y refrigerios"},
+        {"nombre": "Detalle", "interno": "Detalle", "tipo": "Texto", "ejemplo": "Almuerzo"},
+        {"nombre": "Periodo", "interno": "Periodo", "tipo": "Texto", "ejemplo": "2026-II"},
+        {"nombre": "Fecha de inicio", "interno": "FechaInicio", "tipo": "Fecha", "ejemplo": "2026-08-04"},
+        {"nombre": "Fecha de fin", "interno": "FechaFin", "tipo": "Fecha", "ejemplo": ""},
+        {"nombre": "Estado", "interno": "Estado", "tipo": "Texto", "opciones": "estado_beneficio", "ejemplo": "Activo"},
+        {"nombre": "Observación", "interno": "Observacion", "tipo": "TextoLargo", "ejemplo": ""},
+        {"nombre": "Registrado por", "interno": "RegistradoPor", "tipo": "Texto", "ejemplo": "Nombre del profesional"}
+      ]
+    },
+    {
+      "titulo": "Accesos",
+      "url": "Accesos",
+      "nivel": "visible",
+      "descripcion": "Quién pertenece a qué unidad. La app lo usa para mostrar pestañas y botones. El permiso real lo dan los grupos de SharePoint: si esta lista y los grupos no coinciden, la app muestra menos, nunca más.",
+      "editan": ["ADM"],
+      "leen": ["PER"],
+      "columnas": [
+        {"nombre": "Correo", "interno": "Correo", "tipo": "Texto", "requerido": true, "indexado": true, "descripcion": "Correo institucional en minúsculas.", "ejemplo": "persona@unimagdalena.edu.co"},
+        {"nombre": "Nombre", "interno": "Nombre", "tipo": "Texto", "ejemplo": "Nombre Apellido"},
+        {"nombre": "Unidad", "interno": "Unidad", "tipo": "Texto", "requerido": true, "descripcion": "Código de la unidad (DEP, GAV, SAL…) o ADM para las dos personas administradoras.", "ejemplo": "DEP"},
+        {"nombre": "Rol", "interno": "Rol", "tipo": "Texto", "opciones": "rol_acceso", "ejemplo": "Coordinación"},
+        {"nombre": "Activo", "interno": "Activo", "tipo": "Texto", "opciones": "si_no", "ejemplo": "Sí"}
+      ]
+    },
+    {
+      "titulo": "Catálogo de servicios",
+      "url": "CatalogoServicios",
+      "nivel": "visible",
+      "descripcion": "Áreas, programas, estrategias, talleres, disciplinas y servicios. La app llena sus listas desplegables desde aquí.",
+      "editan": ["ADM"],
+      "leen": ["PER"],
+      "columnas": [
+        {"nombre": "Unidad", "interno": "Unidad", "tipo": "Texto", "requerido": true, "indexado": true, "ejemplo": "DEP"},
+        {"nombre": "Área", "interno": "Area", "tipo": "Texto", "ejemplo": "Deportes"},
+        {"nombre": "Grupo", "interno": "Grupo", "tipo": "Texto", "ejemplo": "Disciplinas"},
+        {"nombre": "Servicio", "interno": "Servicio", "tipo": "Texto", "requerido": true, "ejemplo": "Ajedrez"},
+        {"nombre": "Nivel", "interno": "Nivel", "tipo": "Texto", "ejemplo": "visible"},
+        {"nombre": "Activo", "interno": "Activo", "tipo": "Texto", "opciones": "si_no", "ejemplo": "Sí"},
+        {"nombre": "Orden", "interno": "Orden", "tipo": "Numero", "decimales": 0, "ejemplo": 1}
+      ]
+    }
+  ],
+  "lista_seguimiento": {
+    "descripcion": "Plantilla común de las listas reservadas («Seguimiento …»), una por unidad. La unidad ve y edita todo lo de su lista; el resto del personal solo puede crear remisiones y ver las que creó; nadie borra.",
+    "permisos_por_elemento": {
+      "leer": "Solo los elementos que creó el usuario",
+      "crear_editar": "Solo los elementos que creó el usuario",
+      "nota": "La unidad dueña tiene el permiso «Invalidar comportamiento de lista», así que ve y edita todos los elementos de su lista."
+    },
+    "columnas": [
+      {"nombre": "Código", "interno": "Codigo", "tipo": "Texto", "requerido": true, "indexado": true, "ejemplo": "9026118045"},
+      {"nombre": "Estudiante", "interno": "Estudiante", "tipo": "Texto", "ejemplo": "LAURA CAMILA PRUEBA FICTICIA"},
+      {"nombre": "Fecha", "interno": "Fecha", "tipo": "Fecha", "requerido": true, "indexado": true, "ejemplo": "2026-10-01"},
+      {"nombre": "Tipo de registro", "interno": "TipoRegistro", "tipo": "Texto", "requerido": true, "opciones": "tipo_registro_seguimiento", "ejemplo": "Atención"},
+      {"nombre": "Servicio", "interno": "Servicio", "tipo": "Texto", "ejemplo": "Seguimiento académico"},
+      {"nombre": "Modalidad", "interno": "Modalidad", "tipo": "Texto", "opciones": "modalidad", "ejemplo": "Presencial"},
+      {"nombre": "Motivo", "interno": "Motivo", "tipo": "Texto", "opciones": "motivo", "ejemplo": "Académico"},
+      {"nombre": "Resumen", "interno": "Resumen", "tipo": "TextoLargo", "descripcion": "Qué se hizo y qué sigue. Sin diagnósticos, medicamentos ni detalles íntimos.", "ejemplo": "Se revisó el plan de estudio y se acordó asistir a tutoría."},
+      {"nombre": "Próxima acción", "interno": "ProximaAccion", "tipo": "Texto", "ejemplo": "Revisar asistencia a tutoría"},
+      {"nombre": "Fecha próxima acción", "interno": "FechaProximaAccion", "tipo": "Fecha", "ejemplo": "2026-10-15"},
+      {"nombre": "Estado", "interno": "Estado", "tipo": "Texto", "indexado": true, "opciones": "estado_seguimiento", "ejemplo": "En curso"},
+      {"nombre": "Prioridad", "interno": "Prioridad", "tipo": "Texto", "opciones": "prioridad", "ejemplo": "Normal"},
+      {"nombre": "Origen", "interno": "Origen", "tipo": "Texto", "opciones": "origen", "ejemplo": "Iniciativa de la unidad"},
+      {"nombre": "Remitido por", "interno": "RemitidoPor", "tipo": "Texto", "descripcion": "Unidad y persona que remite, cuando aplica.", "ejemplo": ""},
+      {"nombre": "Menor de edad", "interno": "MenorEdad", "tipo": "Texto", "opciones": "si_no", "ejemplo": "No"},
+      {"nombre": "Autorización de datos", "interno": "Autorizacion", "tipo": "Texto", "opciones": "autorizacion", "ejemplo": "Autorizada por el titular"},
+      {"nombre": "Registrado por", "interno": "RegistradoPor", "tipo": "Texto", "descripcion": "Nombre de quien registra (la app lo llena). La huella oficial es «Creado por» y el historial de versiones.", "ejemplo": "Nombre del profesional"},
+      {"nombre": "Correo de quien registra", "interno": "CorreoRegistro", "tipo": "Texto", "ejemplo": "persona@unimagdalena.edu.co"},
+      {"nombre": "Motivo de anulación", "interno": "MotivoAnulacion", "tipo": "Texto", "ejemplo": ""},
+      {"nombre": "Asignado a", "interno": "AsignadoA", "tipo": "Texto", "descripcion": "Correo del profesional que toma la solicitud o remisión.", "ejemplo": "persona@unimagdalena.edu.co"},
+      {"nombre": "Id de solicitud", "interno": "IdSolicitud", "tipo": "Texto", "descripcion": "Número de respuesta del formulario de Forms, para rastrear la solicitud.", "ejemplo": ""}
+    ]
+  },
+  "niveles_de_permiso": [
+    {"nombre": "AE Colaborar sin eliminar", "base": "Colaborar (Contribute)", "quitar": ["Eliminar elementos", "Eliminar versiones"], "agregar": [], "uso": "Unidades que editan una lista visible (Deportes, Cultura, Beneficios)."},
+    {"nombre": "AE Gestionar unidad", "base": "Colaborar (Contribute)", "quitar": ["Eliminar elementos", "Eliminar versiones"], "agregar": ["Invalidar comportamiento de lista"], "uso": "La unidad dueña de una lista «Seguimiento …»: ve y edita todo, no borra."},
+    {"nombre": "AE Consultar unidad", "base": "Leer (Read)", "quitar": [], "agregar": ["Invalidar comportamiento de lista"], "uso": "Lectura completa de otra lista reservada, cuando la matriz lo permite (psicología de Desarrollo Estudiantil sobre el seguimiento académico)."},
+    {"nombre": "AE Remitir", "base": "ninguna", "quitar": [], "agregar": ["Ver elementos", "Agregar elementos", "Ver páginas de aplicación", "Abrir", "Ver páginas", "Usar interfaces remotas"], "uso": "Todo el personal sobre cada lista reservada: puede crear una remisión y ver solo las que creó."}
+  ]
+}

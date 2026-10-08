@@ -40,4 +40,12 @@ Requiere Python 3.10 o superior, `openpyxl` y `lxml`.
 
 ## Sistema de seguimiento y acompañamiento estudiantil
 
-La carpeta `sistema-acompanamiento/` contiene la propuesta para llevar el seguimiento de Bienestar y Desarrollo Estudiantil a Power Apps, Dataverse, Power Automate y Power BI, dentro de Teams. Incluye un prototipo con datos ficticios, el esquema de Dataverse, el modelo de seguridad para datos psicológicos y el plan de implementación. Ver `sistema-acompanamiento/README.md`.
+La carpeta `sistema-acompanamiento/` contiene el sistema para llevar el seguimiento de Bienestar y Desarrollo Estudiantil a Microsoft 365. Incluye:
+
+- el kit para SharePoint, Power Apps y Power Automate con las licencias actuales;
+- el diseño alternativo en Dataverse;
+- un prototipo con datos ficticios;
+- el modelo de permisos por unidad;
+- la guía de protección de datos.
+
+Ver `sistema-acompanamiento/README.md`.

@@ -2,67 +2,74 @@
 
 ## Principios
 
-1. **Mínimo necesario.** Cada rol ve solo lo que necesita para acompañar al estudiante.
-2. **Lo clínico, aparte.** Las notas de Psicología y de Salud están en tablas propias. Las demás áreas solo ven que hubo una atención, con un resumen estándar.
-3. **Huella permanente.** Nadie borra registros. Una atención equivocada se anula con motivo. La auditoría guarda quién creó, cambió o consultó, y cuándo.
-4. **Datos reales solo en producción.** Desarrollo y pruebas usan datos ficticios.
-5. **Acceso por grupo, no por persona.** Los permisos se asignan a equipos de Dataverse ligados a grupos de Entra ID. Cuando alguien deja su cargo, TI lo saca del grupo y pierde el acceso.
+1. **Mínimo necesario.** Cada persona ve solo lo que necesita para acompañar al estudiante. Lo «visible para la red» es poco y está definido.
+2. **Cada unidad, su propio espacio.** Los seguimientos de cada unidad viven en su propia lista, con sus propios permisos. Un error de configuración en una no expone las otras.
+3. **Lo clínico no entra.** La historia clínica sigue en el sistema de Salud y de Psicología. Aquí queda la constancia de la atención, el plan sin datos clínicos y las remisiones.
+4. **Huella permanente.** Nadie, salvo Administración, puede eliminar. Una atención equivocada se anula con motivo. SharePoint guarda quién creó y quién cambió cada registro, con su historial de versiones.
+5. **Acceso por grupo, no por persona.** Cuando alguien deja su cargo, sale de su grupo y pierde el acceso.
+6. **Solo dos personas lo ven todo.** Son las propietarias del sitio (AE Administradores).
 
 ## Matriz de acceso
 
-| Dato o acción | Coordinación | Psicología | Salud | Trabajo social | Desarrollo est. | Docente consejero | Auditoría |
-|---|---|---|---|---|---|---|---|
-| Datos básicos del estudiante | Sí | Sí | Sí | Sí | Sí | Sí | Sí |
-| Documento completo | Sí | Últimos 4 | Últimos 4 | Últimos 4 | Últimos 4 | Últimos 4 | Últimos 4 |
-| Datos sensibles (estrato, etnia, discapacidad, víctima) | Sí | Sí | Sí | Sí | No | No | No |
-| Resumen de atenciones de Bienestar | Sí | Sí | Sí | Sí | Sí | No (solo la fecha de la última) | No |
-| Resumen de atenciones de Desarrollo estudiantil | Sí | Sí | Sí | Sí | Sí | Sí | No |
-| Nota psicológica | No | Sí | No | No | No | No | No |
-| Nota de salud | No | No | Sí | No | No | No | No |
-| Registrar atenciones | Áreas no clínicas | Psicología | Salud | T. social y apoyo socioeconómico | Monitorías y tutorías | Tutorías | No |
-| Borrar | No | No | No | No | No | No | No |
-| Exportar a Excel | Sí | No | No | No | No | No | No |
-| Historial de auditoría | Sí | No | No | No | No | No | Sí |
+| Dato o acción | Administración (2) | Deportes, Cultura, Programas DH | Unidad reservada (p. ej. GAV, Salud, Desarrollo Estudiantil) | Personal sin unidad |
+|---|---|---|---|---|
+| Datos básicos, procedencia, programa, promedio y matrícula | Sí | Sí | Sí | Sí |
+| Estrato | Sí | Sí | Sí | Sí |
+| Beneficios: almuerzos y refrigerios, alojamiento, becas, PIC y reconocimientos | Sí | Ven todo; Programas DH edita | Sí | Sí |
+| Deportes (deportista, disciplina, ASCUN, nivel) y Cultura (talleres, grupos) | Sí | Ven todo; cada una edita la suya | Sí | Sí |
+| Cupo especial sensible: pertenencia étnica, víctima, discapacidad, jefatura de hogar | Sí (en SharePoint) | No | No | No |
+| Seguimientos y atenciones de una unidad reservada | Sí | No | Solo los de su unidad | No |
+| Remitir a una unidad reservada | Sí | Sí, y ven solo sus remisiones | Sí, y ven solo sus remisiones a otras unidades | Sí, y ven solo sus remisiones |
+| Historia clínica | No está en el sistema | No | No | No |
+| Eliminar registros | Sí, con justificación | No | No | No |
+| Anular con motivo | Sí | No aplica | Sí, en su lista | No |
+| Gestionar grupos y la lista Accesos | Sí | No | No | No |
 
-## Cómo se implementa en Dataverse
+Ejemplo pedido por Bienestar: la coordinación de Deportes puede agregar y editar en la lista Deportes y ve si el estudiante está en almuerzos y refrigerios y su estrato. No ve seguimientos, atenciones psicológicas ni médicas, ni problemas de salud.
 
-- **Unidades de negocio:** raíz (catálogos, estudiantes y matrícula), Bienestar Universitario y Desarrollo Estudiantil. Cada área tiene un equipo propietario en su unidad.
-- **Roles:** los define `dataverse/esquema.json` (sección `roles`). Ningún rol tiene privilegio de borrar sobre tablas operativas.
-- **Docentes consejeros:** su rol se asigna en la unidad Desarrollo Estudiantil con lectura de Atención a nivel de unidad. Así ven solo las atenciones de Desarrollo. La columna «Última atención de Bienestar» les indica que existe acompañamiento sin mostrar detalles.
-- **Perfiles de seguridad de columna:** Documento completo, Datos sensibles, Resumen de atenciones (excluye Auditoría), Contenido clínico de Psicología y Contenido clínico de Salud.
-- **Tablas clínicas separadas:** `unimag_notapsicologica` y `unimag_notasalud`, cada una con privilegios solo para su rol. Un error de configuración en una no expone la otra.
-- **Consentimiento obligatorio:** la nota clínica exige un consentimiento vigente. Un complemento de bajo código o una regla del lado del servidor impide guardarla sin él.
-- **Alerta sin contenido:** el profesional clínico puede marcar «Alerta prioritaria para coordinación» en la atención. Coordinación se entera de la urgencia sin leer la nota.
-- **Auditoría:** activa en el entorno y en todas las tablas, con registro de accesos en las tablas clínicas. La retención se define con Jurídica y Archivo.
-- **Registro de lecturas:** se activa el registro de actividad de Dataverse en Microsoft Purview para las tablas clínicas, si el licenciamiento lo permite.
-- **Directiva de datos (DLP) del entorno:** Dataverse, Teams, Outlook, Aprobaciones y Power BI quedan en el grupo «Empresarial». Se bloquean HTTP, almacenamiento personal, redes sociales y cualquier conector no aprobado.
-- **Entorno administrado** con límites para compartir, verificador de soluciones obligatorio y, si aplica, firewall por IP.
-- **Acceso condicional:** MFA para la app y, para los roles clínicos, solo desde dispositivos administrados.
-- **Power BI:** solo tablas no clínicas, datos agregados y seguridad por filas según el área.
+Casos especiales:
+- **Desarrollo Estudiantil · psicología** registra en su propia lista y además consulta el seguimiento académico de Desarrollo Estudiantil. Nadie más ve sus registros.
+- **GAV** es la lista más cerrada. Quien remite un caso solo ve si la remisión fue tomada.
+- **Infancia (CAI)** registra la atención a la madre o el padre estudiante, no datos de los niños.
 
-## Reglas de uso para profesionales
+## Cómo se implementa en Microsoft 365 (camino A)
 
-1. El resumen para la red no lleva diagnósticos, medicamentos ni detalles íntimos. Usa hechos y acuerdos: qué se hizo y qué sigue.
-2. El contenido clínico va solo en la nota reservada del área.
-3. Antes de la primera nota clínica se registra el consentimiento informado. En menores de edad (tarjeta de identidad) se registra además la autorización del acudiente.
-4. Remitir no es compartir el caso completo. El motivo de la remisión se escribe sin datos clínicos.
-5. No se toman capturas de pantalla ni se descargan fichas.
+| Control | Dónde |
+|---|---|
+| Sitio de comunicación sin grupo de Microsoft 365; propietarias solo las dos personas administradoras | Paso 1 de `05-guia-microsoft365.md` |
+| Grupos AE Personal y uno por unidad; permisos por lista sin heredar | `listas.md` y paso 2 de la guía |
+| Niveles de permiso sin «Eliminar elementos» ni «Eliminar versiones» | AE Colaborar sin eliminar, AE Gestionar unidad |
+| Remisión tipo buzón: el resto del personal crea elementos en la lista de otra unidad pero solo ve los suyos | Permisos de nivel de elemento de la lista más el nivel AE Remitir. La unidad dueña tiene el permiso *Override List Behaviors*. |
+| Historial de versiones (500) en todas las listas | Configuración de versiones |
+| Índices en Código, Búsqueda, Documento, Fecha y Estado | Para que las consultas no pasen el umbral de 5.000 elementos |
+| La app no consulta «Condiciones de ingreso» | Solo Administración la abre en SharePoint |
+| La app oculta lo que no corresponde, pero el permiso real es de SharePoint | Si la lista Accesos se desalinea de los grupos, la app muestra menos, nunca más |
+| Registros de auditoría | Si el plan de la universidad incluye Auditoría de Microsoft Purview, TI puede consultar quién creó, cambió o vio elementos del sitio |
+| Formularios y correos sin datos sensibles | `06-solicitudes-forms-y-flujos.md` |
 
-## Marco normativo a validar con Jurídica y el oficial de protección de datos
+Límite conocido: quien puede leer una lista puede exportarla a Excel desde SharePoint. Por eso el acceso a las listas reservadas se restringe a la unidad y se firma un acuerdo de confidencialidad.
 
-- Ley 1581 de 2012 y su reglamentación (Decreto 1074 de 2015): datos sensibles y autorización expresa.
-- Ley 1090 de 2006: secreto profesional y registros del psicólogo.
-- Resolución 1995 de 1999 y Resolución 839 de 2017 del Ministerio de Salud: reserva y conservación de la historia clínica.
-- Ley 1098 de 2006: protección de niñas, niños y adolescentes.
-- Política institucional de tratamiento de datos personales.
+## Cómo se implementa en Dataverse (camino B)
 
-Si Psicología o Salud ya llevan historia clínica en un sistema propio, se recomienda dejar allí el contenido clínico. En este sistema quedarían solo la atención realizada, la alerta sin contenido y la remisión.
+Si la universidad adquiere licencias Power Apps Premium, el diseño de `dataverse/` ofrece controles más finos:
+- unidades de negocio y equipos ligados a grupos de Entra ID;
+- perfiles de seguridad de columna;
+- registro de accesos de lectura y auditoría de Dataverse;
+- app basada en modelo con línea de tiempo.
+
+La matriz de acceso de arriba se mantiene: cada unidad de `microsoft365/modelo.json` corresponde a un equipo propietario y cada lista reservada a un conjunto de privilegios por rol.
+
+## Reglas de uso
+
+Están en `07-proteccion-de-datos-y-menores.md`, junto con el marco normativo, el tratamiento de menores y los borradores de autorización.
 
 ## Pruebas de seguridad antes de producción
 
-- [ ] Con cada rol, abrir la misma ficha y comprobar que coincide con la matriz.
-- [ ] Un usuario sin el rol de Psicología no puede abrir, buscar, exportar ni ver en Power BI una nota psicológica.
-- [ ] Al intentar borrar una atención, el sistema lo impide; al anularla, quedan el motivo y la huella.
-- [ ] La auditoría muestra creación, cambios y lecturas de una nota clínica de prueba.
-- [ ] Al quitar a alguien de un grupo de Entra ID, pierde el acceso en la siguiente sincronización.
-- [ ] La directiva DLP impide crear un flujo que envíe datos a un conector no aprobado.
+- [ ] Con una cuenta de cada tipo de la matriz, abrir la misma ficha y comprobar que coincide.
+- [ ] Una persona de Deportes abre en SharePoint la lista «Seguimiento GAV» y no ve ningún elemento ajeno.
+- [ ] Una persona sin unidad remite a Psicología, ve su remisión y su estado, y no ve los demás registros.
+- [ ] Psicología de Desarrollo Estudiantil ve el seguimiento académico. Desarrollo Estudiantil académico no ve el de psicología.
+- [ ] Nadie fuera de Administración puede eliminar un elemento. La anulación deja el motivo y la versión anterior.
+- [ ] Al sacar a alguien de su grupo, pierde el acceso al abrir de nuevo la app.
+- [ ] «Condiciones de ingreso» solo la abren las dos personas administradoras.
+- [ ] El formulario y los correos del flujo no llevan nombre, código ni motivo del estudiante.
