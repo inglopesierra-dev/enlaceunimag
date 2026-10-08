@@ -49,4 +49,4 @@ Para ver el prototipo localmente, abre `prototipo/index.html` en un navegador.
 ## Reglas
 
 - Aquí no se guardan datos reales de estudiantes. El repositorio es público y el `.gitignore` bloquea `*.xlsx` y `*.csv`. Los archivos de carga reales se entregan aparte y se guardan en el OneDrive institucional.
-- Los datos ficticios usan códigos que empiezan por 9 y documentos que empiezan por 99, para que no se confundan con datos reales.
+- Los códigos ficticios tienen el formato real: año de ingreso, periodo, programa, variante y consecutivo (por ejemplo 2026214962). Usan las variantes de la 9 hacia abajo, que la base real no usa (solo usa de la 0 a la 3); así ningún código de prueba coincide con el de un estudiante real. Los documentos ficticios empiezan por 99, un prefijo que no tienen las cédulas colombianas.

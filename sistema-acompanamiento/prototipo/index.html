@@ -578,6 +578,9 @@ table.matrix td { font-size: 13px; }
     ['Licenciatura en Lenguas Extranjeras', 5, 4], ['Licenciatura en Educación Infantil', 5, 3], ['Licenciatura en Matemáticas', 5, 2],
     ['Licenciatura en Literatura y Lengua Castellana', 5, 2], ['Licenciatura en Ciencias Naturales', 5, 2], ['Licenciatura en Artes', 5, 2], ['Licenciatura en Etnoeducación', 5, 2]
   ];
+  /* Dígitos de programa del código estudiantil real (posiciones 6 y 7), en el mismo orden de PROGRAMAS. */
+  var SEG_PROG = ['14', '16', '15', '17', '19', '11', '13', '18', '38', '99', '22', '24', '20', '26', '27', '27',
+    '61', '62', '63', '41', '40', '42', '43', '44', '78', '65', '72', '77', '39', '66', '67'];
   var NOM_F = ['María José', 'Valentina', 'Daniela', 'Isabella', 'Sofía', 'Camila', 'Mariana', 'Gabriela', 'Laura', 'Natalia', 'Andrea', 'Paula', 'Juliana', 'Karen', 'Luisa Fernanda', 'Ana María', 'Yuliana', 'Melissa', 'Sara', 'Valeria', 'Angie', 'Dayana', 'Alejandra', 'Carolina', 'Kelly', 'Lina', 'Manuela', 'Estefanía', 'Diana', 'Yesica'];
   var NOM_M = ['Juan David', 'Santiago', 'Andrés Felipe', 'Carlos', 'Sebastián', 'Daniel', 'Jesús', 'Luis Miguel', 'Kevin', 'José Luis', 'Miguel Ángel', 'Jhon', 'Samuel', 'Mateo', 'Alejandro', 'Brayan', 'Esteban', 'Camilo', 'Julián', 'Nicolás', 'Óscar', 'Rafael', 'Eduardo', 'Jorge', 'Iván', 'Fabián', 'Andrés', 'Cristian', 'David', 'Elkin'];
   var APE = ['Pérez', 'Gómez', 'Rodríguez', 'Martínez', 'García', 'López', 'Hernández', 'Díaz', 'Torres', 'Ramírez', 'Barrios', 'Castro', 'Mendoza', 'Ospino', 'De la Hoz', 'Charris', 'Pacheco', 'Orozco', 'Vergara', 'Fontalvo', 'Cantillo', 'Romero', 'Polo', 'Ariza', 'Navarro', 'Ruiz', 'Suárez', 'Jiménez', 'Rojas', 'Morales', 'Contreras', 'Guerrero', 'Padilla', 'Escobar', 'Vanegas', 'Rangel', 'Manjarrés', 'Daza', 'Bolaño', 'Granados', 'Mejía', 'Salcedo', 'Villalobos', 'Arrieta', 'Cervantes', 'Zúñiga', 'Barraza', 'Correa', 'Herrera', 'Mercado'];
@@ -778,13 +781,19 @@ table.matrix td { font-size: 13px; }
       if (a2 === a1) a2 = pick(APE);
       var p = wProg();
       var anio = 2019 + wAnio();
-      var key = anio * 100 + p;
-      var s = (seq.get(key) || entre(1, 30)) + entre(1, 3);
-      seq.set(key, s);
-      var codigo = '9' + String(anio).slice(1) + String(p + 101) + String(s % 1000).padStart(3, '0');
+      /* Código con el formato real: año de ingreso, periodo (1 o 2), programa (2 dígitos), variante y consecutivo.
+         Ejemplo: 2026214962 = ingreso 2026, periodo 2, Ingeniería de Sistemas (14), variante 9, consecutivo 62.
+         La base real solo usa las variantes 0 a 3; aquí se usan de la 9 hacia abajo, así ningún código de prueba
+         coincide con el de un estudiante real. */
+      var periodo = R() < 0.51 ? 1 : 2;
+      var grupo = String(anio) + periodo + SEG_PROG[p];
+      var n = seq.get(grupo) || 0;
+      seq.set(grupo, n + 1);
+      if (n >= 600) throw new Error('Cohorte de prueba demasiado grande para el formato de código');
+      var codigo = grupo + String(9 - Math.floor(n / 100)) + String(n % 100).padStart(2, '0');
       /* Edad al 8 oct 2026: cerca del 8,6 % son menores (16 y 17 años), todos de las cohortes 2025 y 2026. */
       var edad;
-      if (anio === 2026 && R() < 0.305) edad = R() < 0.4 ? 16 : 17;
+      if (anio === 2026 && R() < 0.278) edad = R() < 0.4 ? 16 : 17;
       else if (anio === 2025 && R() < 0.155) edad = 17;
       else edad = Math.max(18, (2026 - anio) + 17 + Math.floor(Math.abs(gauss()) * 1.6) + (R() < 0.07 ? entre(3, 12) : 0));
       var nac = diaDe(2025 - edad, 9, 9) + entre(0, 364);
@@ -792,13 +801,13 @@ table.matrix td { font-size: 13px; }
       var lug = LUGARES[wLug()];
       var col = pick(COLEGIOS);
       var colLug = R() < 0.8 ? lug : LUGARES[0];
-      var segundo = anio === 2026 && R() < 0.5;
+      var segundo = anio === 2026 && periodo === 1;
       var prom = (anio === 2026 && !segundo) ? 0 : Math.round(Math.max(2.1, Math.min(4.9, 3.66 + gauss() * 0.42)) * 100) / 100;
       var matric = R() < 0.951;
       var e = {
         i: i, codigo: codigo, nombres: nombres, apellidos: a1 + ' ' + a2, sexo: f ? 'F' : 'M',
         numDoc: '99' + String(Math.floor(R() * 1e8)).padStart(8, '0'), nac: nac, d18: diaDe(nd.getUTCFullYear() + 18, nd.getUTCMonth(), nd.getUTCDate()),
-        prog: p, anio: anio, sem: anio === 2026 ? (segundo ? 2 : 1) : Math.max(1, Math.min(10, (2026 - anio) * 2 + 1 - (R() < 0.3 ? 1 : 0))),
+        prog: p, anio: anio, sem: anio === 2026 ? (segundo ? 2 : 1) : Math.max(1, Math.min(10, (2026 - anio) * 2 + (periodo === 1 ? 2 : 1) - (R() < 0.3 ? 1 : 0))),
         plan: entre(1, 7), ing: wIng(), cupo: wCupo(), lug: lug, colegio: col[0], tipoCol: col[1], colLug: colLug, estrato: 1 + wEstr(),
         prom: prom, matric: matric, cancel: matric && R() < 0.01
       };
@@ -1499,7 +1508,7 @@ table.matrix td { font-size: 13px; }
     var f = S.f, r = S.rol;
     var h = cabecera('Estudiantes', 'Lista «Estudiantes», visible para la red. Busca por código, documento o nombre (sin importar tildes) y abre a cada estudiante en su propia pestaña.');
     h += '<div class="panel"><div class="filters">' +
-      '<input type="search" id="q" placeholder="Ej.: maria perez, 9024110…, 9912…" value="' + esc(f.q) + '" aria-label="Buscar estudiante" autocomplete="off">' +
+      '<input type="search" id="q" placeholder="Ej.: maria perez, 202521…, 9912…" value="' + esc(f.q) + '" aria-label="Buscar estudiante" autocomplete="off">' +
       '<select id="fFac" aria-label="Facultad"><option value="">Todas las facultades</option>' + FACULTADES.map(function (x, k) { return '<option value="' + k + '"' + (String(k) === f.fac ? ' selected' : '') + '>' + esc(x) + '</option>'; }).join('') + '</select>' +
       '<select id="fProg" aria-label="Programa"><option value="">Todos los programas</option>' + PROGRAMAS.map(function (p, k) { return (f.fac === '' || String(p[1]) === f.fac) ? '<option value="' + k + '"' + (String(k) === f.prog ? ' selected' : '') + '>' + esc(p[0]) + '</option>' : ''; }).join('') + '</select>' +
       '<select id="fMat" aria-label="Matrícula"><option value="">Matrícula: todas</option><option value="SI"' + (f.mat === 'SI' ? ' selected' : '') + '>Matriculados</option><option value="NO"' + (f.mat === 'NO' ? ' selected' : '') + '>Sin matrícula</option></select></div>' +
@@ -2246,6 +2255,7 @@ table.matrix td { font-size: 13px; }
         menores: function () { return DB.est.filter(function (e) { return e.menor; }).length; },
         visibles: function () { return { beneficios: DB.ben.length, deportes: DB.dep.length, cultura: DB.cul.length, deportistas: DB.dep.filter(function (d) { return d.tipo === 0; }).length, talleres: DB.cul.filter(function (c) { return c.tipo === 0; }).length, almuerzos: DB.ben.filter(function (b) { return b.prog === 0 && b.per === '2026-II'; }).length, ascun: DB.dep.filter(function (d) { return d.tipo === 0 && d.ascun === 1; }).length, seleccion: DB.dep.filter(function (d) { return d.tipo === 0 && d.nivel === 2; }).length, prestamos: DB.dep.filter(function (d) { return d.tipo === 2; }).length, eventos: DB.dep.filter(function (d) { return d.tipo === 1; }).length, programas: PROGRAMAS_DH.map(function (p, k) { var v = {}; DB.ben.forEach(function (b) { if (b.prog === k) v[b.est] = 1; }); return p + ': ' + Object.keys(v).length; }) }; },
         codigosUnicos: function () { return new Set(DB.est.map(function (e) { return e.codigo; })).size; },
+        codigosFormatoReal: function () { return DB.est.filter(function (e) { return /^20(19|2[0-6])[12]\d{2}[4-9]\d{2}$/.test(e.codigo); }).length; },
         persona: function () { return S.rol.persona; },
         textosReservados: function () { var out = []; Object.keys(TX).forEach(function (c) { ['ini', 'seg', 'cie', 'gru', 'sol', 'acc'].forEach(function (k) { TX[c][k].forEach(function (s) { out.push(s); }); }); }); return out; },
         conUnidad: function (c, n) { var out = [], visto = {}; for (var j = 0; j < NR && out.length < (n || 5); j++) if (codU(j) === c && !visto[RG.est[j]]) { visto[RG.est[j]] = 1; out.push(DB.est[RG.est[j]].codigo); } return out; },

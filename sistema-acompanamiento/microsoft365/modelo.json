@@ -104,7 +104,7 @@
       "editan": ["ADM"],
       "leen": ["PER"],
       "columnas": [
-        {"nombre": "Código", "interno": "Codigo", "tipo": "Texto", "requerido": true, "indexado": true, "unico": true, "ejemplo": "9026118045"},
+        {"nombre": "Código", "interno": "Codigo", "tipo": "Texto", "requerido": true, "indexado": true, "unico": true, "ejemplo": "2026214962"},
         {"nombre": "Documento", "interno": "Documento", "tipo": "Texto", "indexado": true, "ejemplo": "9912345678"},
         {"nombre": "Tipo de documento", "interno": "TipoDocumento", "tipo": "Texto", "ejemplo": "C.C."},
         {"nombre": "Nombres", "interno": "Nombres", "tipo": "Texto", "ejemplo": "LAURA CAMILA"},
@@ -143,7 +143,7 @@
       "editan": ["ADM"],
       "leen": [],
       "columnas": [
-        {"nombre": "Código", "interno": "Codigo", "tipo": "Texto", "requerido": true, "indexado": true, "ejemplo": "9026118045"},
+        {"nombre": "Código", "interno": "Codigo", "tipo": "Texto", "requerido": true, "indexado": true, "ejemplo": "2026214962"},
         {"nombre": "Estudiante", "interno": "Estudiante", "tipo": "Texto", "ejemplo": "LAURA CAMILA PRUEBA FICTICIA"},
         {"nombre": "Condición", "interno": "Condicion", "tipo": "Texto", "ejemplo": "CONDICIÓN FICTICIA"},
         {"nombre": "Periodo", "interno": "Periodo", "tipo": "Texto", "ejemplo": "2026-II"},
@@ -158,7 +158,7 @@
       "editan": ["DEP"],
       "leen": ["PER"],
       "columnas": [
-        {"nombre": "Código", "interno": "Codigo", "tipo": "Texto", "requerido": true, "indexado": true, "ejemplo": "9026118045"},
+        {"nombre": "Código", "interno": "Codigo", "tipo": "Texto", "requerido": true, "indexado": true, "ejemplo": "2026214962"},
         {"nombre": "Estudiante", "interno": "Estudiante", "tipo": "Texto", "ejemplo": "LAURA CAMILA PRUEBA FICTICIA"},
         {"nombre": "Tipo de registro", "interno": "TipoRegistro", "tipo": "Texto", "requerido": true, "opciones": "tipo_registro_deportes", "ejemplo": "Deportista inscrito"},
         {"nombre": "Disciplina o servicio", "interno": "Disciplina", "tipo": "Texto", "catalogo": "DEP", "ejemplo": "Voleibol / Voleibol playa"},
@@ -181,7 +181,7 @@
       "editan": ["CUL"],
       "leen": ["PER"],
       "columnas": [
-        {"nombre": "Código", "interno": "Codigo", "tipo": "Texto", "requerido": true, "indexado": true, "ejemplo": "9026118045"},
+        {"nombre": "Código", "interno": "Codigo", "tipo": "Texto", "requerido": true, "indexado": true, "ejemplo": "2026214962"},
         {"nombre": "Estudiante", "interno": "Estudiante", "tipo": "Texto", "ejemplo": "LAURA CAMILA PRUEBA FICTICIA"},
         {"nombre": "Tipo de registro", "interno": "TipoRegistro", "tipo": "Texto", "requerido": true, "opciones": "tipo_registro_cultura", "ejemplo": "Integrante de taller"},
         {"nombre": "Taller o grupo", "interno": "TallerGrupo", "tipo": "Texto", "catalogo": "CUL", "ejemplo": "Danzas folclóricas"},
@@ -202,7 +202,7 @@
       "editan": ["PDH"],
       "leen": ["PER"],
       "columnas": [
-        {"nombre": "Código", "interno": "Codigo", "tipo": "Texto", "requerido": true, "indexado": true, "ejemplo": "9026118045"},
+        {"nombre": "Código", "interno": "Codigo", "tipo": "Texto", "requerido": true, "indexado": true, "ejemplo": "2026214962"},
         {"nombre": "Estudiante", "interno": "Estudiante", "tipo": "Texto", "ejemplo": "LAURA CAMILA PRUEBA FICTICIA"},
         {"nombre": "Programa", "interno": "Programa", "tipo": "Texto", "requerido": true, "catalogo": "PDH", "ejemplo": "Almuerzos y refrigerios"},
         {"nombre": "Detalle", "interno": "Detalle", "tipo": "Texto", "ejemplo": "Almuerzo"},
@@ -255,7 +255,7 @@
       "nota": "La unidad dueña tiene el permiso «Invalidar comportamiento de lista», así que ve y edita todos los elementos de su lista."
     },
     "columnas": [
-      {"nombre": "Código", "interno": "Codigo", "tipo": "Texto", "requerido": true, "indexado": true, "ejemplo": "9026118045"},
+      {"nombre": "Código", "interno": "Codigo", "tipo": "Texto", "requerido": true, "indexado": true, "ejemplo": "2026214962"},
       {"nombre": "Estudiante", "interno": "Estudiante", "tipo": "Texto", "ejemplo": "LAURA CAMILA PRUEBA FICTICIA"},
       {"nombre": "Fecha", "interno": "Fecha", "tipo": "Fecha", "requerido": true, "indexado": true, "ejemplo": "2026-10-01"},
       {"nombre": "Tipo de registro", "interno": "TipoRegistro", "tipo": "Texto", "requerido": true, "opciones": "tipo_registro_seguimiento", "ejemplo": "Atención"},

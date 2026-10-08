@@ -1,12 +1,14 @@
 """Genera datos 100 % ficticios en CSV para probar el sistema en el entorno de desarrollo de Dataverse.
 
-Ningún dato corresponde a personas reales: los códigos empiezan por 9 y los documentos por 99.
+Ningún dato corresponde a personas reales. Los códigos tienen el formato real (año de ingreso, periodo, programa,
+variante y consecutivo) con variantes de la 9 hacia abajo, que la base real no usa; los documentos empiezan por 99.
 Los encabezados usan los nombres visibles de las columnas de esquema.json para facilitar
 el mapeo al importar (Power Apps > Tablas > Importar, o un flujo de datos de Power Query).
 
 Uso: python generar_datos_ficticios.py --estudiantes 2000 --salida datos_ficticios
 """
 import argparse
+import sys
 import csv
 import datetime as dt
 import os
@@ -26,6 +28,9 @@ PROGRAMAS = [("Ingeniería de Sistemas", 0, 10), ("Ingeniería Industrial", 0, 1
              ("Licenciatura en Educación Infantil", 5, 3), ("Licenciatura en Matemáticas", 5, 2),
              ("Licenciatura en Literatura y Lengua Castellana", 5, 2), ("Licenciatura en Ciencias Naturales", 5, 2),
              ("Licenciatura en Artes", 5, 2), ("Licenciatura en Etnoeducación", 5, 2)]
+# Dígitos de programa del código estudiantil real (posiciones 6 y 7), en el mismo orden de PROGRAMAS.
+SEG_PROG = ["14", "16", "15", "17", "19", "11", "13", "18", "38", "99", "22", "24", "20", "26", "27", "27",
+            "61", "62", "63", "41", "40", "42", "43", "44", "78", "65", "72", "77", "39", "66", "67"]
 NOM_F = ["María José", "Valentina", "Daniela", "Isabella", "Sofía", "Camila", "Mariana", "Gabriela", "Laura", "Natalia",
          "Andrea", "Paula", "Juliana", "Karen", "Luisa Fernanda", "Ana María", "Yuliana", "Melissa", "Sara", "Valeria"]
 NOM_M = ["Juan David", "Santiago", "Andrés Felipe", "Carlos", "Sebastián", "Daniel", "Jesús", "Luis Miguel", "Kevin",
@@ -108,18 +113,20 @@ def main():
     escribir(a.salida, "servicios.csv", serv_rows, ["Nombre", "Área", "Tipo", "Es clínico", "Requiere consentimiento"])
 
     est, mat, ate, cas, rem, ben, ale, con = [], [], [], [], [], [], [], []
-    usados = set()
+    cuenta = {}
     for i in range(a.estudiantes):
         f = rnd.random() < 0.51
         nombres = rnd.choice(NOM_F if f else NOM_M)
         apellidos = f"{rnd.choice(APE)} {rnd.choice(APE)}"
         p = rnd.choices(range(len(PROGRAMAS)), weights=[x[2] for x in PROGRAMAS])[0]
         anio = rnd.choices(range(2019, 2027), weights=[3, 5, 9, 13, 15, 17, 18, 20])[0]
-        while True:
-            codigo = f"9{str(anio)[1:]}{101 + p}{rnd.randint(1, 999):03d}"
-            if codigo not in usados:
-                usados.add(codigo)
-                break
+        periodo = 1 if rnd.random() < 0.51 else 2
+        grupo = f"{anio}{periodo}{SEG_PROG[p]}"
+        n = cuenta.get(grupo, 0)
+        cuenta[grupo] = n + 1
+        if n >= 600:
+            sys.exit("Cohorte de prueba demasiado grande para el formato de código")
+        codigo = f"{grupo}{9 - n // 100}{n % 100:02d}"
         nac = dt.date(anio - 17 - min(6, abs(int(rnd.gauss(0, 1.6)))), rnd.randint(1, 12), rnd.randint(1, 28))
         edad = (HOY - nac).days // 365
         doc = f"99{rnd.randint(0, 99999999):08d}"

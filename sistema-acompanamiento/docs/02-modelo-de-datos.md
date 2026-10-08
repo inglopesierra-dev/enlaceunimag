@@ -98,7 +98,7 @@ Configuración: auditoría activa; clave alterna: unimag_name.
 
 | Columna | Nombre lógico | Tipo | Requerida | Notas |
 |---|---|---|---|---|
-| Clave (principal) | `unimag_name` | Texto (40) | sí | Ej.: 2026II|9026118045 |
+| Clave (principal) | `unimag_name` | Texto (40) | sí | Ej.: 2026II|2026214962 |
 | Estudiante | `unimag_estudianteid` | Búsqueda → `unimag_estudiante` | sí |  |
 | Período | `unimag_periodoid` | Búsqueda → `unimag_periodo` | sí |  |
 | Programa | `unimag_programaid` | Búsqueda → `unimag_programa` |  |  |

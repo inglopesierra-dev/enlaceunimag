@@ -91,7 +91,7 @@
     {
       "nombre_logico": "unimag_matricula", "nombre": "Matrícula del período", "plural": "Matrículas del período", "tipo": "Standard", "propiedad": "UserOwned", "auditoria": true,
       "nota": "Equivale a la hoja Base_estudiantes del Excel: una fila por estudiante y período.",
-      "principal": { "nombre_logico": "unimag_name", "nombre": "Clave", "tipo": "Text", "max": 40, "ejemplo": "2026II|9026118045" },
+      "principal": { "nombre_logico": "unimag_name", "nombre": "Clave", "tipo": "Text", "max": 40, "ejemplo": "2026II|2026214962" },
       "columnas": [
         { "nombre_logico": "unimag_estudianteid", "nombre": "Estudiante", "tipo": "Lookup", "destino": "unimag_estudiante", "requerida": true },
         { "nombre_logico": "unimag_periodoid", "nombre": "Período", "tipo": "Lookup", "destino": "unimag_periodo", "requerida": true },

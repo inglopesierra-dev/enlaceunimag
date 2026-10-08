@@ -23,6 +23,20 @@ Profesionales ──► Power Apps (ficha, bandeja, registro, remisión) ──�
                      └──► listas visibles: Estudiantes, Beneficios, Deportes, Cultura
 ```
 
+## Cómo funciona de ahora en adelante
+
+El sistema se monta **una sola vez** en el Microsoft 365 de la universidad. Después no hay que copiar ni pegar nada: la gente abre la app y trabaja.
+
+| Pieza | Qué es | Cuándo se toca |
+|---|---|---|
+| Listas de SharePoint | La base de datos real. Todo lo que se registra queda guardado aquí al instante, con autor y fecha. | Se crean una vez. En cada corte de matrícula se actualiza la lista Estudiantes. |
+| App de Power Apps (aplicación de lienzo) | La pantalla que usa el personal: buscar, ficha, bandeja, registrar y remitir. Se abre desde Teams o desde un enlace, en el computador o en el celular. | Se construye una vez pegando el código del kit y se publica. Solo se vuelve a editar si cambia el diseño, por ejemplo al crear una unidad nueva. |
+| Flujo de Power Automate | Trabaja solo: cada respuesta del formulario llega a la bandeja de la unidad. | Se configura una vez. |
+| Grupos y lista Accesos | Deciden quién ve qué. | Cuando entra o sale una persona. |
+| Prototipo (enlace de Claude) | Una maqueta con datos ficticios para ver y decidir el diseño. No guarda nada ni se conecta a Microsoft. | No se usa para trabajar. |
+
+El código de la app (`.pa.yaml`) no es un programa que se ejecute por su cuenta: es el plano de las pantallas que Power Apps Studio convierte en la app cuando lo pegas. Una vez publicada, la app vive en el Microsoft 365 de la universidad y se actualiza sola para todos.
+
 ## Paso 0. Comprueba tu licencia y tus accesos (10 minutos)
 
 «Pro Plus» suele ser el nombre de las aplicaciones de escritorio (Office 365 ProPlus, hoy Microsoft 365 Apps). El plan de la universidad que trae SharePoint, Forms, Power Apps y Power Automate suele llamarse Office 365 A1 Plus, A3 o A5. Para saber qué tienes:
