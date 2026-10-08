@@ -159,6 +159,8 @@ def construir(ruta_base, salida):
     carga = json.dumps(datos, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
     html = plantilla.replace(marca, f'<script id="datos-reales" type="application/json">{carga}</script>\n{marca}', 1)
     html = html.replace("<title>Bitácora de Acompañamiento</title>", "<title>Bitácora de Acompañamiento · datos reales</title>", 1)
+    # El archivo se abre directo en el navegador, sin la envoltura de la plataforma: se declara HTML5 para que no use el modo de compatibilidad.
+    html = '<!doctype html>\n<html lang="es">\n' + html + '\n</html>\n'
     Path(salida).write_text(html, encoding="utf-8")
     sensibles = sum(1 for f in datos["filas"] if datos["dic"]["cupo"][f[14]][1])
     print(f"{len(datos['filas'])} estudiantes, {len(datos['dic']['programa'])} programas, {sensibles} con cupo especial sensible; "
