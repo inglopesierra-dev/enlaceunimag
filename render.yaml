@@ -1,0 +1,19 @@
+# Despliegue de Wedflow en Render (plan gratuito).
+# La aplicación vive en la carpeta wedflow/ de este repositorio.
+services:
+  - type: web
+    name: wedflow
+    runtime: node
+    plan: free
+    rootDir: wedflow
+    buildCommand: npm ci --omit=dev
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: NODE_ENV
+        value: production
+      - key: TRUST_PROXY
+        value: "1"

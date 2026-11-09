@@ -70,6 +70,10 @@ export default function authRoutes({ db, options }) {
   r.post('/forgot', h((req, res) => {
     const { email } = validate(req.body, { email: { type: 'email', required: true, label: 'El correo' } });
     const user = db.get('SELECT id FROM users WHERE email = ? AND active = 1', email);
+    if (!options.showResetToken && !options.mailer) {
+      // Sin servicio de correo no hay forma segura de entregar el enlace.
+      return res.json({ ok: true, message: 'Este servidor aún no tiene envío de correos configurado. Pide al administrador de tu empresa que te asigne una contraseña temporal desde Configuración → Usuarios y roles.' });
+    }
     const out = { ok: true, message: 'Si el correo está registrado, se generó un enlace de recuperación válido por 30 minutos.' };
     if (user) {
       const token = randomToken();

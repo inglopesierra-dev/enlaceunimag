@@ -82,14 +82,21 @@ export default function companyRoutes({ db }) {
     const target = db.get('SELECT * FROM users WHERE id = ? AND company_id = ?', Number(req.params.id), req.companyId);
     if (!target) throw new HttpError(404, 'El usuario no existe en tu empresa.');
     const data = validate(req.body, userSpec(false), { partial: true });
+    // El administrador puede asignar una contraseña temporal a un usuario de su empresa.
+    if (req.body?.password) {
+      const problems = passwordProblems(String(req.body.password));
+      if (problems.length) throw new HttpError(422, 'Revisa los datos.', { password: `La contraseña necesita ${problems.join(', ')}.` });
+      data.password_hash = hashPassword(String(req.body.password));
+    }
     if (target.id === req.user.id && (data.role && data.role !== 'admin' || data.active === 0)) throw new HttpError(422, 'No puedes quitarte el rol de administrador ni desactivarte.');
     if (data.email && db.get('SELECT id FROM users WHERE email = ? AND id <> ?', data.email, target.id)) throw new HttpError(409, 'Ya existe una cuenta con ese correo.');
     if (Object.keys(data).length) {
       const q = updateSql('users', data, 'id = ?');
       db.run(q.sql, ...q.params, target.id);
-      if (data.active === 0) db.run('DELETE FROM sessions WHERE user_id = ?', target.id);
+      if (data.active === 0 || data.password_hash) db.run('DELETE FROM sessions WHERE user_id = ?', target.id);
     }
-    audit(db, req, 'usuario', target.id, 'actualizar', data);
+    const { password_hash, ...logged } = data;
+    audit(db, req, 'usuario', target.id, 'actualizar', { ...logged, contrasena_temporal: Boolean(password_hash) });
     res.json({ ok: true });
   }));
 

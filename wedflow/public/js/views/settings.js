@@ -74,7 +74,7 @@ export default async function settings({ root, query }) {
       const bind = () => {
         t.querySelectorAll('[data-e]').forEach((b) => (b.onclick = () => {
           const u = users.find((x) => x.id === Number(b.dataset.e));
-          formModal({ title: 'Editar usuario', fields: [{ name: 'name', label: 'Nombre', required: true }, { name: 'email', label: 'Correo', type: 'email', required: true }, { name: 'role', label: 'Rol', type: 'select', options: roleOpts, required: true, full: true }, { name: 'active', label: 'Usuario activo', type: 'checkbox', full: true }], values: u,
+          formModal({ title: 'Editar usuario', fields: [{ name: 'name', label: 'Nombre', required: true }, { name: 'email', label: 'Correo', type: 'email', required: true }, { name: 'role', label: 'Rol', type: 'select', options: roleOpts, required: true, full: true }, { name: 'active', label: 'Usuario activo', type: 'checkbox', full: true }, { name: 'password', label: 'Nueva contraseña temporal (opcional)', type: 'password', full: true, help: 'Úsala si el usuario olvidó su contraseña. Se cerrarán sus sesiones abiertas.' }], values: u,
             onSubmit: async (d) => {
               await api.put(`/users/${u.id}`, d);
               toast('Usuario actualizado.');

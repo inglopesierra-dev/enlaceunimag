@@ -379,6 +379,11 @@ test('Roles y permisos: el usuario de consulta solo lee', async () => {
   assert.equal((await srv.client().post('/auth/reset', { token, password: 'Nueva2026x' })).status, 200);
   assert.equal((await srv.client().post('/auth/reset', { token, password: 'Otra2026x' })).status, 400);
   assert.equal((await srv.client().post('/auth/login', { email: 'lee@planner.test', password: 'Nueva2026x' })).status, 200);
+  // El administrador asigna una contraseña temporal; un usuario de otra empresa no puede.
+  const lee = (await A.get('/users')).data.find((u) => u.email === 'lee@planner.test');
+  assert.equal((await A.put(`/users/${lee.id}`, { password: 'Temporal2026' })).status, 200);
+  assert.equal((await srv.client().post('/auth/login', { email: 'lee@planner.test', password: 'Temporal2026' })).status, 200);
+  assert.equal((await B.put(`/users/${lee.id}`, { password: 'Robada2026' })).status, 404);
 });
 
 test('Datos de demostración: se pueden eliminar sin tocar los datos propios', async () => {

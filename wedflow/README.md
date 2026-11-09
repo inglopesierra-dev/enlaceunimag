@@ -15,7 +15,7 @@ Para las pruebas iniciales trae una configuración de demostración basada en el
 
 ## Puesta en marcha
 
-Requiere Node.js 22.5 o superior (usa `node:sqlite`, incluido en Node).
+Requiere Node.js 22.13 o superior (usa `node:sqlite`, incluido en Node).
 
 ```bash
 cd wedflow
