@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="256" height="256" role="img" aria-label="Wedflow">
+  <title>Wedflow</title>
+  <rect width="64" height="64" rx="14" fill="#1E1B18"/>
+  <g transform="translate(0 1.5)">
+  <defs>
+    <linearGradient id="ibg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#D2B27A"/><stop offset="1" stop-color="#9E7B45"/>
+    </linearGradient>
+    <clipPath id="ibbottom"><rect x="0" y="39" width="64" height="25"/></clipPath>
+    <clipPath id="ibtop"><rect x="0" y="0" width="64" height="29"/></clipPath>
+    <mask id="ibma" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="40" cy="35" r="13" fill="none" stroke="#000" stroke-width="6.6" clip-path="url(#ibbottom)"/>
+    </mask>
+    <mask id="ibmb" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="24" cy="35" r="13" fill="none" stroke="#000" stroke-width="6.6" clip-path="url(#ibtop)"/>
+    </mask>
+  </defs>
+  <circle cx="40" cy="35" r="13" fill="none" stroke="#FBF8F3" stroke-width="3.4" mask="url(#ibmb)"/>
+  <circle cx="24" cy="35" r="13" fill="none" stroke="url(#ibg)" stroke-width="3.4" mask="url(#ibma)"/>
+  <path d="M32 4.5 C32.6 9.2 34.3 10.9 39 11.5 C34.3 12.1 32.6 13.8 32 18.5 C31.4 13.8 29.7 12.1 25 11.5 C29.7 10.9 31.4 9.2 32 4.5 Z" fill="url(#ibg)"/>
+  <path d="M46.5 7 C46.8 9.1 47.4 9.7 49.5 10 C47.4 10.3 46.8 10.9 46.5 13 C46.2 10.9 45.6 10.3 43.5 10 C45.6 9.7 46.2 9.1 46.5 7 Z" fill="url(#ibg)" opacity=".75"/></g>
+</svg>

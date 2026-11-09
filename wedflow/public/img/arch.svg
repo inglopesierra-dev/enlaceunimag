@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 480" role="img" aria-label="Ilustración de un arco floral de boda">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#D2B27A"/><stop offset="1" stop-color="#9E7B45"/></linearGradient>
+    <radialGradient id="glow" cx=".5" cy=".42" r=".6"><stop offset="0" stop-color="#F4E7D2"/><stop offset="1" stop-color="#F4E7D2" stop-opacity="0"/></radialGradient>
+    <g id="leaf"><path d="M0 0 C6 -10 18 -12 26 -6 C18 -2 8 2 0 0 Z" fill="url(#g)" opacity=".85"/><path d="M0 0 C9 -4 17 -6 26 -6" fill="none" stroke="#FBF8F3" stroke-width=".8" opacity=".7"/></g>
+    <g id="flower">
+      <circle r="9" fill="#FBF8F3" stroke="url(#g)" stroke-width="1.6"/>
+      <path d="M0 -9 C4 -4 4 4 0 9 M-9 0 C-4 -4 4 -4 9 0" fill="none" stroke="url(#g)" stroke-width="1.1" opacity=".8"/>
+      <circle r="2.6" fill="url(#g)"/>
+    </g>
+    <g id="bud"><circle r="4.2" fill="url(#g)" opacity=".9"/><circle r="4.2" fill="none" stroke="#FBF8F3" stroke-width=".8" opacity=".6"/></g>
+  </defs>
+  <ellipse cx="210" cy="235" rx="195" ry="215" fill="url(#glow)"/>
+  <!-- arco -->
+  <path d="M90 430 V200 A120 120 0 0 1 330 200 V430" fill="none" stroke="url(#g)" stroke-width="3"/>
+  <path d="M108 430 V202 A102 102 0 0 1 312 202 V430" fill="none" stroke="#1E1B18" stroke-width="1.2" opacity=".55"/>
+  <!-- velo -->
+  <path d="M118 150 C150 200 150 300 128 420" fill="none" stroke="#D9C6A5" stroke-width="1.2" opacity=".9"/>
+  <path d="M302 150 C270 200 270 300 292 420" fill="none" stroke="#D9C6A5" stroke-width="1.2" opacity=".9"/>
+  <!-- guirnalda superior -->
+  <path d="M120 140 C160 70 260 70 300 140" fill="none" stroke="#9E7B45" stroke-width="1.4" opacity=".7"/>
+  <g transform="translate(150 98) rotate(-40)"><use href="#leaf"/></g>
+  <g transform="translate(176 84) rotate(-160)"><use href="#leaf"/></g>
+  <g transform="translate(244 84) rotate(-20)"><use href="#leaf"/></g>
+  <g transform="translate(270 98) rotate(-140)"><use href="#leaf"/></g>
+  <g transform="translate(210 78)"><use href="#flower"/></g>
+  <g transform="translate(186 82) scale(.75)"><use href="#flower"/></g>
+  <g transform="translate(234 82) scale(.75)"><use href="#flower"/></g>
+  <g transform="translate(163 91)"><use href="#bud"/></g>
+  <g transform="translate(257 91)"><use href="#bud"/></g>
+  <!-- ramo lateral izquierdo -->
+  <g transform="translate(92 250)">
+    <g transform="rotate(200)"><use href="#leaf"/></g>
+    <g transform="rotate(150)"><use href="#leaf"/></g>
+    <g transform="rotate(250) scale(.8)"><use href="#leaf"/></g>
+    <g transform="rotate(100) scale(.9)"><use href="#leaf"/></g>
+    <use href="#flower"/>
+    <g transform="translate(-6 22) scale(.8)"><use href="#flower"/></g>
+    <g transform="translate(10 -16)"><use href="#bud"/></g>
+    <g transform="translate(-14 -6)"><use href="#bud"/></g>
+  </g>
+  <!-- ramo lateral derecho -->
+  <g transform="translate(328 300)">
+    <g transform="rotate(-20)"><use href="#leaf"/></g>
+    <g transform="rotate(30)"><use href="#leaf"/></g>
+    <g transform="rotate(-70) scale(.8)"><use href="#leaf"/></g>
+    <g transform="rotate(80) scale(.9)"><use href="#leaf"/></g>
+    <use href="#flower"/>
+    <g transform="translate(6 -22) scale(.8)"><use href="#flower"/></g>
+    <g transform="translate(-10 16)"><use href="#bud"/></g>
+  </g>
+  <!-- mesa con pastel y velas -->
+  <path d="M150 430 H270" stroke="#1E1B18" stroke-width="1.6"/>
+  <path d="M160 430 V412 H260 V430" fill="#FBF8F3" stroke="url(#g)" stroke-width="1.6"/>
+  <rect x="180" y="378" width="60" height="34" rx="3" fill="#FBF8F3" stroke="url(#g)" stroke-width="1.6"/>
+  <rect x="192" y="352" width="36" height="26" rx="3" fill="#FBF8F3" stroke="url(#g)" stroke-width="1.6"/>
+  <path d="M180 392 C190 398 200 386 210 392 C220 398 230 386 240 392" fill="none" stroke="url(#g)" stroke-width="1"/>
+  <g transform="translate(210 344) scale(.7)"><use href="#flower"/></g>
+  <g stroke="url(#g)" stroke-width="1.4" fill="#FBF8F3">
+    <rect x="166" y="392" width="6" height="20"/><rect x="248" y="392" width="6" height="20"/>
+  </g>
+  <path d="M169 384 C166 388 172 390 169 392 C172 389 169 386 169 384 Z M251 384 C248 388 254 390 251 392 C254 389 251 386 251 384 Z" fill="url(#g)"/>
+  <!-- suelo y destellos -->
+  <path d="M40 432 H380" stroke="#1E1B18" stroke-width="1" opacity=".35"/>
+  <path d="M60 444 H360" stroke="#1E1B18" stroke-width=".6" opacity=".2"/>
+  <g fill="url(#g)">
+    <path d="M360 120 c.6 4.4 2.2 6 6.6 6.6 c-4.4 .6 -6 2.2 -6.6 6.6 c-.6 -4.4 -2.2 -6 -6.6 -6.6 c4.4 -.6 6 -2.2 6.6 -6.6 Z"/>
+    <path d="M56 170 c.4 3 1.5 4.1 4.5 4.5 c-3 .4 -4.1 1.5 -4.5 4.5 c-.4 -3 -1.5 -4.1 -4.5 -4.5 c3 -.4 4.1 -1.5 4.5 -4.5 Z" opacity=".7"/>
+    <path d="M330 52 c.4 3 1.5 4.1 4.5 4.5 c-3 .4 -4.1 1.5 -4.5 4.5 c-.4 -3 -1.5 -4.1 -4.5 -4.5 c3 -.4 4.1 -1.5 4.5 -4.5 Z" opacity=".6"/>
+  </g>
+</svg>

@@ -1,0 +1,27 @@
+{
+  "name": "wedflow",
+  "version": "1.0.0",
+  "description": "Wedflow: plataforma web de planificación, programación y optimización de personal para Wedding Planners",
+  "private": true,
+  "type": "module",
+  "main": "server/index.js",
+  "engines": {
+    "node": ">=22.5"
+  },
+  "scripts": {
+    "start": "node --no-warnings=ExperimentalWarning server/index.js",
+    "dev": "node --no-warnings=ExperimentalWarning --watch server/index.js",
+    "test": "node --no-warnings=ExperimentalWarning --test --test-concurrency=1 tests/*.test.js",
+    "backup": "node --no-warnings=ExperimentalWarning scripts/backup.js"
+  },
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@fontsource/cormorant-garamond": "^5.1.0",
+    "@fontsource/manrope": "^5.1.0",
+    "chart.js": "^4.4.7",
+    "exceljs": "^4.4.0",
+    "express": "^4.21.2",
+    "highs": "^1.15.4",
+    "pdfkit": "^0.17.2"
+  }
+}

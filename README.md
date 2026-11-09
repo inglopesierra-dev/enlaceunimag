@@ -49,3 +49,7 @@ La carpeta `sistema-acompanamiento/` contiene el sistema para llevar el seguimie
 - la guía de protección de datos.
 
 Ver `sistema-acompanamiento/README.md`.
+
+## Wedflow: planificación de personal para Wedding Planners
+
+La carpeta `wedflow/` contiene una plataforma web aparte, con su propio [README](wedflow/README.md). Sirve para planificar, programar y optimizar el personal de bodas con un modelo de programación lineal entera. Toma como caso de estudio a Karol Planner (Santa Marta).
