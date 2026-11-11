@@ -1,0 +1,159 @@
+{
+  "aviso": "Casos 100 % ficticios para probar la rúbrica y el cálculo. No corresponden a ninguna persona. Usan las líneas de pobreza de prueba de la rúbrica (valores inventados): ejecutar con --parametros-de-prueba.",
+  "casos": [
+    {
+      "id": "F-01",
+      "descripcion": "Primer semestre. Hogar rural de un municipio del Magdalena, 5 personas y un perceptor con jornal. Vive en una habitación arrendada en Santa Marta con apoyo familiar irregular. Solo tiene teléfono para estudiar.",
+      "datos": {"ingreso_mensual_hogar": 900000, "personas_hogar": 5, "perceptores": 1, "personas_por_cuarto": 2.5, "carencias_vivienda": 2, "horas_trabajo_semana": 0, "estudiante_es_perceptor": false},
+      "requisitos": {"R1": "cumple", "R2": "cumple", "R4": "cumple"},
+      "declaraciones": {"otros_beneficios": [], "ocasiones_previas": 0, "discapacidad_declarada": false},
+      "indicadores": {
+        "IE1": {"nivel": 4, "verificacion": "criterio_profesional", "justificacion": "Jornal sin soporte documental; relato coherente en dos entrevistas."},
+        "IE2": {"nivel": 2},
+        "IE3": {"nivel": 3},
+        "IV1": {"nivel": 0},
+        "IV2": {"nivel": 3},
+        "IC1": {"nivel": 1},
+        "IC2": {"nivel": 3},
+        "IC3": {"nivel": 2},
+        "IS1": {"nivel": 0},
+        "IS2": {"nivel": 0},
+        "IS3": {"nivel": 0},
+        "IA1": {"estado": "NA", "motivo": "Primer semestre, sin calificaciones registradas."},
+        "IA2": {"nivel": 0},
+        "IR1": {"nivel": 2}
+      },
+      "discrepancias": [],
+      "alta_vulnerabilidad": {"valor": "si", "justificacion": "Ingreso per cápita en pobreza extrema (S1), hogar rural con dos carencias de vivienda y alojamiento en Santa Marta con apoyo irregular."}
+    },
+    {
+      "id": "F-02",
+      "descripcion": "Sexto semestre. Vive con su hogar en Santa Marta: 4 personas y 2 perceptores informales (el estudiante es uno). Trabaja 25 horas por semana y perdió dos asignaturas el último periodo. La madre tuvo un gasto médico agudo que dejó una deuda.",
+      "datos": {"ingreso_mensual_hogar": 2400000, "personas_hogar": 4, "perceptores": 2, "personas_por_cuarto": 1.33, "carencias_vivienda": 0, "horas_trabajo_semana": 25, "estudiante_es_perceptor": true},
+      "requisitos": {"R1": "cumple", "R2": "cumple", "R4": "cumple"},
+      "declaraciones": {"otros_beneficios": [], "ocasiones_previas": 0, "discapacidad_declarada": false},
+      "indicadores": {
+        "IE1": {"nivel": 2},
+        "IE2": {"nivel": 2},
+        "IE3": {"nivel": 0},
+        "IV1": {"nivel": 2},
+        "IV2": {"nivel": 0},
+        "IC1": {"nivel": 2},
+        "IC2": {"nivel": 0},
+        "IC3": {"nivel": 1},
+        "IS1": {"nivel": 2},
+        "IS2": {"nivel": 1},
+        "IS3": {"nivel": 0},
+        "IA1": {"nivel": 2, "verificacion": "fuente_institucional"},
+        "IA2": {"nivel": 3},
+        "IR1": {"nivel": 2}
+      },
+      "discrepancias": [],
+      "alta_vulnerabilidad": {"valor": "si", "justificacion": "Ingreso cercano a la línea de pobreza, deuda vigente por emergencia de salud y 25 horas de trabajo semanales que ya afectan su rendimiento: riesgo alto de deserción."}
+    },
+    {
+      "id": "F-03-preliminar",
+      "descripcion": "Segundo semestre. Valoración preliminar: declaró 4 personas, un perceptor y un ingreso total de 600.000. Trabaja 15 horas por semana, pero no figura como perceptor. No sabe cómo gana la madre. Falta precisar si cuida a un hermano menor.",
+      "datos": {"ingreso_mensual_hogar": 600000, "personas_hogar": 4, "perceptores": 1, "personas_por_cuarto": 2, "carencias_vivienda": 0, "horas_trabajo_semana": 15, "estudiante_es_perceptor": false},
+      "requisitos": {"R1": "cumple", "R2": "cumple", "R4": "cumple"},
+      "declaraciones": {"otros_beneficios": [], "ocasiones_previas": 0, "discapacidad_declarada": false},
+      "indicadores": {
+        "IE1": {"nivel": 4, "verificacion": "declarado"},
+        "IE2": {"estado": "NSNR"},
+        "IE3": {"nivel": 2},
+        "IV1": {"nivel": 1},
+        "IV2": {"nivel": 0},
+        "IC1": {"nivel": 1},
+        "IC2": {"nivel": 0},
+        "IC3": {"nivel": 2},
+        "IS1": {"nivel": 0},
+        "IS2": {"estado": "PEND"},
+        "IS3": {"nivel": 0},
+        "IA1": {"nivel": 1, "verificacion": "fuente_institucional"},
+        "IA2": {"nivel": 2},
+        "IR1": {"nivel": 3}
+      },
+      "discrepancias": [
+        {"campo": "IE1", "tipo": "A", "estado": "abierta", "descripcion": "Regla C5: trabaja 15 horas por semana y no figura como perceptor."}
+      ],
+      "alta_vulnerabilidad": {"valor": "pendiente"}
+    },
+    {
+      "id": "F-03-definitivo",
+      "descripcion": "El mismo caso después de la confirmación. Aclaró que su ingreso (400.000) no estaba en el total: error corregible, sin consecuencias. Ahora el hogar tiene 2 perceptores y 1.000.000 de ingreso. Constancia del empleador aportada. La madre vende por catálogo (informal). Cuida a un hermano menor con apoyo de la abuela.",
+      "datos": {"ingreso_mensual_hogar": 1000000, "personas_hogar": 4, "perceptores": 2, "personas_por_cuarto": 2, "carencias_vivienda": 0, "horas_trabajo_semana": 15, "estudiante_es_perceptor": true},
+      "requisitos": {"R1": "cumple", "R2": "cumple", "R4": "cumple"},
+      "declaraciones": {"otros_beneficios": [], "ocasiones_previas": 0, "discapacidad_declarada": false},
+      "indicadores": {
+        "IE1": {"nivel": 3, "verificacion": "documento"},
+        "IE2": {"nivel": 2},
+        "IE3": {"nivel": 0},
+        "IV1": {"nivel": 1},
+        "IV2": {"nivel": 0},
+        "IC1": {"nivel": 1},
+        "IC2": {"nivel": 0},
+        "IC3": {"nivel": 2},
+        "IS1": {"nivel": 0},
+        "IS2": {"nivel": 2},
+        "IS3": {"nivel": 0},
+        "IA1": {"nivel": 1, "verificacion": "fuente_institucional"},
+        "IA2": {"nivel": 2},
+        "IR1": {"nivel": 3}
+      },
+      "discrepancias": [
+        {"campo": "IE1", "tipo": "A", "estado": "resuelta", "descripcion": "Regla C5: ingreso propio omitido. Corregido: 600.000 → 1.000.000 y 1 → 2 perceptores. Motivo: entendió que la pregunta era solo por los padres."}
+      ],
+      "alta_vulnerabilidad": {"valor": "si", "justificacion": "Ingreso per cápita bajo la línea de pobreza, confirmado; trabaja 15 horas, cuida a un hermano y tiene una red de apoyo mínima."}
+    },
+    {
+      "id": "F-04",
+      "descripcion": "Estudiante con discapacidad física y costos continuos de transporte especial y apoyos técnicos (certificado aportado). La vivienda del hogar es estrato 4: no cumple el requisito del art. 49 num. 2. Ingreso per cápita por encima de la línea de pobreza.",
+      "datos": {"ingreso_mensual_hogar": 1950000, "personas_hogar": 3, "perceptores": 1, "personas_por_cuarto": 1.5, "carencias_vivienda": 0, "horas_trabajo_semana": 0, "estudiante_es_perceptor": false},
+      "requisitos": {"R1": "cumple", "R2": "no_cumple", "R4": "cumple"},
+      "declaraciones": {"otros_beneficios": [], "ocasiones_previas": 0, "discapacidad_declarada": true},
+      "indicadores": {
+        "IE1": {"nivel": 2},
+        "IE2": {"nivel": 1},
+        "IE3": {"nivel": 1},
+        "IV1": {"nivel": 1},
+        "IV2": {"nivel": 0},
+        "IC1": {"nivel": 2},
+        "IC2": {"nivel": 0},
+        "IC3": {"nivel": 0},
+        "IS1": {"nivel": 0},
+        "IS2": {"nivel": 0},
+        "IS3": {"nivel": 4, "verificacion": "documento"},
+        "IA1": {"nivel": 1, "verificacion": "fuente_institucional"},
+        "IA2": {"nivel": 0},
+        "IR1": {"nivel": 1}
+      },
+      "discrepancias": [],
+      "alta_vulnerabilidad": {"valor": "no", "justificacion": "Por ingreso y condiciones del hogar no se identifica alta vulnerabilidad socioeconómica. Hay costos altos y continuos por discapacidad. Se remite a criterio jurídico sobre la ruta del art. 46."}
+    },
+    {
+      "id": "F-05",
+      "descripcion": "Jefa de hogar con una hija y otros tres integrantes. Ya recibió la beca en dos ocasiones. Declara un estímulo en dinero de un programa nacional, que se suma al ingreso del hogar.",
+      "datos": {"ingreso_mensual_hogar": 700000, "personas_hogar": 5, "perceptores": 1, "personas_por_cuarto": 2.5, "carencias_vivienda": 1, "horas_trabajo_semana": 8, "estudiante_es_perceptor": true},
+      "requisitos": {"R1": "cumple", "R2": "cumple", "R4": "cumple"},
+      "declaraciones": {"otros_beneficios": ["Estímulo en dinero de un programa nacional (declarado)"], "ocasiones_previas": 2, "discapacidad_declarada": false},
+      "indicadores": {
+        "IE1": {"nivel": 4, "verificacion": "documento"},
+        "IE2": {"nivel": 3},
+        "IE3": {"nivel": 3},
+        "IV1": {"nivel": 3},
+        "IV2": {"nivel": 2},
+        "IC1": {"nivel": 2},
+        "IC2": {"nivel": 0},
+        "IC3": {"nivel": 3},
+        "IS1": {"nivel": 2},
+        "IS2": {"nivel": 3},
+        "IS3": {"nivel": 0},
+        "IA1": {"nivel": 0, "verificacion": "fuente_institucional"},
+        "IA2": {"nivel": 1},
+        "IR1": {"nivel": 3}
+      },
+      "discrepancias": [],
+      "alta_vulnerabilidad": {"valor": "si", "justificacion": "Ingreso per cápita en pobreza extrema aun con el estímulo nacional (S1), jefatura de hogar y vivienda con atrasos. Para la tercera ocasión, el Comité debe valorar si es «vulnerabilidad socioeconómica extrema» (criterio no definido en la norma)."}
+    }
+  ]
+}

@@ -25,6 +25,7 @@ Ver `docs/01-arquitectura-y-licencias.md`.
 | `dataverse/esquema.json` | Camino B: tablas, columnas, opciones, claves, perfiles de columna, unidades de negocio y roles. El catálogo de unidades vigente está en `microsoft365/modelo.json`. |
 | `dataverse/generar_diccionario.py` | Regenera el diccionario de datos a partir del esquema. |
 | `dataverse/generar_datos_ficticios.py` | Genera archivos CSV ficticios para cargar un entorno de desarrollo de Dataverse. |
+| `beca-inclusion-esc/` | Enfoque Socioeconómico Continuo para la Beca de Inclusión y Permanencia: análisis de las Res. 869 de 2018 y 342 de 2019, flujo, rúbrica piloto para PILAS, calculador de referencia y plan piloto. Propuesta pendiente de aprobación. |
 
 ## Uso rápido
 

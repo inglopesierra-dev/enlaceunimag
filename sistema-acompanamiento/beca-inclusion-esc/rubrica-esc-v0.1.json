@@ -1,0 +1,480 @@
+{
+  "id": "ESC-BIPE",
+  "nombre": "Enfoque Socioeconómico Continuo (ESC) · Beca para la Inclusión y Permanencia Estudiantil",
+  "version": "0.1.0-piloto",
+  "fecha": "2026-11-11",
+  "estado": "PROPUESTA TÉCNICA. Pesos, indicadores, anclajes, umbrales y categorías pendientes de validación y aprobación institucional. No se derivan de la Resolución 869 de 2018 ni de sus modificaciones. No usar para decisiones reales hasta su aprobación.",
+  "advertencia": "El puntaje apoya el estudio socioeconómico conjunto de Bienestar Universitario y Desarrollo Estudiantil. No reemplaza la determinación profesional, la aprobación del equipo interdisciplinario ni la decisión del Comité de Becas.",
+
+  "escala": {
+    "minimo": 0,
+    "maximo": 4,
+    "niveles": {
+      "0": "Sin afectación observable",
+      "1": "Afectación leve",
+      "2": "Afectación moderada",
+      "3": "Afectación alta",
+      "4": "Afectación muy alta o crítica"
+    },
+    "estados_especiales": {
+      "NA": "No aplica. Requiere motivo. Se excluye del denominador.",
+      "NSNR": "No sabe o no responde. Cuenta como dato faltante.",
+      "PEND": "Pendiente de confirmación. Cuenta como dato faltante.",
+      "NAUT": "El estudiante no autorizó el tratamiento de datos sensibles. Solo en indicadores sensibles. Sale del cálculo sin contar como faltante ni como NA: no bloquea ni penaliza."
+    }
+  },
+
+  "formula": {
+    "puntaje_normalizado": "100 × Σ_{i∈V} w_i·(x_i/4) / Σ_{i∈V} w_i",
+    "rango_minimo": "100 × Σ_{i∈V} w_i·(x_i/4) / (Σ_{i∈V} w_i + Σ_{i∈F} w_i)",
+    "rango_maximo": "100 × (Σ_{i∈V} w_i·(x_i/4) + Σ_{i∈F} w_i) / (Σ_{i∈V} w_i + Σ_{i∈F} w_i)",
+    "completitud": "100 − Σ_{i∈F} w_i",
+    "convenciones": "V = indicadores con nivel válido (0 a 4). F = indicadores en NSNR o PEND. Los indicadores en NA o NAUT salen del cálculo y su peso se reparte en proporción entre los demás. Con F vacío, el rango se cierra en el puntaje.",
+    "redondeo": "Se calcula con todos los decimales y se muestra con dos."
+  },
+
+  "parametros": {
+    "linea_pobreza_extrema_pc_mensual": {
+      "valor": null,
+      "unidad": "COP por persona al mes",
+      "fuente": "Cifra oficial vigente del DANE para el dominio geográfico del hogar. La carga Bienestar cada año.",
+      "estado": "PENDIENTE: cargar la cifra oficial. No usar los valores de prueba."
+    },
+    "linea_pobreza_pc_mensual": {
+      "valor": null,
+      "unidad": "COP por persona al mes",
+      "fuente": "Cifra oficial vigente del DANE para el dominio geográfico del hogar. La carga Bienestar cada año.",
+      "estado": "PENDIENTE: cargar la cifra oficial. No usar los valores de prueba."
+    },
+    "multiplicador_IE1_nivel2": {"valor": 1.5, "estado": "Propuesta por calibrar"},
+    "multiplicador_IE1_nivel1": {"valor": 2.5, "estado": "Propuesta por calibrar"},
+    "peso_faltante_maximo_para_definitivo": {"valor": 10, "estado": "Propuesta por calibrar"},
+    "peso_no_aplica_maximo": {"valor": 20, "estado": "Propuesta por calibrar"},
+    "diferencia_maxima_entre_calificadores": {"valor": 10, "unidad": "puntos", "estado": "Propuesta por calibrar"},
+    "plazo_aclaracion_dias_habiles": {"valor": 5, "estado": "Propuesta: lo fija el Comité o el procedimiento aprobado"},
+    "incentivo_smmlv_por_hora": {"valor": 0.0075, "estado": "NORMA EXPRESA", "fuente": "Res. 869/2018 art. 47; art. 5 num. 7 modificado por Res. 342/2019 art. 2"},
+    "horas_maximas_semana": {"valor": 20, "estado": "NORMA EXPRESA", "fuente": "Res. 869/2018 art. 48; art. 5 num. 7 modificado por Res. 342/2019 art. 2"},
+    "smmlv_vigente": {"valor": null, "estado": "PENDIENTE: cargar el valor oficial del año"}
+  },
+
+  "parametros_de_prueba": {
+    "uso": "SOLO para los casos ficticios y las pruebas automáticas. Valores inventados, sin relación con cifras oficiales.",
+    "linea_pobreza_extrema_pc_mensual": 200000,
+    "linea_pobreza_pc_mensual": 500000
+  },
+
+  "requisitos": [
+    {
+      "codigo": "R1",
+      "nombre": "Matrícula en un programa de pregrado",
+      "tipo": "norma_expresa",
+      "fuente_norma": "Res. 869/2018 art. 49 num. 1",
+      "fuente_dato": "Admisiones, Registro y Control Académico",
+      "regla_app": "Se consulta en la base institucional. La app no rechaza: si no cumple, el caso pasa a revisión profesional."
+    },
+    {
+      "codigo": "R2",
+      "nombre": "Condición socioeconómica sin estrato, estrato 1, 2 o 3",
+      "tipo": "norma_expresa",
+      "fuente_norma": "Res. 869/2018 art. 49 num. 2",
+      "fuente_dato": "Base institucional o recibo de servicio público de la vivienda del hogar. La norma no define la fuente: queda pendiente de definir.",
+      "regla_app": "Requisito de elegibilidad, no suma puntos. Si no cumple y el estudiante declara discapacidad, la app marca la ruta de discapacidad para revisión jurídica (tensión arts. 46 y 49)."
+    },
+    {
+      "codigo": "R3",
+      "nombre": "Identificado en situación de alta vulnerabilidad socioeconómica en el estudio socioeconómico conjunto",
+      "tipo": "norma_expresa",
+      "fuente_norma": "Res. 869/2018 art. 49 num. 3; art. 46 par. 1 y 2",
+      "fuente_dato": "Determinación profesional del estudio conjunto de Bienestar Universitario y Desarrollo Estudiantil",
+      "regla_app": "Lo registra el profesional con justificación escrita obligatoria. El puntaje y las señales de severidad lo informan, pero no lo determinan solos."
+    },
+    {
+      "codigo": "R4",
+      "nombre": "Sin sanción disciplinaria vigente",
+      "tipo": "norma_expresa",
+      "fuente_norma": "Res. 869/2018 art. 6",
+      "fuente_dato": "Instancia institucional competente",
+      "regla_app": "Consulta institucional. Si no cumple, pasa a revisión; no se rechaza en automático."
+    },
+    {
+      "codigo": "R5",
+      "nombre": "Declaración de otros beneficios, becas o estímulos",
+      "tipo": "norma_expresa_con_tension",
+      "fuente_norma": "Res. 869/2018 art. 8 y art. 9 num. 1; art. 4 num. 8 y 9 y art. 5 par. 1 y 2, modificados por Res. 342/2019 arts. 1 y 2",
+      "fuente_dato": "Declaración del estudiante y registros de Bienestar",
+      "regla_app": "Si declara otro beneficio, la app no excluye: marca el caso para revisión del Comité y para concepto jurídico sobre el alcance del art. 8."
+    },
+    {
+      "codigo": "R6",
+      "nombre": "Número de ocasiones como beneficiario",
+      "tipo": "norma_expresa_con_ambiguedad",
+      "fuente_norma": "Res. 869/2018 art. 7, modificado por Res. 342/2019 art. 3",
+      "fuente_dato": "Historial del Programa de Becas",
+      "regla_app": "Hasta dos ocasiones. La tercera solo la decide el Comité, previo estudio de casos y si se comprueba la continuidad en la vulnerabilidad socioeconómica extrema (par. 2). Más ocasiones solo con recursos adicionales (par. 3). Qué cuenta como «ocasión» queda pendiente de criterio jurídico."
+    }
+  ],
+
+  "dimensiones": [
+    {"codigo": "D1", "nombre": "Capacidad económica del hogar", "peso": 30},
+    {"codigo": "D2", "nombre": "Vivienda y condiciones habitacionales", "peso": 12},
+    {"codigo": "D3", "nombre": "Costos de permanencia del estudiante", "peso": 15},
+    {"codigo": "D4", "nombre": "Choques y cargas del hogar", "peso": 20},
+    {"codigo": "D5", "nombre": "Riesgo académico y de deserción", "peso": 15},
+    {"codigo": "D6", "nombre": "Redes y apoyos no monetarios", "peso": 8}
+  ],
+
+  "indicadores": [
+    {
+      "codigo": "IE1",
+      "dimension": "D1",
+      "nombre": "Ingreso mensual per cápita del hogar",
+      "peso": 18,
+      "critico": true,
+      "admite_na": false,
+      "sensible": false,
+      "nivel_sugerido_por_app": true,
+      "confirmacion_desde_nivel": 3,
+      "dato_requerido": "Ingreso mensual total del hogar (incluye trabajo, pensiones, arriendos, subsidios y transferencias en dinero) y número de personas que dependen de ese ingreso.",
+      "anclajes": {
+        "0": "Ingreso per cápita mayor que 2,5 veces la línea de pobreza.",
+        "1": "Mayor que 1,5 y hasta 2,5 veces la línea de pobreza.",
+        "2": "Mayor que la línea de pobreza y hasta 1,5 veces.",
+        "3": "Mayor que la línea de pobreza extrema y hasta la línea de pobreza.",
+        "4": "Igual o menor que la línea de pobreza extrema."
+      },
+      "evidencia_minima": "Declaración y entrevista. Si el nivel es 3 o 4: un soporte proporcional (certificado laboral o de pensión, constancia de subsidio, consulta autorizada) o validación profesional escrita cuando el ingreso es informal y no existe documento.",
+      "no_duplicar": "Las transferencias en dinero se cuentan aquí y no en IR1. El estrato no suma: es requisito (R2). Se usa el ingreso bruto, sin descontar gastos de salud, que van en IS3."
+    },
+    {
+      "codigo": "IE2",
+      "dimension": "D1",
+      "nombre": "Estabilidad de la principal fuente de ingreso",
+      "peso": 7,
+      "critico": true,
+      "admite_na": false,
+      "sensible": false,
+      "nivel_sugerido_por_app": false,
+      "confirmacion_desde_nivel": null,
+      "dato_requerido": "Tipo de ingreso de cada perceptor (formal, independiente regular, informal, transferencias, sin ingreso).",
+      "anclajes": {
+        "0": "Al menos un perceptor con ingreso formal estable (contrato laboral vigente o pensión).",
+        "1": "Ingreso independiente regular y predecible (negocio establecido, arriendo).",
+        "2": "Ingreso informal variable (jornal, ventas, rebusque) con al menos un perceptor activo.",
+        "3": "El hogar vive sobre todo de transferencias, subsidios o ayudas de terceros, o el perceptor principal está desempleado desde hace menos de seis meses.",
+        "4": "El hogar no tiene ingreso regular: todos los perceptores sin trabajo o con ingresos solo ocasionales."
+      },
+      "evidencia_minima": "Declaración y entrevista. Soporte solo si hay inconsistencia.",
+      "no_duplicar": "Mide la estabilidad, no el monto (que está en IE1)."
+    },
+    {
+      "codigo": "IE3",
+      "dimension": "D1",
+      "nombre": "Dependencia económica",
+      "peso": 5,
+      "critico": true,
+      "admite_na": false,
+      "sensible": false,
+      "nivel_sugerido_por_app": true,
+      "confirmacion_desde_nivel": null,
+      "dato_requerido": "Personas del hogar y número de perceptores de ingreso.",
+      "anclajes": {
+        "0": "Hasta 2 personas por perceptor.",
+        "1": "Más de 2 y hasta 3 personas por perceptor.",
+        "2": "Más de 3 y hasta 4 personas por perceptor.",
+        "3": "Más de 4 y hasta 6 personas por perceptor.",
+        "4": "Más de 6 personas por perceptor, o ningún perceptor."
+      },
+      "evidencia_minima": "Declaración y entrevista.",
+      "no_duplicar": "Correlaciona con IE1. El peso de D1 (30) limita el efecto conjunto; el piloto revisará la colinealidad."
+    },
+    {
+      "codigo": "IV1",
+      "dimension": "D2",
+      "nombre": "Tenencia y seguridad de la vivienda del hogar",
+      "peso": 6,
+      "critico": false,
+      "admite_na": false,
+      "sensible": false,
+      "nivel_sugerido_por_app": false,
+      "confirmacion_desde_nivel": 4,
+      "dato_requerido": "Tipo de tenencia y situación de pago.",
+      "anclajes": {
+        "0": "Propia y pagada, o familiar sin costo y estable.",
+        "1": "Propia con crédito al día, o arriendo al día sin dificultad.",
+        "2": "Arriendo o crédito con atrasos ocasionales (menos de dos meses).",
+        "3": "Atrasos de dos meses o más; vivienda prestada temporal sin garantía; inquilinato o habitación compartida por el hogar.",
+        "4": "Riesgo inminente de perder la vivienda (aviso de desalojo o lanzamiento), sin vivienda estable o en albergue."
+      },
+      "evidencia_minima": "Declaración y entrevista. Para el nivel 4: un soporte (aviso, constancia) o validación profesional escrita.",
+      "no_duplicar": "El arriendo del estudiante cuando vive fuera del hogar por estudiar va en IC2, no aquí."
+    },
+    {
+      "codigo": "IV2",
+      "dimension": "D2",
+      "nombre": "Hacinamiento y servicios básicos",
+      "peso": 6,
+      "critico": false,
+      "admite_na": false,
+      "sensible": false,
+      "nivel_sugerido_por_app": true,
+      "confirmacion_desde_nivel": null,
+      "dato_requerido": "Personas por cuarto para dormir y carencias: sin acueducto, sin alcantarillado o saneamiento, sin energía, materiales precarios (piso de tierra o paredes de material de desecho).",
+      "anclajes": {
+        "0": "Sin carencias y hasta 2 personas por cuarto.",
+        "1": "Hacinamiento moderado (más de 2 y hasta 3 personas por cuarto) sin otras carencias.",
+        "2": "Una carencia. Cuenta como carencia el hacinamiento crítico (más de 3 personas por cuarto).",
+        "3": "Dos carencias.",
+        "4": "Tres carencias o más."
+      },
+      "evidencia_minima": "Declaración y entrevista.",
+      "no_duplicar": "El hacinamiento moderado solo cuenta como nivel 1 cuando no hay otra carencia."
+    },
+    {
+      "codigo": "IC1",
+      "dimension": "D3",
+      "nombre": "Desplazamiento a la universidad",
+      "peso": 6,
+      "critico": false,
+      "admite_na": false,
+      "sensible": false,
+      "nivel_sugerido_por_app": false,
+      "confirmacion_desde_nivel": null,
+      "dato_requerido": "Tiempo por trayecto desde donde vive el estudiante durante el periodo, medio de transporte y si es intermunicipal.",
+      "anclajes": {
+        "0": "Hasta 30 minutos sin costo de transporte (a pie o en bicicleta).",
+        "1": "Hasta 60 minutos en transporte urbano pagado.",
+        "2": "De 61 a 90 minutos, o transporte pagado con transbordo.",
+        "3": "Más de 90 minutos, o transporte intermunicipal diario.",
+        "4": "Más de 120 minutos, o sin transporte disponible en el horario, con inasistencias registradas por esa causa."
+      },
+      "evidencia_minima": "Declaración y entrevista.",
+      "no_duplicar": "Si el estudiante se trasladó a Santa Marta, se mide su trayecto actual, no el del hogar de origen."
+    },
+    {
+      "codigo": "IC2",
+      "dimension": "D3",
+      "nombre": "Alojamiento por estudiar",
+      "peso": 5,
+      "critico": false,
+      "admite_na": false,
+      "sensible": false,
+      "nivel_sugerido_por_app": false,
+      "confirmacion_desde_nivel": 4,
+      "dato_requerido": "Con quién vive durante el periodo y quién paga el alojamiento.",
+      "anclajes": {
+        "0": "Vive con su hogar y no paga alojamiento propio.",
+        "1": "Vive con familiares o conocidos sin pagar arriendo, con aportes ocasionales.",
+        "2": "Paga alojamiento compartido con apoyo familiar regular.",
+        "3": "Paga alojamiento con apoyo familiar irregular o insuficiente.",
+        "4": "Paga alojamiento sin apoyo familiar, o no tiene alojamiento estable (cambios frecuentes, lugares no aptos)."
+      },
+      "evidencia_minima": "Declaración y entrevista. Para el nivel 4: validación profesional escrita.",
+      "no_duplicar": "La vivienda del hogar de origen va en IV1 y IV2."
+    },
+    {
+      "codigo": "IC3",
+      "dimension": "D3",
+      "nombre": "Recursos para estudiar (equipo y conectividad)",
+      "peso": 4,
+      "critico": false,
+      "admite_na": false,
+      "sensible": false,
+      "nivel_sugerido_por_app": false,
+      "confirmacion_desde_nivel": null,
+      "dato_requerido": "Acceso a computador y a internet donde vive durante el periodo.",
+      "anclajes": {
+        "0": "Computador propio funcional e internet donde vive.",
+        "1": "Computador compartido en el hogar e internet donde vive.",
+        "2": "Solo teléfono con datos o conexión limitada.",
+        "3": "Sin computador y sin conexión donde vive; depende de salas de la universidad o de terceros.",
+        "4": "Lo anterior y, además, no puede usar las salas por horario o distancia, con afectación académica registrada."
+      },
+      "evidencia_minima": "Declaración y entrevista.",
+      "no_duplicar": "—"
+    },
+    {
+      "codigo": "IS1",
+      "dimension": "D4",
+      "nombre": "Choques adversos de los últimos 12 meses",
+      "peso": 8,
+      "critico": false,
+      "admite_na": false,
+      "sensible": true,
+      "nivel_sugerido_por_app": false,
+      "confirmacion_desde_nivel": null,
+      "dato_requerido": "Hechos con efectos que el ingreso actual no refleja: muerte o abandono de un aportante, desplazamiento forzado o amenaza, desastre que afectó vivienda o bienes, gasto médico agudo extraordinario, deuda por emergencia, privación de la libertad de un aportante, pérdida de la vivienda.",
+      "anclajes": {
+        "0": "Ninguno.",
+        "1": "Un hecho ya superado, sin efectos económicos vigentes.",
+        "2": "Un hecho con efectos vigentes.",
+        "3": "Dos hechos con efectos vigentes.",
+        "4": "Tres o más, o un hecho de los últimos 3 meses que compromete la continuidad inmediata."
+      },
+      "evidencia_minima": "Relato y entrevista. No se exige el relato de hechos de violencia: basta con el efecto sobre la permanencia. Soporte solo si el estudiante lo tiene y quiere aportarlo.",
+      "no_duplicar": "Un mismo hecho puntúa en un solo indicador. La pérdida de ingreso ya reflejada en IE1 no se vuelve a puntuar aquí. Un hecho agudo de salud va aquí; una condición permanente va en IS3."
+    },
+    {
+      "codigo": "IS2",
+      "dimension": "D4",
+      "nombre": "Responsabilidades de cuidado o jefatura de hogar",
+      "peso": 6,
+      "critico": false,
+      "admite_na": false,
+      "sensible": true,
+      "nivel_sugerido_por_app": false,
+      "confirmacion_desde_nivel": null,
+      "dato_requerido": "Personas a cargo del estudiante y apoyo disponible.",
+      "anclajes": {
+        "0": "Sin personas a cargo.",
+        "1": "Apoya de forma ocasional el cuidado de un familiar.",
+        "2": "Tiene a cargo a un hijo, hija o persona dependiente, con apoyo de otra persona.",
+        "3": "Cabeza de hogar o cuidador principal de una persona dependiente, con apoyo parcial.",
+        "4": "Cabeza de hogar o cuidador principal de dos o más personas dependientes, o de una persona con dependencia severa, sin apoyo."
+      },
+      "evidencia_minima": "Declaración y entrevista.",
+      "no_duplicar": "—"
+    },
+    {
+      "codigo": "IS3",
+      "dimension": "D4",
+      "nombre": "Barreras y costos por discapacidad o condición de salud (propia o de una persona a cargo)",
+      "peso": 6,
+      "critico": false,
+      "admite_na": false,
+      "sensible": true,
+      "nivel_sugerido_por_app": false,
+      "confirmacion_desde_nivel": 3,
+      "dato_requerido": "Barrera funcional, apoyos requeridos y costos regulares. NO se registra diagnóstico.",
+      "anclajes": {
+        "0": "Ninguna reportada.",
+        "1": "Condición reportada, sin costos ni ajustes adicionales.",
+        "2": "Requiere ajustes razonables o apoyos ocasionales de bajo costo.",
+        "3": "Genera costos regulares (tratamientos, transporte especial, apoyos técnicos) o limita la generación de ingresos del hogar.",
+        "4": "Genera costos altos y continuos, o requiere apoyo de un tercero para actividades básicas o académicas."
+      },
+      "evidencia_minima": "Declaración y entrevista. Para los niveles 3 y 4: un soporte de costos o de apoyos (constancia, factura o certificado de discapacidad si el estudiante lo tiene) o validación profesional escrita si no existe documento. Nunca la historia clínica ni el diagnóstico.",
+      "no_duplicar": "No interviene Psicología. La condición psicológica no se puntúa como tal: solo cuentan los costos o barreras materiales que el estudiante decida informar."
+    },
+    {
+      "codigo": "IA1",
+      "dimension": "D5",
+      "nombre": "Trayectoria académica de riesgo",
+      "peso": 8,
+      "critico": true,
+      "admite_na": true,
+      "motivo_na_valido": "Primer semestre, sin calificaciones registradas.",
+      "sensible": false,
+      "nivel_sugerido_por_app": false,
+      "confirmacion_desde_nivel": null,
+      "dato_requerido": "Registro académico: promedio del último periodo frente al parámetro de alerta de Desarrollo Estudiantil (pendiente), asignaturas perdidas, repitencia, prueba académica o semestre especial, reingreso tras interrupción, cancelación por causas económicas.",
+      "anclajes": {
+        "0": "Ninguna señal.",
+        "1": "Una señal (por ejemplo, una asignatura perdida).",
+        "2": "Dos señales.",
+        "3": "Tres señales, o prueba académica o semestre especial.",
+        "4": "Cuatro señales o más, o reingreso tras deserción por causas económicas con señales vigentes."
+      },
+      "evidencia_minima": "Fuente institucional (Registro y Desarrollo Estudiantil). No se pide al estudiante.",
+      "no_duplicar": "Mide riesgo de deserción, no mérito. La Res. 869 no exige rendimiento académico para esta beca. Conviene usar señales relativas al programa, porque las notas varían entre facultades."
+    },
+    {
+      "codigo": "IA2",
+      "dimension": "D5",
+      "nombre": "Trabajo remunerado que compite con el estudio",
+      "peso": 7,
+      "critico": false,
+      "admite_na": false,
+      "sensible": false,
+      "nivel_sugerido_por_app": true,
+      "confirmacion_desde_nivel": null,
+      "dato_requerido": "Horas semanales de trabajo remunerado del estudiante y efectos en su asistencia.",
+      "anclajes": {
+        "0": "No trabaja, o trabaja hasta 5 horas por semana.",
+        "1": "De 6 a 10 horas por semana.",
+        "2": "De 11 a 20 horas por semana.",
+        "3": "De 21 a 30 horas por semana, o trabajo nocturno que afecta el descanso.",
+        "4": "Más de 30 horas por semana, o el trabajo ya causó inasistencias o cancelaciones."
+      },
+      "evidencia_minima": "Declaración y entrevista.",
+      "no_duplicar": "El ingreso del estudiante va en IE1; aquí se mide el tiempo que compite con el estudio."
+    },
+    {
+      "codigo": "IR1",
+      "dimension": "D6",
+      "nombre": "Red de apoyo y apoyos no monetarios",
+      "peso": 8,
+      "critico": false,
+      "admite_na": false,
+      "sensible": false,
+      "nivel_sugerido_por_app": false,
+      "confirmacion_desde_nivel": null,
+      "dato_requerido": "Familia extensa, comunidad u otros apoyos en especie (alimentación, alojamiento) que puedan responder ante una emergencia.",
+      "anclajes": {
+        "0": "Red sólida que puede cubrir emergencias, o apoyo en especie que cubre necesidades de permanencia.",
+        "1": "Red que cubre emergencias de forma parcial.",
+        "2": "Red ocasional e incierta.",
+        "3": "Red mínima (un apoyo puntual).",
+        "4": "Sin red de apoyo, ruptura familiar o independencia forzada."
+      },
+      "evidencia_minima": "Declaración y entrevista.",
+      "no_duplicar": "Las transferencias en dinero ya cuentan en IE1."
+    }
+  ],
+
+  "senales_de_severidad": {
+    "estado": "Propuesta por aprobar",
+    "uso": "No suman puntos. Evitan que una privación grave se diluya en el promedio: el caso pasa a revisión prioritaria y la justificación de R3 debe referirse a cada señal.",
+    "reglas": [
+      {"codigo": "S1", "condicion": "IE1 = 4", "texto": "Ingreso per cápita en o bajo la línea de pobreza extrema."},
+      {"codigo": "S2", "condicion": "IE2 = 4", "texto": "Hogar sin ingreso regular."},
+      {"codigo": "S3", "condicion": "IV1 = 4", "texto": "Riesgo inminente de perder la vivienda o sin vivienda estable."},
+      {"codigo": "S4", "condicion": "IC2 = 4", "texto": "Sin alojamiento estable o sin apoyo para pagarlo."},
+      {"codigo": "S5", "condicion": "IS1 = 4", "texto": "Choque reciente que compromete la continuidad inmediata."}
+    ]
+  },
+
+  "verificacion": {
+    "valores": {
+      "declarado": "Lo informó el estudiante; sin soporte adicional.",
+      "documento": "Soporte aportado por el estudiante.",
+      "fuente_institucional": "Consultado en una fuente institucional con acceso autorizado.",
+      "criterio_profesional": "Validado por el profesional con justificación escrita (coherencia del relato, entrevista complementaria).",
+      "sin_soporte": "No se pudo confirmar al cierre del plazo. Se puntúa en el nivel que la evidencia disponible permite sostener."
+    },
+    "regla_confirmacion": "Un indicador con nivel igual o mayor que su «confirmacion_desde_nivel» no puede quedar solo como «declarado» para el puntaje definitivo. Basta cualquier verificación distinta: documento, fuente institucional o criterio profesional escrito."
+  },
+
+  "bloqueos_puntaje_definitivo": [
+    {"codigo": "B1", "regla": "Algún indicador crítico sin nivel válido (NSNR o PEND), o en NA sin admitirlo."},
+    {"codigo": "B2", "regla": "Peso faltante (NSNR + PEND) mayor que el parámetro peso_faltante_maximo_para_definitivo."},
+    {"codigo": "B3", "regla": "Peso en NA mayor que el parámetro peso_no_aplica_maximo."},
+    {"codigo": "B4", "regla": "Discrepancias abiertas."},
+    {"codigo": "B5", "regla": "Indicador en o por encima de su «confirmacion_desde_nivel» verificado solo como «declarado»."},
+    {"codigo": "B6", "regla": "Nivel asignado distinto del sugerido por la app sin justificación escrita."},
+    {"codigo": "B7", "regla": "Requisitos R1, R2 o R4 «por confirmar»."},
+    {"codigo": "B8", "regla": "NA sin motivo registrado."},
+    {"codigo": "B9", "regla": "NAUT en un indicador que no es sensible."}
+  ],
+
+  "reglas_de_consistencia": [
+    {"codigo": "C1", "regla": "Perceptores ≤ personas del hogar."},
+    {"codigo": "C2", "regla": "Ingreso total igual a 0 con perceptores mayores que 0: pedir aclaración."},
+    {"codigo": "C3", "regla": "IE2 = 0 (ingreso formal estable) con IE1 = 4: revisar si falta un ingreso o si el ingreso formal es parcial."},
+    {"codigo": "C4", "regla": "Horas de trabajo del estudiante entre 0 y 84 por semana."},
+    {"codigo": "C5", "regla": "IA2 ≥ 2 y el estudiante no aparece como perceptor del hogar: revisar si su ingreso quedó por fuera de IE1."},
+    {"codigo": "C6", "regla": "IS1 marca pérdida de empleo y IE2 no cambió: revisar doble conteo."},
+    {"codigo": "C7", "regla": "Diferencia entre dos calificadores mayor que el parámetro, o algún indicador con diferencia de 2 niveles o más: conciliación obligatoria."}
+  ],
+
+  "categorias_piloto": {
+    "estado": "SIN CORTES. No hay evidencia para fijarlos. Se calibran con casos históricos anonimizados, doble calificación, revisión de equidad y aprobación del Comité.",
+    "nombres_propuestos": ["Prioridad 1 · muy alta", "Prioridad 2 · alta", "Prioridad 3 · moderada", "Prioridad 4 · baja"],
+    "cortes": null,
+    "modo_mientras_no_haya_cortes": "La app ordena por puntaje y muestra el cuartil dentro de la convocatoria solo como referencia descriptiva."
+  },
+
+  "desempate_propuesto": {
+    "estado": "Propuesta por aprobar",
+    "orden": ["Mayor número de señales de severidad", "Mayor puntaje en D1", "Mayor puntaje en D5", "Fecha de radicación más antigua"]
+  }
+}
