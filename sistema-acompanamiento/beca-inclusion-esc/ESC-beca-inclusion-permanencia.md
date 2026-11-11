@@ -39,6 +39,8 @@ Abreviaturas: Res. = Resolución Rectoral; art. = artículo; par. = parágrafo; 
 
 ## 1. Lo que exige la norma para esta beca
 
+La beca es un apoyo mensual por horas de apoyo administrativo (hasta 20 por semana, 0,0075 SMMLV por hora) para evitar la deserción, y exige matrícula, estrato 0 a 3 y alta vulnerabilidad identificada en el estudio conjunto de Bienestar y DE.
+
 | Tema | Disposición vigente | Fuente |
 |---|---|---|
 | Objeto del Programa de Becas | Apoyo económico a estudiantes de pregrado de excelente rendimiento académico y/o de escasos recursos económicos o en situación de vulnerabilidad o discapacidad. | [N] Res. 869, art. 1 |
@@ -171,6 +173,8 @@ Resumen técnico; no es un concepto jurídico. Debe validarlo quien ejerza la pr
 ---
 
 ## B. Diagrama del flujo
+
+El caso pasa por 15 etapas; PILAS solo desbloquea el puntaje definitivo después de la confirmación y de la segunda revisión, y nunca rechaza por sí sola.
 
 ```
  E0  CONVOCATORIA ─ Comité: apertura y cupos (arts. 50.1, 3) · Bienestar: parámetros y versión de rúbrica
@@ -702,13 +706,13 @@ Solo con autorización del titular y acceso legítimo definido por Jurídica y p
 > |---|---|---|
 > | R1 Matrícula en pregrado (art. 49.1) | | |
 > | R2 Estrato 0 a 3 (art. 49.2) | | |
-> | R3 Alta vulnerabilidad en el estudio conjunto (art. 49.3) | Sí / No | Concepto del __/__ |
+> | R3 Alta vulnerabilidad en el estudio conjunto (art. 49.3) | Sí / No | Concepto del dd/mm/aaaa |
 > | R4 Sin sanción disciplinaria (art. 6) | | |
 > | R5 Otros beneficios declarados (art. 8) | Ninguno / Cuáles | |
 > | R6 Ocasiones previas (art. 7) | 0 / 1 / 2 / más | |
 >
 > **3. Resultado del ESC**
-> Puntaje definitivo: ____ / 100 · Versión de rúbrica: ____ · Completitud: ____ % · Indicadores en NA: ____
+> Puntaje definitivo: ____ / 100 · Versión de rúbrica: ____ · Completitud: ____ % · Indicadores en NA o NAUT: ____
 > Aporte por dimensión: D1 ____ · D2 ____ · D3 ____ · D4 ____ · D5 ____ · D6 ____
 > Señales de severidad: ______ · Categoría de prioridad: (solo si hay cortes aprobados) ______
 > Posición en la convocatoria (descriptiva): cuartil ____
@@ -735,16 +739,18 @@ Solo con autorización del titular y acceso legítimo definido por Jurídica y p
 > Fundamento: ______
 >
 > **8. Trazabilidad**
-> Diligenció (TS): ______ fecha __/__ · Verificó (segunda revisión): ______ fecha __/__
-> Aprobó (equipo interdisciplinario): ______ fecha __/__
+> Diligenció (TS): ______ fecha dd/mm/aaaa · Verificó (segunda revisión): ______ fecha dd/mm/aaaa
+> Aprobó (equipo interdisciplinario): ______ fecha dd/mm/aaaa
 >
 > **9. Decisión del Comité** (la diligencia la secretaría en la sesión)
 > ☐ Seleccionado · ☐ No seleccionado · ☐ Elegible en espera · ☐ Aplazado · ☐ Excepción aprobada · ☐ Excepción negada
-> Acta N.º ____ de __/__/____ · Observaciones: ______
+> Acta N.º ____ de dd/mm/aaaa · Observaciones: ______
 
 ---
 
 ## H. Plan piloto y métricas
+
+El piloto mide primero si dos profesionales califican igual y si el puntaje trata por igual a los grupos, y solo después se usa para decidir.
 
 ### H.1 Fases [R]
 
